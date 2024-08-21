@@ -3,6 +3,8 @@ import { WelcomeText } from "./components/WelcomeText";
 import { CardShared } from "@/components/shared/CardShared";
 import useResponsive from "@/utils/useResponsive";
 import { WelcomeCard } from "./components/WelcomeCard";
+import { AuthBg } from "@/components/shared/AuthBg";
+import { AuthLogo } from "@/components/shared/AuthLogo";
 import Warejeans from "/assets/warjeans.jpg";
 
 const MobileWelcome = () => {
@@ -18,23 +20,17 @@ const MobileWelcome = () => {
     </div>
   );
 };
+
 const DesktopWelcome = () => {
   return (
-    <div className="h-screen grid place-items-center">
-      <CardShared
-        logo={
-          <div className="flex items-center justify-center ml-10">
-            <img src={Warejeans} alt="" width={300} height={300} />
-          </div>
-        }
-        cardContent={<WelcomeCard />}
-      />
-    </div>
+    <AuthBg>
+      <CardShared logo={<AuthLogo />} cardContent={<WelcomeCard />} />
+    </AuthBg>
   );
 };
 
 const TabletWelcome = () => {
-  return <h1>Tablet</h1>;
+  return <AuthBg>Tablet</AuthBg>;
 };
 const Welcome = () => {
   const { desktopResponsive, mobileResponsive, tabletResponsive } =
