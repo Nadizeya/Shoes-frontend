@@ -5,14 +5,14 @@ import useResponsive from "@/utils/useResponsive";
 import { WelcomeCard } from "./components/WelcomeCard";
 import { AuthBg } from "@/components/shared/AuthBg";
 import { AuthLogo } from "@/components/shared/AuthLogo";
-import Warejeans from "/assets/warjeans.jpg";
+import Logo from "/assets/logo/logo.jpg";
 
 const MobileWelcome = () => {
   return (
     <div className="h-screen grid place-content-center">
       <div className="grid gap-y-5 px-5">
         <div className="mx-auto">
-          <img src={Warejeans} alt="" width={300} height={300} />
+          <img src={Logo} alt="" width={200} height={200} />
         </div>
         <WelcomeText />
         <ButtonAlign />
@@ -29,9 +29,6 @@ const DesktopWelcome = () => {
   );
 };
 
-const TabletWelcome = () => {
-  return <AuthBg>Tablet</AuthBg>;
-};
 const Welcome = () => {
   const { desktopResponsive, mobileResponsive, tabletResponsive } =
     useResponsive();
@@ -39,8 +36,7 @@ const Welcome = () => {
   return (
     <>
       {desktopResponsive && <DesktopWelcome />}
-      {tabletResponsive && <TabletWelcome />}
-      {mobileResponsive && <MobileWelcome />}
+      {(tabletResponsive || mobileResponsive) && <MobileWelcome />}
     </>
   );
 };

@@ -46,7 +46,10 @@ function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="h-[75%] flex flex-col justify-between"
+      >
         <FormField
           control={form.control}
           name="email"
@@ -67,21 +70,26 @@ function LoginForm() {
               <FormControl>
                 <Input type="password" placeholder="Password" {...field} />
               </FormControl>
-              <FormDescription
-                className="text-blue-500 cursor-pointer"
-                onClick={() => navigate("/reset-password")}
-              >
-                Forgot your Password?
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        <FormDescription
+          className="text-blue-500 cursor-pointer"
+          onClick={() => navigate("/reset-password")}
+        >
+          Forgot your Password?
+        </FormDescription>
         <div className="text-center">
           <Button type="submit" variant="welcome" className="w-full">
             Sign In
           </Button>
-          <p className="text-center">Create new account</p>
+          <p
+            className="text-center cursor-pointer mt-2"
+            onClick={() => navigate("/register")}
+          >
+            Create new account
+          </p>
         </div>
       </form>
     </Form>

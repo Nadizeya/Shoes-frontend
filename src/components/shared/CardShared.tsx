@@ -16,15 +16,17 @@ export const CardShared = ({
   contentClassName,
 }: CardProps) => {
   const defaultCardClassName =
-    "bg-white w-[60rem] min-w-[50rem] max-w-[60rem] rounded-2xl overflow-hidden border border-gray-50 py-8 shadow-sm";
-  const defaultContentClassName = "flex items-center justify-between p-0";
+    "bg-white w-[60rem] min-w-[50rem] max-w-[60rem] rounded-3xl overflow-hidden border border-gray-50 shadow-sm";
+  const defaultContentClassName = "flex justify-between  p-0";
 
   return (
     <Card className={classNames(defaultCardClassName, cardClassName)}>
       <CardContent
         className={classNames(defaultContentClassName, contentClassName)}
       >
-        {logo}
+        <div className="flex items-center justify-center mb-4 ml-40">
+          {logo}
+        </div>
         {cardContent}
       </CardContent>
     </Card>
