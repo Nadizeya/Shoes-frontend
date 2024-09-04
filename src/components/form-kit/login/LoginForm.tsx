@@ -23,7 +23,11 @@ const FormSchema = z.object({
   }),
 });
 
-function LoginForm() {
+type LoginPropsT = {
+  mobile?: boolean;
+};
+
+function LoginForm({ mobile }: LoginPropsT) {
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -44,11 +48,14 @@ function LoginForm() {
     });
   }
 
+  const mobileClassName = "flex flex-col justify-between gap-5";
+  const desktopClassName = "h-[75%] flex flex-col justify-between";
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="h-[75%] flex flex-col justify-between"
+        className={mobile ? mobileClassName : desktopClassName}
       >
         <FormField
           control={form.control}
