@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
+import { openCloseEyesPassword } from "@/utils/helpers/OpenCloseEyesPassword";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +16,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
-
 // Define schema with both email and password validation
 const FormSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -28,6 +29,7 @@ type LoginPropsT = {
 };
 
 function LoginForm({ mobile }: LoginPropsT) {
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -63,7 +65,7 @@ function LoginForm({ mobile }: LoginPropsT) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Email" {...field} />
+                <Input className="bg-gray-100" placeholder="Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,7 +77,20 @@ function LoginForm({ mobile }: LoginPropsT) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input type="password" placeholder="Password" {...field} />
+                <div className="relative">
+                  <Input
+                    className="bg-gray-100"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    {...field}
+                  />
+                  <span
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {openCloseEyesPassword(showPassword)}
+                  </span>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

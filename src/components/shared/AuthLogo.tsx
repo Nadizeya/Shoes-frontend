@@ -3,9 +3,11 @@ import Logo from "/assets/logo/logo.jpg";
 export const AuthLogo = ({
   width,
   height,
+  mobile,
 }: {
   width?: number;
   height?: number;
+  mobile?: boolean;
 }) => {
   return (
     <div className="flex flex-col gap-2 justify-center">
@@ -18,9 +20,11 @@ export const AuthLogo = ({
           height={height || 180}
         />
       </div>
-      <h4 className="text-center font-bold text-lg lg:text-2xl">
-        Nadi Yoon Htike
-      </h4>
+      {!mobile && (
+        <h4 className="text-center font-bold text-lg lg:text-2xl">
+          Nadi Yoon Htike
+        </h4>
+      )}
     </div>
   );
 };
