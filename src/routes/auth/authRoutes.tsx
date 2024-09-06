@@ -5,6 +5,7 @@ import {
   LazyChangePassword,
   LazyResetPassword,
   LazyWelcome,
+  LazyCreateProfile,
 } from "../lazy";
 
 const authRoutes: Routes = [
@@ -32,6 +33,11 @@ const authRoutes: Routes = [
     key: "welcome",
     path: "/welcome",
     element: <LazyWelcome />,
+  },
+  {
+    key: "create-profile",
+    path: "/create-profile",
+    element: <LazyCreateProfile />,
   },
 ];
 
