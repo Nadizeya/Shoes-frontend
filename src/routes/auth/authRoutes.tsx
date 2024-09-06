@@ -5,6 +5,7 @@ import {
   LazyChangePassword,
   LazyResetPassword,
   LazyWelcome,
+  LazyOtpValidate,
 } from "../lazy";
 
 const authRoutes: Routes = [
@@ -22,6 +23,11 @@ const authRoutes: Routes = [
     key: "change-password",
     path: "/change-password",
     element: <LazyChangePassword />,
+  },
+  {
+    key: "otp-validation",
+    path: "/change-password/otp-validation",
+    element: <LazyOtpValidate />,
   },
   {
     key: "reset-password",
