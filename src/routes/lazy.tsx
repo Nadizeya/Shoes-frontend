@@ -6,6 +6,7 @@ export const LazyRegister = lazy(() => import("@/pages/auth/Register"));
 export const LazyChangePassword = lazy(
   () => import("@/pages/auth/ChangePassword")
 );
+export const LazyOtpValidate = lazy(() => import("@/pages/auth/OtpValidation"));
 export const LazyResetPassword = lazy(
   () => import("@/pages/auth/ResetPassword")
 );
