@@ -1,7 +1,7 @@
-import baseService from "../BaseService";
+import PublicService from "../PublicService";
 
-// Fetch all users
-export const fetchAllCharacters = async () => {
-  const response = await baseService.get("/character");
+export const fetchUsers = async () => {
+  const response = await PublicService.get("/comments");
+
   return response.data;
 };
