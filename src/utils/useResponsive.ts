@@ -29,7 +29,7 @@ const useResponsive = () => {
     let screenSize = "";
 
     switch (true) {
-      case windowWidth < breakpoints.sm:
+      case windowWidth < breakpoints.sm:  
         screenSize = "xs";
         break;
       case windowWidth < breakpoints.md:

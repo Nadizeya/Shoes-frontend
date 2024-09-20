@@ -12,7 +12,7 @@ const Home = () => {
 
   console.log(data);
   return (
-    <div>
+    <div className="space-y-5">
       <HeroSection />
       <BrandsHomeComp />
       <ProductsHomeComp />
