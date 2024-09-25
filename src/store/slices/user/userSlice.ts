@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserT } from "@/types/user";
 
 const initialState: UserT = {
-  username: "",
+  username: "Nay Oo Lwin",
   email: "",
   phone: "",
 };

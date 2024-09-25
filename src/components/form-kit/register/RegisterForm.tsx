@@ -14,6 +14,10 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import MainLoading from "@/components/shared/MainLoading";
+
+import { postRegister } from "@/api/endpoints/authApi";
+
 
 const formSchema = z
   .object({
@@ -24,7 +28,7 @@ const formSchema = z
           /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
           /^\+?\d{10,15}$/.test(value),
         {
-          message: "Please enter a valid phone number or email!",
+          message: "Please enter a valid phone number or contact!",
         }
       ),
     password: z
@@ -51,6 +55,10 @@ const formSchema = z
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+   // State for toggling password visibility
+   const [showPassword, setShowPassword] = useState(false);
+   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -59,14 +67,14 @@ const RegisterForm = () => {
     },
   });
 
-  // State for toggling password visibility
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Define submit handler
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values, "val");
+
   }
+
+  // if(isLoading) return <MainLoading/>
 
   return (
     <Form {...form}>

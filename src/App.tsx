@@ -55,7 +55,7 @@ const App = () => {
                   key={route.key}
                   path={route.path}
                   element={
-                    <Suspense fallback={<p>Loading...</p>}>
+                    <Suspense fallback={<MainLoading/>}>
                       {route.element}
                     </Suspense>
                   }

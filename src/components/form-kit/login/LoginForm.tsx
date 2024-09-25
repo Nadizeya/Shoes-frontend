@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 
-import { useApiSend } from "@/utils/useQueryHook";
+import { useMutation } from "@tanstack/react-query";
 import { postLogin } from "@/api/endpoints/authApi";
 
 // Define schema with both email and password validation
@@ -51,14 +51,6 @@ type LoginPropsT = {
   mobile?: boolean;
 };
 
-// Define success and error handlers
-const onSuccess = (data) => {
-  console.log(data);
-};
-
-const onError = (error) => {
-  console.error("Login failed:", error);
-};
 
 function LoginForm({ mobile }: LoginPropsT) {
   const [showPassword, setShowPassword] = useState(false);
@@ -71,10 +63,8 @@ function LoginForm({ mobile }: LoginPropsT) {
     },
   });
 
-  const { mutate } = useApiSend(postLogin, onSuccess, onError, [], {});
-
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    mutate(data);
+
     // toast({
     //   title: "You submitted the following values:",
     //   description: (

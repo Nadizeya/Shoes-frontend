@@ -11,7 +11,7 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "4rem",
       screens: {
         "2xl": "1400px",
       },
@@ -21,6 +21,7 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        main : "hsl(0, 0% , 20%)",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
