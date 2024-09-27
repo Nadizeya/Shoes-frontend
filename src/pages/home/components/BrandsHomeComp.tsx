@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { products } from "../products";
-import ProductCard from "./ProductCard";
+import ProductCard from "../../../components/shared/ProductCard";
 
 const BrandsHomeComp = () => {
   return (

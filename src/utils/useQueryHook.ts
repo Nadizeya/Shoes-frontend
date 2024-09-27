@@ -1,7 +1,16 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 
-export const useApiGet = (key: string[], fn: () => void, options) =>
-  useQuery({
+export const useApiGet = <T>(
+  key: string[],
+  fn: () => Promise<T>,
+  options?: any
+): UseQueryResult<T> =>
+  useQuery<T>({
     queryKey: key,
     queryFn: fn,
     ...options,
