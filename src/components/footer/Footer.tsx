@@ -1,7 +1,8 @@
-import Logo from "/assets/logo/logo.jpg";
-import Facebook from "/assets/logo/facebook.jpg";
-import Instagram from "/assets/logo/instagram.jpg";
-import Gmail from "/assets/logo/gmail.jpg";
+import Logo from "/assets/footer/Badge.png";
+import Facebook from "/assets/footer/facebook.svg";
+import Instagram from "/assets/footer/instagram.svg";
+import Gmail from "/assets/footer/gmail.svg";
+import Icon from "../ui/icon";
 import useResponsive from "@/utils/useResponsive";
 
 const MobileAndTabletFooter = () => {
@@ -39,22 +40,18 @@ const DesktopFooter = () => {
         <ul className="flex items-center gap-4">
           <li className="cursor-pointer">
             <a target="_blank" href="www.facebook.com">
-              <img src={Facebook} width={30} height={30} alt="facebook logo" />
+          
+              <Icon width={30} height={30} src={Facebook} alt="facebook" />
             </a>
           </li>
           <li className="cursor-pointer">
             <a target="_blank" href="www.instagram.com">
-              <img
-                src={Instagram}
-                width={50}
-                height={50}
-                alt="instagram logo"
-              />
+            <Icon width={30} height={30} src={Instagram} alt="instagram" />
             </a>
           </li>
           <li className="cursor-pointer">
             <a target="_blank" href="www.gmail.com">
-              <img src={Gmail} width={30} height={30} alt="instagram logo" />
+            <Icon width={30} height={30} src={Gmail} alt="gmail" />
             </a>
           </li>
         </ul>
@@ -72,10 +69,10 @@ const Footer = () => {
   console.log(mobile_tablet);
   return (
     <footer className="bg-main text-white container py-16">
-      {desktopResponsive && <DesktopFooter />}
-      {mobile_tablet && <MobileAndTabletFooter />}
-    </footer>
-  );
-};
+    {desktopResponsive && <DesktopFooter />}
+    {mobile_tablet && <MobileAndTabletFooter />}
+  </footer>
+  )
+}
 
 export default Footer;
