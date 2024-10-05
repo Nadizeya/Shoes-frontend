@@ -1,90 +1,115 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
 import { useAuth } from "@/utils/useAuth";
-import { Button } from "@/components/ui/button";
+import Community from "/assets/header/community.svg";
+import Profile from "/assets/header/profile.svg";
+import Wishlist from "/assets/header/heart.svg";
+import Heart from "/assets/header/wishlist.svg";
+import SearchBar from "../shared/Search";
+import Icon from "../ui/icon";
+import { Separator } from "@/components/ui/separator";
+import ProfileDropDown from "./ProfileDropDown";
+import { useState } from "react";
+import { DropdownMenuTrigger, DropdownMenu } from "../ui/dropdown-menu";
+import { Link, useNavigate } from "react-router-dom";
 
 type AuthenticatedT = boolean | null | string;
 
-const navLinks: Record<"path" | "link_name", string>[] = [
-  {
-    path: "/",
-    link_name: "Home",
-  },
-  {
-    path: "brands",
-    link_name: "Brands",
-  },
-  {
-    path: "products",
-    link_name: "Products",
-  },
-];
+const renderLogo = () => {
+  return (
+    <Link to={"/"}>
+      <h1 className="font-bold text-2xl ">Nadi Yoon Htike</h1>
+    </Link>
+  );
+};
 
 const renderNavLinks = () => {
-  return (
-    <>
-      {navLinks.map((navlink, index: number) => (
-        <React.Fragment key={navlink.path + index}>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? "text-red-500 font-bold" : ""
-            }
-            to={navlink.path}
-          >
-            {navlink.link_name}
-          </NavLink>
-        </React.Fragment>
-      ))}
-    </>
-  );
-};
+  const [showDropDown, setShowDropDown] = useState<boolean | null>(false);
+  const navigate = useNavigate();
+  const handleClick = () => {
+    setShowDropDown(true);
+  };
 
-const renderAuthBtn = (authenticated: AuthenticatedT) => {
-  if (authenticated) {
-    return <li>Avatar</li>;
-  }
   return (
-    <>
-      <li>
-        <NavLink to={`/login`}>
-          <Button>Login</Button>
-        </NavLink>
-      </li>
-      <li>
-        <NavLink to={`/register`}>
-          <Button variant="secondary" size="sm">
-            Create Account
-          </Button>
-        </NavLink>
-      </li>
-    </>
-  );
-};
+    <div className="flex gap-7">
+      <div className="flex gap-4 items-center">
+        <div className="flex gap-2">
+          <Icon src={Community} alt="Store Icon" />
 
-const MobileNav = ({ authenticated }: { authenticated: AuthenticatedT }) => {
-  console.log(authenticated);
-  return (
-    <nav className="md:hidden absolute inset-0 bg-red-500">
-      <h1>LOGO</h1>
+          <span className="text-sm font-semibold">Community</span>
+        </div>
+        <Separator orientation="vertical" />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div
+              className="flex items-center gap-2 cursor-pointer"
+              onClick={handleClick}
+            >
+              <div>
+                <Icon src={Profile} alt="Logo Profile" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">Sign In</span>
+                <small className="text-xs">For FREE Shipping</small>
+              </div>
+              {showDropDown && <ProfileDropDown />}
+            </div>
+          </DropdownMenuTrigger>
+        </DropdownMenu>
+      </div>
 
-      <ul className="flex flex-col items-end bg-green-500 h-full">
-        {renderNavLinks()}
-        {renderAuthBtn(authenticated)}
-      </ul>
-    </nav>
+      <div className="flex gap-7">
+        <Link to={"/add-to-cart"}>
+          <Icon src={Wishlist} alt="Basket Icon" />
+        </Link>
+        <Icon src={Heart} alt="Wishlist Icon" />
+      </div>
+    </div>
   );
 };
 
 const DesktopNav = ({ authenticated }: { authenticated: AuthenticatedT }) => {
-  console.log(authenticated);
+  // console.log(authenticated);
 
   return (
-    <nav className="hidden md:flex items-center justify-between gap-2 ">
-      <h1>LOGO</h1>
+    <nav className="hidden md:flex items-center justify-evenly gap-2 ">
+      <div>{renderLogo()}</div>
+      <SearchBar />
 
-      <ul className="flex items-center gap-2">
+      {renderNavLinks()}
+      {/* {renderAuthBtn(authenticated)} */}
+    </nav>
+  );
+};
+// const renderAuthBtn = (authenticated: AuthenticatedT) => {
+//   if (authenticated) {
+//     return <li>Avatar</li>;
+//   }
+//   return (
+//     <>
+//       <li>
+//         <NavLink to={`/login`}>
+//           <Button>Login</Button>
+//         </NavLink>
+//       </li>
+//       <li>
+//         <NavLink to={`/register`}>
+//           <Button variant="secondary" size="sm">
+//             Create Account
+//           </Button>
+//         </NavLink>
+//       </li>
+//     </>
+//   );
+// };
+
+const MobileNav = ({ authenticated }: { authenticated: AuthenticatedT }) => {
+  // console.log(authenticated) ;
+  return (
+    <nav className="md:hidden absolute inset-0 bg-red-500">
+      <div>{renderLogo()}</div>
+
+      <ul className="flex flex-col items-end bg-green-500 h-full">
         {renderNavLinks()}
-        {renderAuthBtn(authenticated)}
+        {/* {renderAuthBtn(authenticated)} */}
       </ul>
     </nav>
   );
@@ -94,7 +119,7 @@ const Header = () => {
   const { authenticated } = useAuth();
 
   return (
-    <header className="bg-orange-400 w-full px-8 py-4 ">
+    <header className="w-full px-8 py-4 border-b-2">
       <MobileNav authenticated={authenticated} />
       <DesktopNav authenticated={authenticated} />
     </header>
