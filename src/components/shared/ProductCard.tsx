@@ -22,14 +22,16 @@ const ProductCard = ({
   price: string | number;
   tags?: String[];
 }) => {
-  console.log(image);
   return (
-    <Card key={id} className="p-2 min-w-[250px] w-[250px]">
-      <Link to={`/brands/${id}`}>
-        <CardContent className="cursor-pointer ">
+    <Card
+      key={id}
+      className="xl:p-2 lg:p-1 2xl:min-w-[230px] 2xl:w-[230px] xl:min-w-[200px] xl:w-[200px] lg:min-w-[180px] lg:w-[180px]"
+    >
+      <Link to={`/products/${id}`}>
+        <CardContent className="cursor-pointer p-3 ">
           <div className="relative mb-4">
             <img src={image} alt={title} />
-            <div className="absolute left-0 top-0 space-y-1 ">
+            <div className="absolute left-0 top-0 space-y-1">
               {tags?.map((tag, index) => (
                 <p
                   key={index}

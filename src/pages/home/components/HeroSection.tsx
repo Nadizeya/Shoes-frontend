@@ -1,8 +1,8 @@
 import React from "react";
-import HeroCard from "./HeroCard";
-import Hero1 from "/assets/logo/hero1.png";
-import Hero2 from "/assets/logo/hero2.png";
-import Hero3 from "/assets/logo/hero3.png";
+import HeroCard from "../../../components/shared/HeroCard";
+import Hero1 from "/assets/home/hero1.png";
+import Hero2 from "/assets/home/hero2.png";
+import Hero3 from "/assets/home/hero3.png";
 
 const HeroSection = () => {
   return (
