@@ -12,7 +12,7 @@ const SearchBar = () => {
     value: "",
   });
 
-  const [resultList, setResultList] = useState([{ id: 1, title: "AA" }]);
+  const [resultList, setResultList] = useState([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
