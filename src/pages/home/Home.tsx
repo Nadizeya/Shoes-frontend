@@ -1,5 +1,5 @@
-import BrandsHomeComp from "./components/BrandsHomeComp";
-import ProductsHomeComp from "./components/ProductsHomeComp";
+import BrandsHomeComp from "./components/ProductsHomeComp";
+import ProductsHomeComp from "./components/BrandsHomeComp";
 import HeroSection from "./components/HeroSection";
 import { useApiGet } from "@/utils/useQueryHook";
 import { GetAllResponse } from "@/types/common";
@@ -29,8 +29,8 @@ const Home = () => {
   return (
     <div className="space-y-5">
       <HeroSection />
-      <BrandsHomeComp />
       <ProductsHomeComp />
+      <BrandsHomeComp />
     </div>
   );
 };

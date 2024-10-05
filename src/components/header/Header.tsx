@@ -1,23 +1,29 @@
 import { useAuth } from "@/utils/useAuth";
 import Community from "/assets/header/community.svg";
 import Profile from "/assets/header/profile.svg";
-import Heart from "/assets/header/heart.svg";
-import Wishlist from "/assets/header/wishlist.svg";
+import Wishlist from "/assets/header/heart.svg";
+import Heart from "/assets/header/wishlist.svg";
 import SearchBar from "../shared/Search";
 import Icon from "../ui/icon";
 import { Separator } from "@/components/ui/separator";
 import ProfileDropDown from "./ProfileDropDown";
 import { useState } from "react";
 import { DropdownMenuTrigger, DropdownMenu } from "../ui/dropdown-menu";
+import { Link, useNavigate } from "react-router-dom";
 
 type AuthenticatedT = boolean | null | string;
 
 const renderLogo = () => {
-  return <h1 className="font-bold text-2xl">Nadi Yoon Htike</h1>;
+  return (
+    <Link to={"/"}>
+      <h1 className="font-bold text-2xl ">Nadi Yoon Htike</h1>
+    </Link>
+  );
 };
 
 const renderNavLinks = () => {
   const [showDropDown, setShowDropDown] = useState<boolean | null>(false);
+  const navigate = useNavigate();
   const handleClick = () => {
     setShowDropDown(true);
   };
@@ -51,8 +57,10 @@ const renderNavLinks = () => {
       </div>
 
       <div className="flex gap-7">
-        <Icon src={Heart} alt="Heart Icon" />
-        <Icon src={Wishlist} alt="Wishlist Icon" />
+        <Link to={"/add-to-cart"}>
+          <Icon src={Wishlist} alt="Basket Icon" />
+        </Link>
+        <Icon src={Heart} alt="Wishlist Icon" />
       </div>
     </div>
   );
