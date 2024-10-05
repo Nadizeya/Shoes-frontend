@@ -19,7 +19,7 @@ module.exports = {
     extend: {
       colors: {
         border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
+        input: "#F1F4FF",
         ring: "hsl(var(--ring))",
         main : "hsl(0, 0% , 20%)",
         background: "hsl(var(--background))",
@@ -55,6 +55,7 @@ module.exports = {
         buttonbg: "#323232",
         inputbg: "#F1F4FF",
         pinkbg: "#F8C6D5",
+        textColor: "#323232",
       },
       borderRadius: {
         lg: "var(--radius)",

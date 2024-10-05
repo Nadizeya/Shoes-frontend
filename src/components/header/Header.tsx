@@ -21,9 +21,18 @@ import {
 
 import TinyLogo from "/assets/logo/blackwhitelogo.jpg";
 import { useAuth } from "@/utils/useAuth";
+// import SearchBar from "../shared/Search";
 import SearchBar from "./components/Search";
 import SecondHeader from "./SecondHeader";
 import { useAppSelector } from "@/store/hook";
+// import Logo from "/assets/logo/headerlogo.jpg";
+// import Store from "/assets/logo/Vector.svg";
+// import Community from "/assets/logo/community.svg";
+// import Profile from "/assets/logo/Group.svg";
+// import Heart from "/assets/logo/heart.svg";
+// import Wishlist from "/assets/logo/wishlist.svg";
+// import Icon from "../ui/icon";
+// import { Separator } from "@/components/ui/separator";
 
 type AuthenticatedT = boolean | null | string;
 
@@ -72,76 +81,6 @@ const dropDownOptions: dropDownOptionT[] = [
     path: "/login",
   },
 ];
-
-const navLinks: Record<"path" | "link_name", string>[] = [
-  {
-    path: "/",
-    link_name: "Home",
-  },
-  {
-    path: "brands",
-    link_name: "Brands",
-  },
-  {
-    path: "products",
-    link_name: "Products",
-  },
-];
-
-const renderNavLinks = () => {
-  return (
-    <>
-      {navLinks.map((navlink, index: number) => (
-        <React.Fragment key={navlink.path + index}>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? "text-red-500 font-bold" : ""
-            }
-            to={navlink.path}
-          >
-            {navlink.link_name}
-          </NavLink>
-        </React.Fragment>
-      ))}
-    </>
-  );
-};
-
-const renderAuthBtn = (authenticated: AuthenticatedT) => {
-  if (authenticated) {
-    return <li>Avatar</li>;
-  }
-  return (
-    <>
-      <li>
-        <NavLink to={`/login`}>
-          <Button>Login</Button>
-        </NavLink>
-      </li>
-      <li>
-        <NavLink to={`/register`}>
-          <Button variant="secondary" size="sm">
-            Create Account
-          </Button>
-        </NavLink>
-      </li>
-    </>
-  );
-};
-
-const MobileNav = ({ authenticated }: { authenticated: AuthenticatedT }) => {
-  console.log(authenticated);
-  return (
-    <nav className="md:hidden absolute inset-0 bg-red-500">
-      <h1>Nadi Yoon Htike</h1>
-
-      <ul className="flex flex-col items-end bg-green-500 h-full">
-        {renderNavLinks()}
-        {renderAuthBtn(authenticated)}
-      </ul>
-    </nav>
-  );
-};
 
 const DesktopNav = ({
   authenticated,
@@ -242,7 +181,9 @@ const DesktopNav = ({
           </DropdownMenu>
         </li>
         <li>
-          <NotificationBadge icon={<Heart size={23} />} count={10} />
+          <Link to="/love-list">
+            <NotificationBadge icon={<Heart size={23} />} count={10} />
+          </Link>
         </li>
         <li className="flex items-center gap-4">
           <NotificationBadge icon={<Basket size={23} />} count={5} />
@@ -252,13 +193,18 @@ const DesktopNav = ({
   );
 };
 
+const MobileNav = ({ authenticated }: { authenticated: AuthenticatedT }) => {
+  console.log(authenticated);
+  return <nav>Mobile Nav</nav>;
+};
+
 const Header = () => {
   const { authenticated, logout } = useAuth();
 
   return (
     <div className="">
       <header className="bg-white container py-6">
-        <MobileNav authenticated={authenticated} />
+        {/* <MobileNav authenticated={authenticated} /> */}
         <DesktopNav authenticated={authenticated} logout={logout} />
       </header>
       <SecondHeader />

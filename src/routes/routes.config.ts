@@ -5,11 +5,12 @@ import { wishListRoutes } from "./wishList/wishListRoutes";
 import { checkOutRoutes } from "./checkout/CheckOutRoute";
 import { homeRoutes } from "./home/homeRoutes";
 import { profileRoutes } from "./profile/profileRoutes";
+import { loveRoutes } from "./loves/LoveRoute";
 import { addToCartRoutes } from "./addtocart/addToCartRoutes";
 
 export const authenticationRoutes = [...authRoutes];
 
-export const publicRoutes = [...homeRoutes, ...productRoutes, ...brandRoutes];
+export const publicRoutes = [...homeRoutes, ...productRoutes, ...brandRoutes, ...loveRoutes];
 
 export const privateRoutes = [
   ...profileRoutes,

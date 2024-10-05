@@ -5,7 +5,7 @@ import HeroSection from "./components/HeroSection";
 const Home = () => {
 
   return (
-    <div>
+    <div className="space-y-5">
       <HeroSection />
       <BrandsHomeComp />
       <ProductsHomeComp />

@@ -12,8 +12,7 @@ const SearchBar = () => {
     value: "",
   });
 
-  // console.log(query);
-  const [resultList, setResultList] = useState([]);
+  const [resultList, setResultList] = useState([{ id: 1, title: "AA" }]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,12 +40,12 @@ const SearchBar = () => {
                 ...prev,
                 value: e.target.value,
               }));
-              const result = await axios.get(
-                "https://rickandmortyapi.com/api/character"
-              );
+              // const result = await axios.get(
+              //   "https://rickandmortyapi.com/api/character"
+              // );
 
-              // console.log(result?.data?.results);
-              setResultList(result?.data?.results);
+              // // console.log(result?.data?.results);
+              // setResultList(result?.data?.results);
             }}
           />
           <Button className="hidden" type="submit">
