@@ -17,7 +17,7 @@ const categories: string[] = [
 const SecondHeader = () => {
   // soon later we need to fetch api for all main category
   return (
-    <div className="container bg-main py-5 text-white flex items-center justify-between">
+    <div className="px-8 bg-main py-5 text-white flex items-center justify-between">
       {categories.map((category, index: number) => (
         <p className="text-sm cursor-pointer" key={index}>
           {category}

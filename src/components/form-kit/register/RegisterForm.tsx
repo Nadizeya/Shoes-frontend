@@ -14,23 +14,21 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import MainLoading from "@/components/shared/MainLoading";
-
 import { postRegister } from "@/api/endpoints/authApi";
-
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "@/components/ui/use-toast";
+import login from "../login";
 
 const formSchema = z
   .object({
-    contact: z
+    email: z
       .string()
-      .refine(
-        (value) =>
-          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
-          /^\+?\d{10,15}$/.test(value),
-        {
-          message: "Please enter a valid phone number or contact!",
-        }
-      ),
+      .refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
+        message: "Please enter a valid email!",
+      }),
+    name: z.string().min(3, {
+      message: "Your name must be at least 3 characters",
+    }),
     password: z
       .string()
       .min(6, { message: "Password must be at least 6 characters long." })
@@ -55,23 +53,39 @@ const formSchema = z
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-   // State for toggling password visibility
-   const [showPassword, setShowPassword] = useState(false);
-   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { mutate, isError } = useMutation({
+    mutationFn: postRegister,
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      contact: "",
+      email: "",
+      name: "",
       password: "",
     },
   });
 
-
   // Define submit handler
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values, "val");
-
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    mutate(data, {
+      onSuccess: (response) => {
+        toast({
+          title: "Your account is created Sucessful",
+          variant: "default",
+        });
+        const data = response.data;
+        // login(data);
+        navigate("/");
+        localStorage.setItem("authToken", data.token);
+      },
+      onError: (err) => {
+        setErrorMessage(err.response?.data?.message || "Login failed"); // Extract message or set a default
+      },
+    });
   }
 
   // if(isLoading) return <MainLoading/>
@@ -83,15 +97,14 @@ const RegisterForm = () => {
         className="lg:flex lg:flex-col lg:justify-between h-[75%]"
       >
         <div className="grid grid-cols-1 gap-5">
-          {/* EMail or phone */}
           <FormField
             control={form.control}
-            name="contact"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
                   <Input
-                    placeholder="Email or Phone"
+                    placeholder="Name"
                     className="bg-gray-100"
                     {...field}
                   />
@@ -100,6 +113,24 @@ const RegisterForm = () => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="Email"
+                    className="bg-gray-100"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/*name number*/}
+
           {/* Password */}
           <FormField
             control={form.control}

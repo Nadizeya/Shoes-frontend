@@ -21,18 +21,10 @@ import {
 
 import TinyLogo from "/assets/logo/blackwhitelogo.jpg";
 import { useAuth } from "@/utils/useAuth";
-// import SearchBar from "../shared/Search";
 import SearchBar from "./components/Search";
 import SecondHeader from "./SecondHeader";
 import { useAppSelector } from "@/store/hook";
-// import Logo from "/assets/logo/headerlogo.jpg";
-// import Store from "/assets/logo/Vector.svg";
-// import Community from "/assets/logo/community.svg";
-// import Profile from "/assets/logo/Group.svg";
-// import Heart from "/assets/logo/heart.svg";
-// import Wishlist from "/assets/logo/wishlist.svg";
-// import Icon from "../ui/icon";
-// import { Separator } from "@/components/ui/separator";
+import SubHeader from "../SubHeader/SubHeader";
 
 type AuthenticatedT = boolean | null | string;
 
@@ -57,14 +49,14 @@ const dropDownOptions: dropDownOptionT[] = [
     icon: <Package size={23} />,
     title: "Orders",
     desc: "View and track online or pickup orders",
-    path: "/login",
+    path: "/wishlist",
   },
   {
     id: 3,
     icon: <Heart size={23} />,
     title: "Loves",
     desc: "View saved products",
-    path: "/login",
+    path: "/love-listk",
   },
   {
     id: 4,
@@ -82,6 +74,16 @@ const dropDownOptions: dropDownOptionT[] = [
   },
 ];
 
+const getGreeting = () => {
+  const hours = new Date().getHours();
+  if (hours < 12) {
+    return "Good Morning";
+  } else if (hours < 18) {
+    return "Good Afternoon";
+  } else {
+    return "Good Evening";
+  }
+};
 const DesktopNav = ({
   authenticated,
   logout,
@@ -92,11 +94,13 @@ const DesktopNav = ({
   console.log(authenticated);
   const navigate = useNavigate();
 
-  const loginUserName = useAppSelector((state) => state.user.username);
+  const loginUserName = useAppSelector((state) => state.user.name);
 
   return (
     <nav className="hidden md:flex items-center justify-between gap-2 ">
-      <h1 className="text-2xl font-black">Nadi Yoon Htike</h1>
+      <Link to={"/"}>
+        <h1 className="text-2xl font-black">Nadi Yoon Htike</h1>
+      </Link>
 
       <SearchBar />
 
@@ -110,10 +114,18 @@ const DesktopNav = ({
                 height={35}
                 alt="black and white logo"
               />
-              <div className="flex flex-col items-start">
-                <h6 className="font-bold">Sign In</h6>
-                <p className="text-xs">FOR FREE SHIPPING</p>
-              </div>
+              {!authenticated && (
+                <div className="flex flex-col items-start">
+                  <h6 className="font-bold">Sign In</h6>
+                  <p className="text-xs">FOR FREE SHIPPING</p>
+                </div>
+              )}
+              {authenticated && (
+                <div className="flex flex-col items-start">
+                  <h6 className="font-bold">Hi, {loginUserName}</h6>
+                  <p className="text-xs"> {getGreeting()}</p>
+                </div>
+              )}
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>
@@ -127,10 +139,10 @@ const DesktopNav = ({
                     />
                     <div className="flex flex-col items-start">
                       <h6 className="font-bold">
-                        Happy weekend,{" "}
-                        {!authenticated ? loginUserName : "Beautiful"}
+                        {getGreeting() + " "}
+                        {authenticated ? loginUserName : "Beautiful"}
                       </h6>
-                      {authenticated && (
+                      {!authenticated && (
                         <p className="text-xs">
                           Sign in for <b className="font-bold">Free Delivery</b>{" "}
                           on all of your first orders
@@ -139,7 +151,7 @@ const DesktopNav = ({
                     </div>
                   </div>
 
-                  {authenticated && (
+                  {!authenticated && (
                     <div className="grid grid-cols-2 items-center gap-2">
                       <Button
                         className="rounded-full h-9"
@@ -185,9 +197,11 @@ const DesktopNav = ({
             <NotificationBadge icon={<Heart size={23} />} count={10} />
           </Link>
         </li>
-        <li className="flex items-center gap-4">
-          <NotificationBadge icon={<Basket size={23} />} count={5} />
-        </li>
+        <Link to={"/checkout"}>
+          <li className="flex items-center gap-4">
+            <NotificationBadge icon={<Basket size={23} />} count={5} />
+          </li>
+        </Link>
       </ul>
     </nav>
   );
@@ -200,14 +214,15 @@ const MobileNav = ({ authenticated }: { authenticated: AuthenticatedT }) => {
 
 const Header = () => {
   const { authenticated, logout } = useAuth();
+  console.log(authenticated, "in header");
 
   return (
     <div className="">
-      <header className="bg-white container py-6">
+      <header className="bg-white px-8 py-4">
         {/* <MobileNav authenticated={authenticated} /> */}
         <DesktopNav authenticated={authenticated} logout={logout} />
       </header>
-      <SecondHeader />
+      <SubHeader />
     </div>
   );
 };

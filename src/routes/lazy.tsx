@@ -25,4 +25,3 @@ export const LazyLoveList = lazy(() => import("@/pages/loves"));
 export const LazyProfile = lazy(() => import("@/pages/profile"));
 export const LazyWishList = lazy(() => import("@/pages/wishList"));
 export const LazyCheckOut = lazy(() => import("@/pages/checkout"));
-export const LazyAddToCart = lazy(() => import("@/pages/addToCart"));

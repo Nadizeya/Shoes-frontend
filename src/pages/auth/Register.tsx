@@ -11,7 +11,7 @@ const DesktopRegisterComp = () => {
   return (
     <Card className="shadow-lg rounded-lg  border border-gray-100 h-[80vh] min-h-[80vh] max-h-[80vh]">
       <CardContent className="p-4 h-full">
-        <div className="text-center">
+        <div className="text-center mt-4">
           <h1 className="text-black text-2xl font-bold">Create Account</h1>
           <p className="my-4">
             Please create your account to explore all the products

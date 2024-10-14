@@ -40,18 +40,17 @@ const DesktopFooter = () => {
         <ul className="flex items-center gap-4">
           <li className="cursor-pointer">
             <a target="_blank" href="www.facebook.com">
-          
               <Icon width={30} height={30} src={Facebook} alt="facebook" />
             </a>
           </li>
           <li className="cursor-pointer">
             <a target="_blank" href="www.instagram.com">
-            <Icon width={30} height={30} src={Instagram} alt="instagram" />
+              <Icon width={30} height={30} src={Instagram} alt="instagram" />
             </a>
           </li>
           <li className="cursor-pointer">
             <a target="_blank" href="www.gmail.com">
-            <Icon width={30} height={30} src={Gmail} alt="gmail" />
+              <Icon width={30} height={30} src={Gmail} alt="gmail" />
             </a>
           </li>
         </ul>
@@ -68,11 +67,11 @@ const Footer = () => {
 
   console.log(mobile_tablet);
   return (
-    <footer className="bg-main text-white container py-16">
-    {desktopResponsive && <DesktopFooter />}
-    {mobile_tablet && <MobileAndTabletFooter />}
-  </footer>
-  )
-}
+    <footer className="bg-main text-white px-10 py-16">
+      {desktopResponsive && <DesktopFooter />}
+      {mobile_tablet && <MobileAndTabletFooter />}
+    </footer>
+  );
+};
 
 export default Footer;

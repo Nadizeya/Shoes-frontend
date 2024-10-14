@@ -9,7 +9,7 @@ const ProtectedRoutes = ({ redirectPath = "/login" }) => {
   Purpose of location
  - after login we will bring user "/" home or the visited page we use
 */
-  if (authenticated) {
+  if (!authenticated) {
     return <Navigate to={redirectPath} replace state={{ from: location }} />;
   }
 

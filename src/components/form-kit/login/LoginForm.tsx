@@ -15,14 +15,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
-
 import { useMutation } from "@tanstack/react-query";
 import { postLogin } from "@/api/endpoints/authApi";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/utils/useAuth";
 
-// Define schema with both email and password validation
+// Define schema with both username and password validation
 const FormSchema = z.object({
-  contact: z
+  username: z
     .string()
     .refine(
       (value) =>
@@ -52,27 +52,40 @@ type LoginPropsT = {
 };
 
 function LoginForm({ mobile }: LoginPropsT) {
+  const { toast } = useToast();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      contact: "",
-      password: "",
+      username: "nadilay@example.com",
+      password: "Password@123",
     },
   });
-
-  const { mutate } = useMutation(async (data) => postLogin(data));
+  const { mutate, isError } = useMutation({
+    mutationFn: postLogin,
+  });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // });
+    mutate(data, {
+      onSuccess: (response) => {
+        toast({
+          title: "Login Sucessful",
+          variant: "default",
+        });
+        const data = response.data;
+        login(data);
+        navigate("/");
+        localStorage.setItem("authToken", data.token);
+      },
+      onError: (err) => {
+        setErrorMessage(err.response?.data?.message || "Login failed"); // Extract message or set a default
+      },
+    });
+
+    console.log(data);
   }
 
   const mobileClassName = "flex flex-col justify-between gap-5";
@@ -87,13 +100,13 @@ function LoginForm({ mobile }: LoginPropsT) {
         <div className="flex flex-col gap-4">
           <FormField
             control={form.control}
-            name="contact"
+            name="username"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
                   <Input
                     className="bg-gray-100"
-                    placeholder="Email"
+                    placeholder="Email or PhoneNumber"
                     {...field}
                   />
                 </FormControl>
@@ -126,9 +139,10 @@ function LoginForm({ mobile }: LoginPropsT) {
               </FormItem>
             )}
           />
+          {isError && <small className="text-red-600">{errorMessage}</small>}
           <FormDescription
             className="text-blue-500 cursor-pointer"
-            onClick={() => navigate("/reset-password")}
+            onClick={() => navigate("/change-password")}
           >
             Forgot your Password?
           </FormDescription>
@@ -138,7 +152,7 @@ function LoginForm({ mobile }: LoginPropsT) {
             Sign In
           </Button>
           <p
-            className="text-center cursor-pointer mt-2"
+            className="text-center cursor-pointer mt-2 text-sm"
             onClick={() => navigate("/register")}
           >
             Create new account

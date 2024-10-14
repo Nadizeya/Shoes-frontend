@@ -20,41 +20,70 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useAppSelector } from "@/store/hook";
+import { postOtpValidation } from "@/api/endpoints/authApi";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const FormSchema = z.object({
-  pin: z.string().min(6, {
+  otp: z.string().min(6, {
     message: "Your one-time password must be 6 characters.",
   }),
 });
 
 export function InputOTPForm() {
+  const navigate = useNavigate();
+  const email = useAppSelector((state) => state.user.email);
+  const [errorMessage, setErrorMessage] = useState("");
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      pin: "",
+      otp: "",
     },
   });
+  type FormDataWithEmail = { email: string; otp_code: number };
+  const { mutate, isError } = useMutation({
+    mutationFn: postOtpValidation,
+  });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+  function onSubmit(data: FormDataWithEmail) {
+    const otpAsNumber = Number(data.otp);
+
+    if (isNaN(otpAsNumber)) {
+      setErrorMessage("Invalid OTP value");
+      return;
+    }
+    data = { otp_code: otpAsNumber, email: email };
+    mutate(data, {
+      onSuccess: (response) => {
+        console.log(response.data);
+        toast({
+          title: "You submitted the following values:",
+          description: (
+            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+              <code className="text-white">
+                {JSON.stringify(data, null, 2)}
+              </code>
+            </pre>
+          ),
+        });
+        navigate("/reset-password");
+      },
+      onError: (err) => {
+        setErrorMessage(err.response?.data?.msg || "Wrong OTP code"); // Extract message or set a default
+      },
     });
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <FormField
           control={form.control}
-          name="pin"
+          name="otp"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>One-Time Password</FormLabel>
+            <FormItem className="">
               <FormControl>
                 <InputOTP maxLength={6} {...field}>
                   <InputOTPGroup>
@@ -81,8 +110,15 @@ export function InputOTPForm() {
             </FormItem>
           )}
         />
+        {errorMessage && (
+          <small className="text-red-600 mt-4">{errorMessage}</small>
+        )}
 
-        <Button type="submit" variant="welcome" className="w-full text-lg">
+        <Button
+          type="submit"
+          variant="welcome"
+          className="w-full text-lg place-self-center"
+        >
           Continue
         </Button>
       </form>

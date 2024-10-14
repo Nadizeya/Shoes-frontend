@@ -9,7 +9,7 @@ import { ArrowLeft } from "lucide-react";
 
 const DesktopLoginComp = () => {
   return (
-    <Card className="shadow-lg rounded-lg  border border-gray-100 h-[80vh] min-h-[80vh] max-h-[80vh]">
+    <Card className="shadow-lg rounded-lg  border border-gray-100 h-[80vh] min-h-[80vh] max-h-[80vh] pt-8">
       <CardContent className="p-4 h-full">
         <div className="text-center ">
           <h1 className="text-black text-2xl font-bold">Welcome Back</h1>

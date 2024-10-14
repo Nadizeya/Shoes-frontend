@@ -4,6 +4,7 @@ import { data } from "./data";
 import { useAppSelector } from "@/store/hook";
 
 const DesktopNav = () => {
+  // const maincategories = data;
   const maincategories = useAppSelector((state) => state.home.maincategroies);
   console.log(maincategories, "in subheader");
 

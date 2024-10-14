@@ -1,3 +1,3 @@
-import CheckOut from "./CheckOut";
+import Checkout from "./Checkout";
 
-export default CheckOut;
+export default Checkout;

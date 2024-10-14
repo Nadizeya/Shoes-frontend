@@ -1,15 +1,31 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "@/store/slices/user/userSlice";
 import authReducer from "@/store/slices/auth/authSlice";
 import homeReducer from "@/store/slices/Home/homeSlice";
+import checkoutReducer from "@/store/slices/Checkout/checkOutSlice";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
+const rootReducer = combineReducers({
+  user: userReducer,
+  auth: authReducer,
+  home: homeReducer,
+  checkout: checkoutReducer,
+});
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth", "user"], // Only persist 'auth' and 'user' slices
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    user: userReducer,
-    auth: authReducer,
-    home: homeReducer,
-  },
+  reducer: persistedReducer,
 });
+
+export const persistor = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

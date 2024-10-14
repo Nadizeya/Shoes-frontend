@@ -21,7 +21,7 @@ module.exports = {
         border: "hsl(var(--border))",
         input: "#F1F4FF",
         ring: "hsl(var(--ring))",
-        main : "hsl(0, 0% , 20%)",
+        main: "hsl(0, 0% , 20%)",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
@@ -53,7 +53,6 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         buttonbg: "#323232",
-        inputbg: "#F1F4FF",
         pinkbg: "#F8C6D5",
         textColor: "#323232",
       },

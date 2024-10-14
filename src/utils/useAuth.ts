@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import {
   accessTokenState,
+  signInSuccess,
   signOutSuccess,
 } from "@/store/slices/auth/authSlice";
 import { setUser } from "@/store/slices/user/userSlice";
@@ -8,11 +9,14 @@ import { useAppSelector, useAppDispatch } from "@/store/hook";
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const { access_token, signedIn } = useAppSelector(accessTokenState);
+  const { token, signedIn } = useAppSelector(accessTokenState);
   const navigate = useNavigate();
 
   // this will probably be api fetching
-  const login = () => {};
+  const login = (data: any) => {
+    dispatch(signInSuccess(data));
+    dispatch(setUser(data));
+  };
 
   // this will probably be api fetching
   const register = () => {};
@@ -20,7 +24,9 @@ export function useAuth() {
   const handleLogOut = () => {
     dispatch(
       setUser({
-        username: "",
+        name: "",
+        id: 0,
+        role: "",
         email: "",
         phone: "",
       })
@@ -34,7 +40,7 @@ export function useAuth() {
   };
 
   return {
-    authenticated: access_token && signedIn,
+    authenticated: token && signedIn,
     login,
     register,
     logout,

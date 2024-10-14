@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Warejeans from "/assets/forgotpassword.jpg";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/components/ui/use-toast";
 import {
   Form,
   FormControl,
@@ -14,13 +15,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { postForgotPassword } from "@/api/endpoints/authApi";
+import { useMutation } from "@tanstack/react-query";
+import { setEmail, setUser } from "@/store/slices/user/userSlice";
+import { useAppDispatch } from "@/store/hook";
 
 const FormSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
+  email: z.string().email(),
 });
 
 const ResetPassword = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -28,17 +36,23 @@ const ResetPassword = () => {
     },
   });
 
+  const { mutate, isError } = useMutation({
+    mutationFn: postForgotPassword,
+  });
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-    //     </pre>
-    //   ),
-    // });
-    console.log(data);
-    navigate("/change-password/otp-validation");
+    mutate(data, {
+      onSuccess: (response) => {
+        toast({
+          title: "OTP code has been sent to your Email successfully!!",
+        });
+        dispatch(setEmail(data));
+        navigate("/change-password/otp-validation");
+      },
+      onError: (err) => {
+        setErrorMessage(err.response?.data?.msg || "Email is invalid"); // Extract message or set a default
+      },
+    });
   }
 
   return (
@@ -46,15 +60,13 @@ const ResetPassword = () => {
       <div className="w-full h-full flex sm:w-[50%] md:w-[60%]">
         <div className=" bg-pinkbg h-full w-1/2 z-0"></div>
 
-        <div className="flex items-center justify-center -ml-32 z-10 ">
-          <img
-            src={Warejeans}
-            alt=""
-            className="w-[300px] sm:w-[250px] md:w-[300px] md:h-[300px] lg:w-[400px] h-[300px] lg:h-[400px] sm:h-[250px] sm:shadow-lg sm:border-r-hidden sm:rounded-l-3xl"
-          />
+        <div className="flex items-center justify-center -ml-32 xl:-ml-48 z-10 ">
+          <div className=" flex items-center justify-center bg-white w-[300px] sm:w-[250px] md:w-[350px] md:h-[350px] lg:w-[400px] lg:h-[400px] xl:w-[500px] h-[300px] xl:h-[500px] sm:h-[250px] sm:shadow-lg sm:border-r-hidden sm:rounded-l-3xl">
+            <img src={Warejeans} alt="" />
+          </div>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center sm:py-5 py-10 w-full sm:w-[50%] md:w-[40%] space-y-4 sm:shadow-lg sm:rounded-b-3xl px-4 sm:p-0">
+      <div className="flex flex-col items-center justify-center sm:py-5 py-10 w-full sm:w-[60%] md:w-[40%] lg:w-[30%] xl:w-[35%]  md:mr-16 space-y-4 sm:shadow-lg sm:rounded-b-3xl px-4 sm:p-0">
         <div className="w-full sm:w-[85%] space-y-4">
           <h1 className="text-center font-bold text-2xl">Forgot Password?</h1>
           <p className="">
@@ -72,7 +84,7 @@ const ResetPassword = () => {
                   <FormItem>
                     <FormControl>
                       <Input
-                        className="bg-inputbg font-sans"
+                        className="bg-input font-sans"
                         type="email"
                         placeholder="Enter your Email"
                         {...field}
@@ -82,6 +94,9 @@ const ResetPassword = () => {
                   </FormItem>
                 )}
               />
+              {errorMessage && (
+                <small className="text-red-600">{errorMessage}</small>
+              )}
               <Button
                 type="submit"
                 variant="welcome"
