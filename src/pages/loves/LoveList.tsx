@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { CaretLeft, Export, CaretDown } from "@phosphor-icons/react";
 import { FaRegHeart } from "react-icons/fa";
-import { Heart } from "lucide-react";
 import { FaHeart } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
