@@ -98,7 +98,7 @@ const DesktopNav = ({
   return (
     <nav className="hidden md:flex items-center justify-between gap-2 ">
       <Link to={"/"}>
-        <h1 className="text-2xl font-black">Nadi Yoon Htike</h1>
+        <h1 className="text-2xl font-black cursor-pointer">Nadi Yoon Htike</h1>
       </Link>
 
       <SearchBar />

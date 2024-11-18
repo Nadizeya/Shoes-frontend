@@ -42,10 +42,10 @@ h1 {
   font-weight: 700;
   font-size: 20px;
 }
-ul,
+/* ul,
 li {
   list-style: none;
-}
+} */
 
 .search:focus{
   outline: none !important;
