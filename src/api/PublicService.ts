@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const BASE_URL = "http://localhost:8000/api/v1";
-const BASE_URL = "http://192.168.1.38:9000/api/";
+const BASE_URL = "http://192.168.1.35:9000/api/";
 
 // const BASE_URL = "https://jsonplaceholder.typicode.com";
 

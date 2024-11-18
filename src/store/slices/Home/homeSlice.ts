@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ProductT } from "@/types/common";
 import {
-  Data,
+  HomeData,
   MainCategory,
   Maincategroies,
   Products,
@@ -20,7 +20,7 @@ const initialProductState: ProductT = {
   short_description: "",
 };
 
-const initialHomeState: Data = {
+const initialHomeState: HomeData = {
   maincategroies: [],
   products: {
     total: 0,

@@ -1,6 +1,6 @@
 import { BrandT, CategoryT, ProductT } from "../common";
 
-export interface Data {
+export interface HomeData {
   maincategroies: Maincategroies;
   products: Products;
 }

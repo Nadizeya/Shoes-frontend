@@ -14,23 +14,22 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import MainLoading from "@/components/shared/MainLoading";
-
 import { postRegister } from "@/api/endpoints/authApi";
-
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "@/components/ui/use-toast";
+import login from "../login";
+import { useAuth } from "@/utils/useAuth";
 
 const formSchema = z
   .object({
-    contact: z
+    email: z
       .string()
-      .refine(
-        (value) =>
-          /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
-          /^\+?\d{10,15}$/.test(value),
-        {
-          message: "Please enter a valid phone number or contact!",
-        }
-      ),
+      .refine((value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), {
+        message: "Please enter a valid email!",
+      }),
+    name: z.string().min(3, {
+      message: "Your name must be at least 3 characters",
+    }),
     password: z
       .string()
       .min(6, { message: "Password must be at least 6 characters long." })
@@ -40,8 +39,7 @@ const formSchema = z
           /[0-9]/.test(value) && // at least one digit
           /[!@#$%^&*(),.?":{}|<>]/.test(value), // at least one special character
         {
-          message:
-            "Password must contain at least one digit, one lowercase letter, and one special character.",
+          message: "At least one special,number and uppercase!",
         }
       ),
     confirmPassword: z.string().min(1, {
@@ -55,23 +53,45 @@ const formSchema = z
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-   // State for toggling password visibility
-   const [showPassword, setShowPassword] = useState(false);
-   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { register } = useAuth();
+
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { mutate, isError } = useMutation({
+    mutationFn: postRegister,
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      contact: "",
+      email: "",
+      name: "",
       password: "",
     },
   });
 
-
   // Define submit handler
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values, "val");
-
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    mutate(data, {
+      onSuccess: (response) => {
+        toast({
+          title: "Your account is created Sucessful",
+          variant: "default",
+        });
+        const data = response.data;
+        register(data);
+        navigate("/");
+        localStorage.setItem("authToken", data.token);
+      },
+      onError: (err) => {
+        setErrorMessage(err.response?.data?.errors.email || "Login failed");
+        toast({
+          title: errorMessage,
+          variant: "destructive",
+        }); // Extract message or set a default
+      },
+    });
   }
 
   // if(isLoading) return <MainLoading/>
@@ -83,23 +103,32 @@ const RegisterForm = () => {
         className="lg:flex lg:flex-col lg:justify-between h-[75%]"
       >
         <div className="grid grid-cols-1 gap-5">
-          {/* EMail or phone */}
           <FormField
             control={form.control}
-            name="contact"
+            name="name"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    placeholder="Email or Phone"
-                    className="bg-gray-100"
-                    {...field}
-                  />
+                  <Input placeholder="Name" className="bg-input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Email" className="bg-input" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {/*name number*/}
+
           {/* Password */}
           <FormField
             control={form.control}
@@ -109,7 +138,7 @@ const RegisterForm = () => {
                 <FormControl>
                   <div className="relative">
                     <Input
-                      className="bg-gray-100"
+                      className="bg-input"
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       {...field}
@@ -135,7 +164,7 @@ const RegisterForm = () => {
                 <FormControl>
                   <div className="relative">
                     <Input
-                      className="bg-gray-100"
+                      className="bg-input"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm Your Password"
                       {...field}

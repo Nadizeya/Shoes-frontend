@@ -1,23 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type AuthT = { signedIn: boolean; access_token: string | null };
+type AuthT = { signedIn: boolean; token: string | null };
 
 const initialState: AuthT = {
   signedIn: false,
-  access_token: null,
+  token: null,
 };
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    signInSuccess(state, action: PayloadAction<AuthT>) {
+    signInSuccess(state, action: PayloadAction<string>) {
       state.signedIn = true;
-      state.access_token = action.payload.access_token;
+      state.token = action.payload;
     },
     signOutSuccess(state) {
       state.signedIn = false;
-      state.access_token = null;
+      state.token = null;
     },
   },
 });

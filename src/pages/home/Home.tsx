@@ -7,9 +7,12 @@ import { GetAllResponse } from "@/types/common";
 import { fetchProducts } from "@/api/endpoints/productsApi";
 import { Data } from "@/types/Home/homeTypes";
 import { fetchUsers } from "@/api/endpoints/userApi";
+
 import { useEffect } from "react";
 import { useAppDispatch } from "@/store/hook";
 import { setMainCategories, setProducts } from "@/store/slices/Home/homeSlice";
+import { fetchHome } from "@/api/endpoints/homeApi";
+import { useQuery } from "@tanstack/react-query";
 
 const Home = () => {
   const dispatch = useAppDispatch();
@@ -37,10 +40,13 @@ const Home = () => {
     }
   }, [data]);
   return (
-    <div className="space-y-5">
+    <div className="space-y-10 pb-10">
       <HeroSection />
-      <ProductsHomeComp />
-      <BrandsHomeComp />
+      {/* <ProductsHomeComp /> */}
+      <BrandsHomeComp id={1} name="Beauty Offers (25)" />
+      <BrandsHomeComp id={2} name="Chosen For You" />
+      <BrandsHomeComp id={3} name="New Arrival" />
+      <HeroSection />
     </div>
   );
 };

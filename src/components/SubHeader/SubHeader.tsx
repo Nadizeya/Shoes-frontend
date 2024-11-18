@@ -2,9 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import CategoriesDropDown from "./CategoriesDropDown";
 import { data } from "./data";
 import { useAppSelector } from "@/store/hook";
+import useResponsive from "@/utils/useResponsive";
 
-const DesktopNav = () => {
-  const maincategories = useAppSelector((state) => state.home.maincategroies);
+const SubHeader = () => {
+  const maincategories = data;
+  const { desktopResponsive, mobileResponsive, tabletResponsive } =
+    useResponsive();
   console.log(maincategories, "in subheader");
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -34,36 +37,55 @@ const DesktopNav = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [activeIndex]);
-  // console.log(activeIndex);
 
-  return (
-    <nav className="hidden md:flex items-center justify-evenly text-white text-xs ">
-      {maincategories.map((data) => (
-        <div key={data.id} ref={activeIndex === data.id ? dropdownRef : null}>
-          <p onClick={() => handleClick(data.id)} className="cursor-pointer">
+  const DesktopNav = () => {
+    return (
+      <nav className="flex items-center justify-evenly text-white text-xs ">
+        {maincategories.map((data: any) => (
+          <div key={data.id} ref={activeIndex === data.id ? dropdownRef : null}>
+            <p
+              onClick={() => handleClick(data.id)}
+              className={`cursor-pointer p-2 ${
+                activeIndex === data.id ? "text-blue-500" : ""
+              }`}
+            >
+              {data.name}
+            </p>
+            {activeIndex === data.id && (
+              <div className="absolute top-full left-0 w-full">
+                <CategoriesDropDown data={data.categories} />
+              </div>
+            )}
+          </div>
+        ))}
+      </nav>
+    );
+  };
+
+  const MobileNav = () => {
+    return (
+      <header className="flex justify-center items-center gap-4 px-3 overflow-x-scroll no-scrollbar text-black">
+        {maincategories.map((data: any) => (
+          <div
+            key={data.id}
+            className="text-xs px-3 py-1 border h-[50px] flex justify-center items-center "
+          >
             {data.name}
-          </p>
-          {activeIndex === data.id && (
-            <div className="absolute top-full left-0 w-full">
-              <CategoriesDropDown data={data.categories} />
-            </div>
-          )}
-        </div>
-      ))}
-    </nav>
-  );
-};
+          </div>
+        ))}
+      </header>
+    );
+  };
 
-const MobileNav = () => {
-  return <nav className="md:hidden absolute inset-0 bg-red-500"></nav>;
-};
-
-const SubHeader = () => {
   return (
-    <header className="bg-textColor w-full px-8 py-4 border-b-2 relative">
-      <MobileNav />
-      <DesktopNav />
-    </header>
+    <div>
+      {desktopResponsive && (
+        <header className="bg-textColor w-full px-3 py-4 border-b-2 relative">
+          <DesktopNav />
+        </header>
+      )}
+      {(mobileResponsive || tabletResponsive) && <MobileNav />}
+    </div>
   );
 };
 

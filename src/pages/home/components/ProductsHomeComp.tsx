@@ -3,11 +3,15 @@ import { Link } from "react-router-dom";
 import { products } from "../products";
 import ProductCard from "../../../components/shared/ProductCard";
 
-const ProductsHomeComp = () => {
+type ProductListProps = {
+  name: string;
+  id: number;
+};
+const ProductsHomeComp = (props: ProductListProps) => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between">
-        <h1 className="text-xl font-bold">Beauty Offers (25)</h1>
+        <h1 className="text-xl font-bold">{props.name}</h1>
         <Link to={`/products`} className="text-blue-400">
           Show More
         </Link>
