@@ -39,18 +39,18 @@ const DesktopFooter = () => {
 
         <ul className="flex items-center gap-4">
           <li className="cursor-pointer">
-            <a target="_blank" href="www.facebook.com">
-              <Icon width={30} height={30} src={Facebook} alt="facebook" />
+            <a target="_blank" href="https://www.facebook.com/nadiyoon22">
+              <Icon width={40} height={40} src={Facebook} alt="facebook" />
             </a>
           </li>
           <li className="cursor-pointer">
-            <a target="_blank" href="www.instagram.com">
-              <Icon width={30} height={30} src={Instagram} alt="instagram" />
+            <a target="_blank" href="https://www.instagram.com/nadiyoonhtike/">
+              <Icon width={40} height={40} src={Instagram} alt="instagram" />
             </a>
           </li>
           <li className="cursor-pointer">
-            <a target="_blank" href="www.gmail.com">
-              <Icon width={30} height={30} src={Gmail} alt="gmail" />
+            <a target="_blank" href="https://mail.google.com/mail/u/0/#inbox">
+              <Icon width={40} height={40} src={Gmail} alt="gmail" />
             </a>
           </li>
         </ul>

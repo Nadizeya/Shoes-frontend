@@ -49,6 +49,7 @@ export function InputOTPForm() {
 
   function onSubmit(data: FormDataWithEmail) {
     const otpAsNumber = Number(data.otp);
+    console.log("object");
 
     if (isNaN(otpAsNumber)) {
       setErrorMessage("Invalid OTP value");
@@ -110,9 +111,7 @@ export function InputOTPForm() {
             </FormItem>
           )}
         />
-        {errorMessage && (
-          <small className="text-red-600 mt-4">{errorMessage}</small>
-        )}
+        {isError && <small className="text-red-600 mt-4">{errorMessage}</small>}
 
         <Button
           type="submit"

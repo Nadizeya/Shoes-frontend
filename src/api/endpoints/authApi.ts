@@ -35,10 +35,13 @@ export const postOtpValidation = async (
   return response.data;
 };
 
-// export const postOtpValidation = async (
-//   otpValidatioVal: { email: string; otp: number } // email is string, otp is number
-// ) => {
-//   const response = await PublicService.post("/otp-validation", otpValidatioVal);
+export const postResetPassword = async (
+  resetPasswordVal: { email: string; password: string } // email is string, otp is number
+) => {
+  const response = await PublicService.post(
+    "/reset-password",
+    resetPasswordVal
+  );
 
-//   return response.data;
-// };
+  return response.data;
+};

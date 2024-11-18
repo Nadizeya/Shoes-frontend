@@ -22,9 +22,8 @@ import {
 import TinyLogo from "/assets/logo/blackwhitelogo.jpg";
 import { useAuth } from "@/utils/useAuth";
 import SearchBar from "./components/Search";
-import SecondHeader from "./SecondHeader";
 import { useAppSelector } from "@/store/hook";
-import SubHeader from "../SubHeader/SubHeader";
+import useResponsive from "@/utils/useResponsive";
 
 type AuthenticatedT = boolean | null | string;
 
@@ -56,7 +55,7 @@ const dropDownOptions: dropDownOptionT[] = [
     icon: <Heart size={23} />,
     title: "Loves",
     desc: "View saved products",
-    path: "/love-listk",
+    path: "/love-list",
   },
   {
     id: 4,
@@ -207,23 +206,60 @@ const DesktopNav = ({
   );
 };
 
-const MobileNav = ({ authenticated }: { authenticated: AuthenticatedT }) => {
+const MobileNav = ({
+  authenticated,
+  logout,
+}: {
+  authenticated: AuthenticatedT;
+  logout: () => void;
+}) => {
   console.log(authenticated);
-  return <nav>Mobile Nav</nav>;
+  const navigate = useNavigate();
+
+  const loginUserName = useAppSelector((state) => state.user.name);
+
+  console.log(authenticated);
+  return (
+    <nav className="flex items-center justify-between">
+      <Link to={"/"}>
+        <h1 className="text-lg sm:text-xl md:text-2xl font-black">
+          Nadi Yoon Htike
+        </h1>
+      </Link>
+
+      <SearchBar />
+
+      <ul className="flex items-center gap-4">
+        <li>
+          <Link to="/love-list">
+            <NotificationBadge icon={<Heart size={23} />} count={10} />
+          </Link>
+        </li>
+        <Link to={"/checkout"}>
+          <li className="flex items-center gap-4">
+            <NotificationBadge icon={<Basket size={23} />} count={5} />
+          </li>
+        </Link>
+      </ul>
+    </nav>
+  );
 };
 
 const Header = () => {
+  const { desktopResponsive, mobileResponsive, tabletResponsive } =
+    useResponsive();
   const { authenticated, logout } = useAuth();
   console.log(authenticated, "in header");
 
   return (
-    <div className="">
-      <header className="bg-white px-8 py-4">
-        {/* <MobileNav authenticated={authenticated} /> */}
+    <header className="bg-white px-3 sm:px-8 py-4">
+      {desktopResponsive && (
         <DesktopNav authenticated={authenticated} logout={logout} />
-      </header>
-      <SubHeader />
-    </div>
+      )}
+      {(mobileResponsive || tabletResponsive) && (
+        <MobileNav authenticated={authenticated} logout={logout} />
+      )}
+    </header>
   );
 };
 

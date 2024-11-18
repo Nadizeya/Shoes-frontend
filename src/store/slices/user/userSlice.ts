@@ -23,11 +23,17 @@ export const userSlice = createSlice({
     setEmail(state, action: PayloadAction<{ email: string }>) {
       state.email = action.payload.email;
     },
+    setRegister(state, action: PayloadAction<UserT>) {
+      state.id = action.payload.id;
+      state.role = action.payload.role;
+      state.email = action.payload.email;
+      state.name = action.payload.name;
+    },
   },
 });
 
 export const getAllUserSelector = (state: { user: UserT }) => state.user;
 
-export const { setUser, setEmail } = userSlice.actions;
+export const { setUser, setEmail, setRegister } = userSlice.actions;
 
 export default userSlice.reducer;

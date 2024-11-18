@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Warejeans from "/assets/resetpassword.png";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "@/components/ui/use-toast";
+
 import {
   Form,
   FormControl,
@@ -13,6 +15,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useAppSelector } from "@/store/hook";
+import { useNavigate } from "react-router-dom";
+import { postResetPassword } from "@/api/endpoints/authApi";
+import { useMutation } from "@tanstack/react-query";
+import { openCloseEyesPassword } from "@/utils/helpers/OpenCloseEyesPassword";
 
 const FormSchema = z
   .object({
@@ -29,17 +36,38 @@ const FormSchema = z
   });
 
 const ResetPassword = () => {
+  const email = useAppSelector((state) => state.user.email);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      // email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
+  const { mutate, isError, isPending } = useMutation({
+    mutationFn: postResetPassword,
+  });
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+    const formData = { email, password: data.password };
+    mutate(formData, {
+      onSuccess: (response) => {
+        toast({
+          title: "Changing Password is successful.",
+        });
+        // dispatch(setEmail(data));
+        navigate("/success");
+      },
+      onError: (err) => {
+        setErrorMessage(err.response?.data?.msg || "Email is invalid"); // Extract message or set a default
+      },
+    });
   }
 
   return (
@@ -69,11 +97,20 @@ const ResetPassword = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Input
+                          className="bg-input"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Password"
+                          {...field}
+                        />
+                        <span
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {openCloseEyesPassword(showPassword)}
+                        </span>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -85,11 +122,22 @@ const ResetPassword = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Confirm Password"
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Input
+                          className="bg-input"
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="Confirm Your Password"
+                          {...field}
+                        />
+                        <span
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
+                        >
+                          {openCloseEyesPassword(showConfirmPassword)}
+                        </span>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -98,6 +146,7 @@ const ResetPassword = () => {
               <Button
                 type="submit"
                 variant="welcome"
+                disabled={isPending}
                 className="w-full text-lg"
               >
                 Continue

@@ -6,12 +6,15 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { toast } from "@/components/ui/use-toast";
+
 import {
   setCartItems,
   updateDeliveryInfo,
   updateOrderCost,
 } from "@/store/slices/Checkout/checkOutSlice";
 import { CheckOutT } from "@/store/slices/Checkout/checkOutTypes";
+import ProductsHomeComp from "../home/components/ProductsHomeComp";
 
 export const itemData = [
   {
@@ -27,7 +30,7 @@ export const itemData = [
   {
     id: 2,
     title: "Gro Hair Serum",
-    image: "/assets/products/product1.png",
+    image: "/assets/products/product3.png",
     color: "Color: Adulterous - 828",
     desc: "Absolut Repair 10-In-1 Hair Oil for Dry Hair",
     price: 10000,
@@ -37,7 +40,7 @@ export const itemData = [
   {
     id: 3,
     title: "Gro Hair Serum",
-    image: "/assets/products/product1.png",
+    image: "/assets/products/product2.png",
     color: "Color: Adulterous - 828",
     desc: "lsdfd Repair 10-In-1 Hair Oil for Dry Hair",
     price: 10000,
@@ -117,11 +120,16 @@ const Checkout = () => {
   // console.log(form);
 
   const onSubmit = (data: any) => {
+    toast({
+      title: "Success !!",
+      description:
+        "Your order is submitted successful. Please wait for the admin to confirm the order.",
+    });
     data = { orderCost: orderCost, cartItems: cartItems, ...data };
     console.log(data); // You can send this data to the server
   };
   return (
-    <div>
+    <div className="py-8">
       <h1 className="mb-5">Your Basket</h1>
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -135,6 +143,11 @@ const Checkout = () => {
           </Button> */}
         </form>
       </FormProvider>
+      <div className="mt-5">
+        <ProductsHomeComp id={1} name="Beauty Offers (25)" />
+        <ProductsHomeComp id={1} name="Beauty Offers (25)" />
+        <ProductsHomeComp id={1} name="Beauty Offers (25)" />
+      </div>
     </div>
   );
 };

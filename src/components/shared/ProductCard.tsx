@@ -25,7 +25,7 @@ const ProductCard = ({
   return (
     <Card
       key={id}
-      className="xl:p-2 lg:p-1 2xl:min-w-[230px] 2xl:w-[230px] xl:min-w-[200px] xl:w-[200px] lg:min-w-[180px] lg:w-[180px]"
+      className="xl:p-2 lg:p-1 2xl:min-w-[230px] 2xl:w-[230px] xl:min-w-[200px] xl:w-[200px] min-w-[180px] w-[180px]"
     >
       <Link to={`/products/${id}`}>
         <CardContent className="cursor-pointer p-3 ">

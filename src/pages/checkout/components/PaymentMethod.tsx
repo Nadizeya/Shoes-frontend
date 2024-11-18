@@ -58,16 +58,16 @@ const PaymentMethodContent = () => {
       </Tabs>
       <div>
         <FormItem>
-          <FormLabel>Account Name</FormLabel>
+          <FormLabel>Bank Account Name Name</FormLabel>
           <FormControl>
-            <Input disabled value={"Nadi Zeya"} />
+            <Input />
           </FormControl>
           <FormMessage />
         </FormItem>
         <FormItem>
-          <FormLabel>Account Number</FormLabel>
+          <FormLabel>Bank Account Number</FormLabel>
           <FormControl>
-            <Input disabled value={"123234343234"} />
+            <Input />
           </FormControl>
           <FormMessage />
         </FormItem>

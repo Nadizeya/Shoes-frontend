@@ -18,6 +18,7 @@ import { postRegister } from "@/api/endpoints/authApi";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "@/components/ui/use-toast";
 import login from "../login";
+import { useAuth } from "@/utils/useAuth";
 
 const formSchema = z
   .object({
@@ -38,8 +39,7 @@ const formSchema = z
           /[0-9]/.test(value) && // at least one digit
           /[!@#$%^&*(),.?":{}|<>]/.test(value), // at least one special character
         {
-          message:
-            "Password must contain at least one digit, one lowercase letter, and one special character.",
+          message: "At least one special,number and uppercase!",
         }
       ),
     confirmPassword: z.string().min(1, {
@@ -55,6 +55,8 @@ const RegisterForm = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const { register } = useAuth();
+
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { mutate, isError } = useMutation({
     mutationFn: postRegister,
@@ -78,12 +80,16 @@ const RegisterForm = () => {
           variant: "default",
         });
         const data = response.data;
-        // login(data);
+        register(data);
         navigate("/");
         localStorage.setItem("authToken", data.token);
       },
       onError: (err) => {
-        setErrorMessage(err.response?.data?.message || "Login failed"); // Extract message or set a default
+        setErrorMessage(err.response?.data?.errors.email || "Login failed");
+        toast({
+          title: errorMessage,
+          variant: "destructive",
+        }); // Extract message or set a default
       },
     });
   }
@@ -103,11 +109,7 @@ const RegisterForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    placeholder="Name"
-                    className="bg-gray-100"
-                    {...field}
-                  />
+                  <Input placeholder="Name" className="bg-input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -119,11 +121,7 @@ const RegisterForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    placeholder="Email"
-                    className="bg-gray-100"
-                    {...field}
-                  />
+                  <Input placeholder="Email" className="bg-input" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -140,7 +138,7 @@ const RegisterForm = () => {
                 <FormControl>
                   <div className="relative">
                     <Input
-                      className="bg-gray-100"
+                      className="bg-input"
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       {...field}
@@ -166,7 +164,7 @@ const RegisterForm = () => {
                 <FormControl>
                   <div className="relative">
                     <Input
-                      className="bg-gray-100"
+                      className="bg-input"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="Confirm Your Password"
                       {...field}

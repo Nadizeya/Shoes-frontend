@@ -10,6 +10,7 @@ export const LazyOtpValidate = lazy(() => import("@/pages/auth/OtpValidation"));
 export const LazyResetPassword = lazy(
   () => import("@/pages/auth/ResetPassword")
 );
+export const LazySuccess = lazy(() => import("@/pages/auth/Success"));
 export const LazyWelcome = lazy(() => import("@/pages/welcome"));
 export const LazyProducts = lazy(() => import("@/pages/products"));
 export const LazyProductDetails = lazy(() => import("@/pages/productDetails"));

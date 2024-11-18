@@ -4,7 +4,7 @@ import {
   signInSuccess,
   signOutSuccess,
 } from "@/store/slices/auth/authSlice";
-import { setUser } from "@/store/slices/user/userSlice";
+import { setRegister, setUser } from "@/store/slices/user/userSlice";
 import { useAppSelector, useAppDispatch } from "@/store/hook";
 
 export function useAuth() {
@@ -18,8 +18,10 @@ export function useAuth() {
     dispatch(setUser(data));
   };
 
-  // this will probably be api fetching
-  const register = () => {};
+  const register = (data: any) => {
+    dispatch(signInSuccess(data));
+    dispatch(setRegister(data));
+  };
 
   const handleLogOut = () => {
     dispatch(

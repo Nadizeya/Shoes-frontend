@@ -36,7 +36,7 @@ const ResetPassword = () => {
     },
   });
 
-  const { mutate, isError } = useMutation({
+  const { mutate, isError, isPending } = useMutation({
     mutationFn: postForgotPassword,
   });
 
@@ -94,12 +94,13 @@ const ResetPassword = () => {
                   </FormItem>
                 )}
               />
-              {errorMessage && (
+              {isError && (
                 <small className="text-red-600">{errorMessage}</small>
               )}
               <Button
                 type="submit"
                 variant="welcome"
+                disabled={isPending}
                 className="w-full text-lg"
               >
                 Continue
