@@ -4,8 +4,32 @@ import SimilarProduct from "./components/SimilarProduct";
 import SuggestionProduct from "./components/SuggestionProduct";
 import HeroSection from "../home/components/HeroSection";
 import { ChevronLeft } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { useProductDetails } from "@/utils/useProductDetail";
+import {
+  setProductDetail,
+  setSelectedItem,
+} from "@/store/slices/Products/productSlice";
+import { useAppDispatch } from "@/store/hook";
+import { useEffect } from "react";
 
 const ProductDetails = () => {
+  const dispatch = useAppDispatch();
+  const { productId } = useParams<{ productId: string }>();
+  const numericProductId = Number(productId);
+  const { productDetail, isSuccess, isError, isLoading } =
+    useProductDetails(numericProductId);
+
+  console.log(productDetail);
+
+  useEffect(() => {
+    if (isSuccess) {
+      if (productDetail) {
+        dispatch(setProductDetail(productDetail));
+        dispatch(setSelectedItem(productDetail.items[0]));
+      }
+    }
+  }, [productDetail, isSuccess]);
   return (
     <div className="px-4 py-8">
       <h4 className="flex items-center gapa-4">

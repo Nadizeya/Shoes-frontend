@@ -11,43 +11,55 @@ import { FaHeart } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
 import { Plus, Minus } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
-
-const productsDetailsData = {
-  id: 1,
-  title: "Gro Hair serum",
-  product_desc: "Absolut Repair 10 In 1 Hair Oil for Dry Hair",
-  price: "10,00 Ks",
-  size: ["30mL", "50mL", "100mL", "300mL", "120mL", "38mL"],
-};
-
-const products_images = [
-  {
-    id: 1,
-    url: "https://images.unsplash.com/photo-1590156546946-ce55a12a6a5d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzZ8fGxpcHN0aWNrfGVufDB8fDB8fHww",
-  },
-  {
-    id: 2,
-    url: "https://images.unsplash.com/photo-1590156351885-f73330202730?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjd8fGxpcHN0aWNrfGVufDB8fDB8fHww",
-  },
-  {
-    id: 3,
-    url: "https://images.unsplash.com/photo-1591375372226-3531cf2eb6d3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzB8fGxpcHN0aWNrfGVufDB8fDB8fHww",
-  },
-  {
-    id: 4,
-    url: "https://images.unsplash.com/photo-1617422275563-4cf1103e7d60?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGxpcHN0aWNrfGVufDB8fDB8fHww",
-  },
-];
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { BASE_URL } from "@/api/BaseService";
+import { useAuth } from "@/utils/useAuth";
+import { useNavigate } from "react-router-dom";
+import { postAddToCartT } from "@/utils/useProductDetail";
+import { useMutation } from "@tanstack/react-query";
+import { postAddToCart } from "@/api/endpoints/productsApi";
+import {
+  setSelectedColor,
+  setSelectedItem,
+  setSelectedSize,
+} from "@/store/slices/Products/productSlice";
+import { addToWishList, removeWishList } from "@/api/endpoints/wishlistApi";
 
 const ProductsInfo = () => {
-  const [selectedSize, setSelectedSize] = React.useState("-");
+  // taking out datas from store
+  const productsDetailsData = useAppSelector(
+    (state) => state.productDetail.productDetail
+  );
+  const items = useAppSelector(
+    (state) => state.productDetail.productDetail.items
+  );
+  const selectedItem = useAppSelector(
+    (state) => state.productDetail.selectedItem
+  );
+  const selectedSize = useAppSelector(
+    (state) => state.productDetail.selectedItem.size
+  );
+  const selectedColor = useAppSelector(
+    (state) => state.productDetail.selectedItem.color
+  );
+
+  // using hooks for functions
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { authenticated } = useAuth();
+  const [selectedQuantity, setSelectQuantity] = React.useState(1);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [changeheart, setChangeheart] = React.useState(false);
   const [carouselRef, api] = useEmblaCarousel();
 
-  // Function to handle when a thumbnail is clicked
+  // when size changed only available will show
+  const availableColors = items
+    .filter((item) => item.size === selectedItem.size)
+    .map((item) => item.color);
+  console.log(selectedItem);
+
   const handleThumbnailClick = React.useCallback(
-    (index) => {
+    (index: any) => {
       setSelectedIndex(index);
       if (api) {
         api.scrollTo(index); // Ensure the carousel scrolls to the selected image
@@ -55,6 +67,82 @@ const ProductsInfo = () => {
     },
     [api]
   );
+
+  // Mutations called
+  const addMutation = useMutation({
+    mutationFn: addToWishList,
+    onSuccess: () => {
+      setChangeheart(true);
+    },
+    onError: (error: any) => {
+      console.error("Error adding to wishlist:", error.message);
+    },
+  });
+
+  const removeMutation = useMutation({
+    mutationFn: removeWishList,
+    onSuccess: () => {
+      setChangeheart(false);
+      console.log("Removed from wishlist");
+    },
+    onError: (error: any) => {
+      console.error("Error removing from wishlist:", error.message);
+    },
+  });
+
+  const basketMutation = useMutation({
+    mutationFn: postAddToCart,
+  });
+
+  // Buttons handling events
+  const handleSizeClick = (s: string) => {
+    dispatch(setSelectedSize(s));
+    const changedItem = items.filter(
+      (item) => item.size === s && item.color === selectedColor
+    );
+    dispatch(setSelectedItem(changedItem[0]));
+    console.log(selectedItem, "items");
+  };
+
+  const handleColorClick = (s: string) => {
+    dispatch(setSelectedColor(s));
+    const changedItem = items.filter(
+      (item) => item.size === selectedSize && item.color === s
+    );
+    dispatch(setSelectedItem(changedItem[0]));
+  };
+
+  const handleIncrement = () => {
+    setSelectQuantity((prev) => prev + 1);
+  };
+
+  const handleDecrement = () => {
+    setSelectQuantity((prev) => (prev > 1 ? prev - 1 : prev));
+  };
+
+  const toggleHeart = () => {
+    const wishListData = {
+      product_id: productsDetailsData.id,
+    };
+    if (changeheart) {
+      removeMutation.mutate(wishListData);
+    } else {
+      addMutation.mutate(wishListData);
+    }
+  };
+  const addToCart = (id: number) => {
+    const addToCartProduct: postAddToCartT = {
+      product_id: productsDetailsData.id,
+      product_variations_id: id,
+      quantity: selectedQuantity,
+    };
+
+    if (!authenticated) {
+      console.log("Not authenticated");
+      navigate("/login");
+    }
+    basketMutation.mutate(addToCartProduct);
+  };
 
   // Sync selected index with carousel when using Next/Previous buttons
   React.useEffect(() => {
@@ -70,29 +158,41 @@ const ProductsInfo = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
       <div className="flex flex-start h-full">
         <div className="flex flex-col gap-2">
-          {products_images.map((imgUrl, index) => (
-            <div
-              key={index}
-              onClick={() => handleThumbnailClick(index)}
-              className={`rounded-full w-12 h-12 border border-gray-400 cursor-pointer hover:border-blue-500 ${
-                selectedIndex === index ? "border-blue-500" : ""
-              }`}
-            >
+          {productsDetailsData.images &&
+          productsDetailsData.images.length > 0 ? (
+            productsDetailsData.images.map((imgUrl, index) => (
+              <div
+                key={index}
+                onClick={() => handleThumbnailClick(index)}
+                className={`rounded-full w-12 h-12 border border-gray-400 cursor-pointer hover:border-blue-500 ${
+                  selectedIndex === index ? "border-blue-500" : ""
+                }`}
+              >
+                <img
+                  src={BASE_URL + imgUrl}
+                  alt={`Product ${index}`}
+                  className="rounded-full w-full h-full object-cover"
+                />
+              </div>
+            ))
+          ) : (
+            <div className="rounded-full w-12 h-12 border border-gray-400 cursor-pointer hover:border-blue-500">
               <img
-                src={imgUrl.url}
-                alt={`Product ${index}`}
+                src="/assets/products/product3.png"
+                alt="Placeholder"
                 className="rounded-full w-full h-full object-cover"
               />
             </div>
-          ))}
+          )}
         </div>
+
         <div className="basis-[60%] mx-auto">
           <Carousel ref={carouselRef}>
             <CarouselContent>
-              {products_images.map((imgUrl, index) => (
+              {productsDetailsData.images?.map((imgUrl, index) => (
                 <CarouselItem key={index} className="h-60">
                   <img
-                    src={imgUrl.url}
+                    src={BASE_URL + imgUrl}
                     alt={`Product ${index}`}
                     className={`w-full h-full object-contain ${
                       index === selectedIndex ? "opacity-100" : "opacity-50"
@@ -110,52 +210,87 @@ const ProductsInfo = () => {
       {/* product info left side */}
       <div className="space-y-4">
         <div className="">
-          <h4 className="font-bold ">{productsDetailsData.title}</h4>
-          <p>{productsDetailsData.product_desc}</p>
+          <h4 className="font-bold ">{productsDetailsData.name}</h4>
+          <p>{productsDetailsData.short_description}</p>
         </div>
-        <div className="">
-          <h4 className="font-bold">{productsDetailsData.price}</h4>
-          <p>Size : {selectedSize}</p>
-        </div>
+        <h4 className="font-bold">{selectedItem.price} Ks</h4>
+        <p>Size : {selectedItem.size}</p>
 
-        <div className="">
+        <div className="space-y-2">
           <h4>Size</h4>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-            {productsDetailsData?.size.map((s: string, index: number) => (
+            {productsDetailsData?.sizes.map((s: string, index: number) => (
               <div
                 key={index}
-                onClick={() => setSelectedSize(s)}
+                onClick={() => handleSizeClick(s)}
                 className={`border text-center  px-2 py-2 cursor-pointer rounded-sm text-black ${
-                  selectedSize === s ? "border-gray-700" : "border-gray-300"
+                  selectedItem.size === s
+                    ? "border-gray-700"
+                    : "border-gray-300"
                 }`}
               >
                 {s}
               </div>
             ))}
           </div>
+          <h4>Colors</h4>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            {(selectedItem.size
+              ? availableColors
+              : productsDetailsData.colors
+            ).map((color: string, index: number) => (
+              <div
+                key={index}
+                onClick={() => handleColorClick(color)}
+                className={`w-10 h-10 cursor-pointer rounded-full border-2 flex items-center justify-center ${
+                  selectedItem.color === color
+                    ? "border-gray-700  "
+                    : "border-gray-300"
+                }`}
+                style={{ backgroundColor: color }}
+                title={color}
+              ></div>
+            ))}
+          </div>
 
           <div className="flex items-center gap-4 my-4">
             <div className="text-white h-11 bg-red-600 rounded-full pl-4  pr-10 flex justify-start items-center gap-4">
               <div className="flex items-center gap-4 h-full border-r border-r-white pr-2  basis-[30%]">
-                <Minus
-                  className="cursor-pointer"
-                  onClick={() => console.log("work")}
-                />
-                1
-                <Plus
-                  className="cursor-pointer"
-                  onClick={() => console.log("work")}
-                />
+                <Minus className="cursor-pointer" onClick={handleDecrement} />
+                {selectedQuantity}
+                <Plus className="cursor-pointer" onClick={handleIncrement} />
               </div>
-              <span className="basis-[70%] cursor-pointer">Add to Basket</span>
+
+              <span
+                className={`basis-[70%] cursor-pointer ${
+                  basketMutation.isPending
+                    ? "cursor-not-allowed opacity-50"
+                    : ""
+                }`}
+                onClick={() => addToCart(selectedItem?.id)}
+              >
+                {basketMutation.isPending ? "Adding..." : "Add to Basket"}
+              </span>
             </div>
             {changeheart ? (
-              <FaHeart className="text-red-500 cursor-pointer" size={25} />
+              <FaHeart
+                onClick={removeMutation.isPending ? undefined : toggleHeart}
+                className={`text-red-500 cursor-pointer ${
+                  removeMutation.isPending
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                size={25}
+              />
             ) : (
               <FaRegHeart
-                onClick={() => setChangeheart(true)}
-                className="text-red-500 cursor-pointer"
+                onClick={addMutation.isPending ? undefined : toggleHeart}
+                className={`text-red-500 cursor-pointer ${
+                  removeMutation.isPending
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
                 size={25}
               />
             )}

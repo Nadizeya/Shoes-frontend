@@ -14,7 +14,7 @@ export type ProductT = {
   description?: string;
   original_price: number;
   discount_price?: number;
-  image: string[] | null;
+  image: string[];
 };
 
 export type CategoryT = {

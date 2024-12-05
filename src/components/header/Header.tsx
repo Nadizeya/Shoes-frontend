@@ -90,7 +90,7 @@ const DesktopNav = ({
   authenticated: AuthenticatedT;
   logout: () => void;
 }) => {
-  console.log(authenticated);
+  // console.log(authenticated);
   const navigate = useNavigate();
 
   const loginUserName = useAppSelector((state) => state.user.name);
@@ -213,12 +213,11 @@ const MobileNav = ({
   authenticated: AuthenticatedT;
   logout: () => void;
 }) => {
-  console.log(authenticated);
+  // console.log(authenticated);
   const navigate = useNavigate();
 
   const loginUserName = useAppSelector((state) => state.user.name);
 
-  console.log(authenticated);
   return (
     <nav className="flex items-center justify-between">
       <Link to={"/"}>
@@ -249,7 +248,6 @@ const Header = () => {
   const { desktopResponsive, mobileResponsive, tabletResponsive } =
     useResponsive();
   const { authenticated, logout } = useAuth();
-  console.log(authenticated, "in header");
 
   return (
     <header className="bg-white px-3 sm:px-8 py-4">

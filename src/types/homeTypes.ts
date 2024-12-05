@@ -1,11 +1,14 @@
-import { BrandT, CategoryT, ProductT } from "../common";
+import { BrandT, CategoryT, ProductT } from "./common";
 
 export interface HomeData {
   maincategroies: Maincategroies;
-  products: Products;
+  products: HomeProducts;
 }
-export type Products = {
-  [key: string]: ProductT[] | number;
+export type HomeProducts = {
+  total: number;
+  beauty_offer: ProductT[];
+  Choose_for_you: ProductT[];
+  New_Arrivals: ProductT[];
 };
 
 export type MainCategory = {

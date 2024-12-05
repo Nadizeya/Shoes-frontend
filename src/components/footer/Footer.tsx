@@ -65,7 +65,7 @@ const Footer = () => {
 
   const mobile_tablet = mobileResponsive || tabletResponsive;
 
-  console.log(mobile_tablet);
+  // console.log(mobile_tablet);
   return (
     <footer className="bg-main text-white px-10 py-16">
       {desktopResponsive && <DesktopFooter />}

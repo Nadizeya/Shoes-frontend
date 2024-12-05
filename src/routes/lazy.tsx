@@ -14,8 +14,8 @@ export const LazySuccess = lazy(() => import("@/pages/auth/Success"));
 export const LazyWelcome = lazy(() => import("@/pages/welcome"));
 export const LazyProducts = lazy(() => import("@/pages/products"));
 export const LazyProductDetails = lazy(() => import("@/pages/productDetails"));
-export const LazyBrands = lazy(() => import("@/pages/brands"));
-export const LazyBrandDetails = lazy(() => import("@/pages/brandDetails"));
+export const LazyCategory = lazy(() => import("@/pages/categories"));
+export const LazyCategoryDetails = lazy(() => import("@/pages/categoryDetail"));
 export const LazyHome = lazy(() => import("@/pages/home"));
 export const LazyCreateProfile = lazy(
   () => import("@/pages/auth/CreateProfile")
@@ -24,5 +24,5 @@ export const LazyLoveList = lazy(() => import("@/pages/loves"));
 
 // private pages (add your private page imports here as needed)
 export const LazyProfile = lazy(() => import("@/pages/profile"));
-export const LazyWishList = lazy(() => import("@/pages/wishList"));
+// export const LazyWishList = lazy(() => import("@/pages/wishList"));
 export const LazyCheckOut = lazy(() => import("@/pages/checkout"));

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { CartCardShared } from "../CardCardShared";
+import { CartCardShared } from "../CartCardShared";
 
 const DeliveryContent = () => {
   const { control } = useFormContext();

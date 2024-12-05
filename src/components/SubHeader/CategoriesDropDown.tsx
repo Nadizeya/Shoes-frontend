@@ -18,13 +18,13 @@ const CategoriesDropDown = ({ data }: Props) => {
         {chunkedData.map((row, rowIndex) => (
           <div className="flex justify-start" key={rowIndex}>
             {row.map((category, index) => (
-              <a
-                href={`/brands/${category.id}`}
+              <Link
+                to={`/categories/${category.id}`}
                 className="w-1/5 font-bold hover:underline"
                 key={index}
               >
                 {category.name}
-              </a>
+              </Link>
             ))}
             {/* Add empty divs to keep the layout consistent if there's less than 3 items in the row */}
             {row.length < 3 &&

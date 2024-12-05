@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/store/hook";
-import { CartCardShared } from "../CardCardShared";
+import { CartCardShared } from "../CartCardShared";
 import { Separator } from "@/components/ui/separator";
 
 const CalculateTotalContent = () => {

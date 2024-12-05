@@ -28,7 +28,7 @@ const SearchResultList = ({
   query,
 }: SearchResutListT) => {
   const resultexist = resultList && resultList?.length > 0;
-  console.log(resultList);
+  // console.log(resultList);
   return (
     <>
       {resultexist &&

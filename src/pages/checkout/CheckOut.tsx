@@ -13,57 +13,42 @@ import {
   updateDeliveryInfo,
   updateOrderCost,
 } from "@/store/slices/Checkout/checkOutSlice";
-import { CheckOutT } from "@/store/slices/Checkout/checkOutTypes";
+import { CheckOutT } from "@/types/checkOutTypes";
 import ProductsHomeComp from "../home/components/ProductsHomeComp";
+import { useCheckoutItems } from "@/utils/useCheckout";
 
-export const itemData = [
-  {
-    id: 1,
-    title: "Gro Hair Serum",
-    image: "/assets/products/product1.png",
-    color: "Color: Adulterous - 828",
-    desc: "sdfsdfRepair 10-In-1 Hair Oil for Dry Hair",
-    price: 10000,
-    size: "30mL",
-    quantity: 1,
-  },
-  {
-    id: 2,
-    title: "Gro Hair Serum",
-    image: "/assets/products/product3.png",
-    color: "Color: Adulterous - 828",
-    desc: "Absolut Repair 10-In-1 Hair Oil for Dry Hair",
-    price: 10000,
-    size: "30mL",
-    quantity: 1,
-  },
-  {
-    id: 3,
-    title: "Gro Hair Serum",
-    image: "/assets/products/product2.png",
-    color: "Color: Adulterous - 828",
-    desc: "lsdfd Repair 10-In-1 Hair Oil for Dry Hair",
-    price: 10000,
-    size: "45mL",
-    quantity: 1,
-  },
-];
-
-export const CartData: CheckOutT = {
-  cartItems: itemData,
-  deliveryInfo: {
-    address: "",
-    name: "",
-    phoneNumber: "",
-  },
-  orderCost: {
-    deliveryCost: 100,
-    total: 30000,
-    subtotal: 30100,
-  },
-  paymentFile: null,
-  paymentId: 1,
-};
+// export const itemData = [
+//   {
+//     id: 1,
+//     title: "Gro Hair Serum",
+//     image: "/assets/products/product1.png",
+//     color: "Color: Adulterous - 828",
+//     desc: "sdfsdfRepair 10-In-1 Hair Oil for Dry Hair",
+//     price: 10000,
+//     size: "30mL",
+//     quantity: 1,
+//   },
+//   {
+//     id: 2,
+//     title: "Gro Hair Serum",
+//     image: "/assets/products/product3.png",
+//     color: "Color: Adulterous - 828",
+//     desc: "Absolut Repair 10-In-1 Hair Oil for Dry Hair",
+//     price: 10000,
+//     size: "30mL",
+//     quantity: 1,
+//   },
+//   {
+//     id: 3,
+//     title: "Gro Hair Serum",
+//     image: "/assets/products/product2.png",
+//     color: "Color: Adulterous - 828",
+//     desc: "lsdfd Repair 10-In-1 Hair Oil for Dry Hair",
+//     price: 10000,
+//     size: "45mL",
+//     quantity: 1,
+//   },
+// ];
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -88,12 +73,12 @@ const formSchema = z.object({
 
 const Checkout = () => {
   const dispatch = useAppDispatch();
+  const { cartProducts, isSuccess, isError, isLoading } = useCheckoutItems();
   useEffect(() => {
-    dispatch(setCartItems(itemData));
-    dispatch(updateOrderCost(CartData.orderCost));
-  }, [CartData]);
+    dispatch(setCartItems(cartProducts));
+  }, [cartProducts, dispatch]);
 
-  const cartItems = useAppSelector((state) => state.checkout.cartItems);
+  // const cartItems = useAppSelector((state) => state.checkout.cartItems);
   const orderCost = useAppSelector((state) => state.checkout.orderCost);
 
   const form = useForm({
@@ -125,29 +110,33 @@ const Checkout = () => {
       description:
         "Your order is submitted successful. Please wait for the admin to confirm the order.",
     });
-    data = { orderCost: orderCost, cartItems: cartItems, ...data };
-    console.log(data); // You can send this data to the server
+    data = { orderCost: orderCost, cartItems: cartProducts, ...data };
+    console.log(data);
   };
   return (
-    <div className="py-8">
-      <h1 className="mb-5">Your Basket</h1>
-      <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex flex-col md:flex-row gap-7 items-center md:items-start md:justify-evenly">
-            <CartComp />
-            <CheckoutComp />
-          </div>
+    <div>
+      {isSuccess && (
+        <div className="py-8">
+          <h1 className="mb-5">Your Basket</h1>
+          <FormProvider {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="flex flex-col md:flex-row gap-7 items-center md:items-start md:justify-evenly">
+                <CartComp />
+                <CheckoutComp />
+              </div>
 
-          {/* <Button type="submit" variant="welcome">
-            Submit{" "}
-          </Button> */}
-        </form>
-      </FormProvider>
-      <div className="mt-5">
-        <ProductsHomeComp id={1} name="Beauty Offers (25)" />
-        <ProductsHomeComp id={1} name="Beauty Offers (25)" />
-        <ProductsHomeComp id={1} name="Beauty Offers (25)" />
-      </div>
+              {/* <Button type="submit" variant="welcome">
+              Submit{" "}
+            </Button> */}
+            </form>
+          </FormProvider>
+          {/* <div className="mt-5">
+          <ProductsHomeComp id={1} name="Beauty Offers (25)" />
+          <ProductsHomeComp id={1} name="Beauty Offers (25)" />
+          <ProductsHomeComp id={1} name="Beauty Offers (25)" />
+        </div> */}
+        </div>
+      )}
     </div>
   );
 };

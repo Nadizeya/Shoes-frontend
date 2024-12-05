@@ -44,8 +44,10 @@ const ProductCard = ({
           </div>
 
           <div className="space-y-2">
-            <p className="text-xs font-bold">{title}</p>
-            <p className="text-sm">{desc}</p>
+            <p className="text-sm font-bold">{title}</p>
+            <p className="text-sm">
+              {desc.length > 50 ? `${desc.substring(0, 50)}...` : desc}
+            </p>
             <p className="font-bold">{price} Ks</p>
           </div>
         </CardContent>

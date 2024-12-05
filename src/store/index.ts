@@ -5,18 +5,20 @@ import homeReducer from "@/store/slices/Home/homeSlice";
 import checkoutReducer from "@/store/slices/Checkout/checkOutSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import productDetailReducer from "./slices/Products/productSlice";
 
 const rootReducer = combineReducers({
   user: userReducer,
   auth: authReducer,
   home: homeReducer,
   checkout: checkoutReducer,
+  productDetail: productDetailReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "user"], // Only persist 'auth' and 'user' slices
+  whitelist: ["auth", "user", "home"], // Only persist 'auth' and 'user' slices
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

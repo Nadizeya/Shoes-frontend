@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import CategoriesDropDown from "./CategoriesDropDown";
-import { data } from "./data";
 import { useAppSelector } from "@/store/hook";
 import useResponsive from "@/utils/useResponsive";
 
 const SubHeader = () => {
-  const maincategories = data;
+  const maincategories = useAppSelector((state) => state.home.maincategroies);
   const { desktopResponsive, mobileResponsive, tabletResponsive } =
     useResponsive();
-  console.log(maincategories, "in subheader");
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -68,7 +66,7 @@ const SubHeader = () => {
         {maincategories.map((data: any) => (
           <div
             key={data.id}
-            className="text-xs px-3 py-1 border h-[50px] flex justify-center items-center "
+            className="text-xs px-3 py-1 border h-[50px] flex justify-center items-center rounded-lg "
           >
             {data.name}
           </div>

@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CartItem, CheckOutT, DeliveryInfo, OrderCost } from "./checkOutTypes";
+import {
+  CartItem,
+  CartProduct,
+  CheckOutT,
+  DeliveryInfo,
+  OrderCost,
+} from "../../../types/checkOutTypes";
 
 const initialState: CheckOutT = {
   cartItems: [],
@@ -21,7 +27,7 @@ export const checkoutSlice = createSlice({
   name: "checkout",
   initialState: initialState,
   reducers: {
-    setCartItems(state, action: PayloadAction<CartItem[]>) {
+    setCartItems(state, action: PayloadAction<CartProduct[]>) {
       state.cartItems = action.payload;
     },
     deleteItem(state, action: PayloadAction<number>) {
@@ -43,7 +49,7 @@ export const checkoutSlice = createSlice({
     },
     updateTotalCost(state) {
       const totalValue = state.cartItems.reduce((acc, item) => {
-        return acc + item.price * item.quantity;
+        return acc + item.total_price * item.quantity;
       }, 0);
 
       state.orderCost.total = totalValue;

@@ -8,6 +8,8 @@ import {
   decrementQuantity,
   updateTotalCost,
 } from "@/store/slices/Checkout/checkOutSlice";
+import useResponsive from "@/utils/useResponsive";
+import { BASE_URL } from "@/api/BaseService";
 
 const ItemQuantity = ({
   quantity,
@@ -19,7 +21,7 @@ const ItemQuantity = ({
   onDecrement: () => void;
 }) => {
   return (
-    <div className="flex gap-4 rounded-full border px-3 w-[80px] border-black">
+    <div className="flex gap-4 rounded-full border justify-center items-center w-[80px] border-black">
       <span onClick={onDecrement} style={{ cursor: "pointer" }}>
         -
       </span>
@@ -86,7 +88,7 @@ const CartItem = ({
           <p>{desc}</p>
           <small className="text-muted-foreground">Size: {size}</small>
           <span className="text-xs">{color}</span>
-          <div className="flex justify-between items-center mt-4">
+          <div className="flex justify-between items-center gap-4 mt-4">
             <ItemQuantity
               quantity={itemQuantity}
               onIncrement={handleIncrement}
@@ -101,7 +103,82 @@ const CartItem = ({
   );
 };
 
+const MobileCartItem = ({
+  id,
+  title,
+  image,
+  desc,
+  price,
+  size,
+  color,
+  quantity,
+  onDelete,
+}: {
+  id: number;
+  title: string;
+  image: string;
+  desc: string;
+  price: string | number;
+  size: string;
+  color: string;
+  quantity: number;
+  onDelete: (id: number) => void;
+}) => {
+  const dispatch = useDispatch();
+  const itemQuantity = useAppSelector(
+    (state) =>
+      state.checkout.cartItems.find((item) => item.id === id)?.quantity || 1
+  );
+
+  const totalPrice = Number(price) * itemQuantity;
+
+  const handleIncrement = () => {
+    dispatch(incrementQuantity(id));
+    dispatch(updateTotalCost());
+  };
+
+  const handleDecrement = () => {
+    dispatch(decrementQuantity(id));
+    dispatch(updateTotalCost());
+  };
+
+  return (
+    <div>
+      <div className="flex justify-around ">
+        <img src={image} alt={title} className="w-[200px] h-[200px] p-4" />
+        <div className="flex flex-col justify-center ">
+          <div className="mb-2 flex justify-between items-center">
+            <h2 className="font-bold">{title}</h2>
+          </div>
+          <p>{desc}</p>
+          <small className="text-muted-foreground">Size: {size}</small>
+          <span className="text-xs">{color}</span>
+        </div>
+      </div>
+      <div className="flex justify-between items-center mt-4 p-4">
+        <div className="flex gap-2">
+          <ItemQuantity
+            quantity={itemQuantity}
+            onIncrement={handleIncrement}
+            onDecrement={handleDecrement}
+          />
+          <img
+            src={Delete}
+            className="cursor-pointer"
+            onClick={() => onDelete(id)}
+          />
+        </div>
+
+        <span>{totalPrice} Ks</span>
+      </div>
+      <Separator />
+    </div>
+  );
+};
+
 const CartComp = () => {
+  const { desktopResponsive, mobileResponsive, tabletResponsive } =
+    useResponsive();
   const cartItems = useAppSelector((state) => state.checkout.cartItems);
   const dispatch = useDispatch();
 
@@ -112,20 +189,36 @@ const CartComp = () => {
 
   return (
     <div className="w-full sm:w-[80%] lg:w-[60%] border rounded-lg shadow-lg">
-      {cartItems.map((item, index) => (
-        <CartItem
-          key={index}
-          id={item.id}
-          title={item.title}
-          image={item.image}
-          color={item.color}
-          desc={item.desc}
-          price={item.price}
-          size={item.size}
-          quantity={item.quantity}
-          onDelete={handleDelete}
-        />
-      ))}
+      {desktopResponsive &&
+        cartItems?.map((item, index) => (
+          <CartItem
+            key={index}
+            id={item.id}
+            title={item.product.name}
+            image={BASE_URL + item.product.image}
+            color={item.product.item.color}
+            desc={item.product.short_description}
+            price={item.total_price}
+            size={item.product.item.size}
+            quantity={item.quantity}
+            onDelete={handleDelete}
+          />
+        ))}
+      {(mobileResponsive || tabletResponsive) &&
+        cartItems?.map((item, index) => (
+          <MobileCartItem
+            key={index}
+            id={item.id}
+            title={item.product.name}
+            image={BASE_URL + item.product.image}
+            color={item.product.item.color}
+            desc={item.product.short_description}
+            price={item.total_price}
+            size={item.product.item.size}
+            quantity={item.quantity}
+            onDelete={handleDelete}
+          />
+        ))}
     </div>
   );
 };
