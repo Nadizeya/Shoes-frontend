@@ -120,9 +120,9 @@ const ProductsInfo = () => {
     setSelectQuantity((prev) => (prev > 1 ? prev - 1 : prev));
   };
 
-  const toggleHeart = () => {
+  const toggleHeart = (id: number) => {
     const wishListData = {
-      product_id: productsDetailsData.id,
+      product_variation_id: id,
     };
     if (changeheart) {
       removeMutation.mutate(wishListData);
@@ -169,7 +169,7 @@ const ProductsInfo = () => {
                 }`}
               >
                 <img
-                  src={BASE_URL + imgUrl}
+                  src={BASE_URL + imgUrl || "/assets/products/product3.png"}
                   alt={`Product ${index}`}
                   className="rounded-full w-full h-full object-cover"
                 />
@@ -192,7 +192,7 @@ const ProductsInfo = () => {
               {productsDetailsData.images?.map((imgUrl, index) => (
                 <CarouselItem key={index} className="h-60">
                   <img
-                    src={BASE_URL + imgUrl}
+                    src={BASE_URL + imgUrl || "/assets/products/product3.png"}
                     alt={`Product ${index}`}
                     className={`w-full h-full object-contain ${
                       index === selectedIndex ? "opacity-100" : "opacity-50"
@@ -220,20 +220,28 @@ const ProductsInfo = () => {
           <h4>Size</h4>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-            {productsDetailsData?.sizes.map((s: string, index: number) => (
-              <div
-                key={index}
-                onClick={() => handleSizeClick(s)}
-                className={`border text-center  px-2 py-2 cursor-pointer rounded-sm text-black ${
-                  selectedItem.size === s
-                    ? "border-gray-700"
-                    : "border-gray-300"
-                }`}
-              >
-                {s}
+            {productsDetailsData?.sizes &&
+            productsDetailsData.sizes.length > 0 ? (
+              productsDetailsData.sizes.map((s: string, index: number) => (
+                <div
+                  key={index}
+                  onClick={() => handleSizeClick(s)}
+                  className={`border text-center px-2 py-2 cursor-pointer rounded-sm text-black ${
+                    selectedItem.size === s
+                      ? "border-gray-700"
+                      : "border-gray-300"
+                  }`}
+                >
+                  {s}
+                </div>
+              ))
+            ) : (
+              <div className="text-center col-span-full text-gray-500">
+                No sizes available.
               </div>
-            ))}
+            )}
           </div>
+
           <h4>Colors</h4>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             {(selectedItem.size
@@ -275,7 +283,11 @@ const ProductsInfo = () => {
             </div>
             {changeheart ? (
               <FaHeart
-                onClick={removeMutation.isPending ? undefined : toggleHeart}
+                onClick={
+                  removeMutation.isPending
+                    ? undefined
+                    : () => toggleHeart(selectedItem?.id)
+                }
                 className={`text-red-500 cursor-pointer ${
                   removeMutation.isPending
                     ? "opacity-50 cursor-not-allowed"
@@ -285,7 +297,11 @@ const ProductsInfo = () => {
               />
             ) : (
               <FaRegHeart
-                onClick={addMutation.isPending ? undefined : toggleHeart}
+                onClick={
+                  addMutation.isPending
+                    ? undefined
+                    : () => toggleHeart(selectedItem?.id)
+                }
                 className={`text-red-500 cursor-pointer ${
                   removeMutation.isPending
                     ? "opacity-50 cursor-not-allowed"

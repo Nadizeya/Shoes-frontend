@@ -12,7 +12,7 @@ const HeroCard = ({
   return (
     <div
       style={{ backgroundColor: background }}
-      className="rounded-md shadow-lg 2xl:min-w-[545px] 2xl:w-[545px] xl:min-w-[450px] xl:w-[450px] md:w-[400px] md:min-w-[400px] sm:min-w-[330px] sm:w-[330px] min-w-[280px] w-[280px] "
+      className="rounded-md shadow-lg 2xl:min-w-[545px] 2xl:w-[545px] xl:min-w-[450px] xl:w-[450px] md:w-[400px] md:min-w-[400px]  min-w-[300px] w-[300px] "
     >
       <div className="2xl:h-[400px] xl:h-[350px] md:h-[300px] h-[250px]">
         <img src={image} alt={title} className="w-full h-full" />

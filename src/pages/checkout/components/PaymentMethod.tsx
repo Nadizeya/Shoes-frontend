@@ -11,15 +11,39 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRef, useState } from "react";
+import { useAppSelector } from "@/store/hook";
+import { useDispatch } from "react-redux";
+import {
+  changePaymentFile,
+  changePaymentId,
+} from "@/store/slices/Checkout/checkOutSlice";
+import { Bank, HandCoins } from "@phosphor-icons/react";
 
 const PaymentMethodContent = () => {
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
+  const paymentMethods = useAppSelector((state) => state.checkout.paymentData);
+  const payData = paymentMethods?.filter(
+    (item) => item.bank_type === "pay_number"
+  );
+  const bankData = paymentMethods?.filter(
+    (item) => item.bank_type === "bank_account"
+  );
+
+  // Handling events
+  const handlePaymentSelection = (id: number) => {
+    dispatch(changePaymentId(id));
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
+    const selectedFile = event.target.files?.[0] || null;
+
+    const formData = new FormData();
+    console.log(selectedFile, "select file");
     if (selectedFile) {
-      setFile(selectedFile);
+      // setFile(selectedFile);
+      dispatch(changePaymentFile(selectedFile));
     }
   };
 
@@ -33,30 +57,94 @@ const PaymentMethodContent = () => {
       <p>Choose your bank method</p>
       <Tabs defaultValue="banktransfer" className="w-[300px]">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="banktransfer">Bank Transfer</TabsTrigger>
-          <TabsTrigger value="pay">Pay</TabsTrigger>
+          <TabsTrigger
+            value="banktransfer"
+            className="flex gap-3 data-[state=active]:bg-buttonbg data-[state=active]:text-white"
+          >
+            <Bank size={23} />
+            Bank Transfer
+          </TabsTrigger>
+          <TabsTrigger
+            value="pay"
+            className="flex gap-3 data-[state=active]:bg-buttonbg data-[state=active]:text-white"
+          >
+            <HandCoins size={23} />
+            Pay
+          </TabsTrigger>
         </TabsList>
+        {/* Bank pay tabs  */}
         <TabsContent value="banktransfer" className="space-y-3">
-          <p>Select your Preferred bank</p>
-          <Tabs defaultValue="cb" className="w-[300px]">
+          <p>Select your Preferred Bank</p>
+          <Tabs
+            defaultValue={bankData[0]?.userdetails.account_id.toString()}
+            onValueChange={(value) => handlePaymentSelection(Number(value))}
+            className="w-[300px]"
+          >
             <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="cb">Cb bank</TabsTrigger>
-              <TabsTrigger value="kbz">Kbz bank</TabsTrigger>
-              <TabsTrigger value="aya">Aya bank</TabsTrigger>
+              {bankData.map((bank) => (
+                <TabsTrigger
+                  key={bank.userdetails.account_id}
+                  value={bank.userdetails.account_id.toString()}
+                >
+                  {bank.name}
+                </TabsTrigger>
+              ))}
             </TabsList>
+            {/* Default Selected Bank Details */}
+            {/* {bankData?.[0] && (
+              <div className="space-y-2 mt-7">
+                <p>Name: {bankData[0].userdetails.name}</p>
+                <p>Bank Number: {bankData[0].userdetails.bank_number}</p>
+              </div>
+            )} */}
+
+            {bankData.map((bank) => (
+              <TabsContent
+                key={bank.userdetails.account_id}
+                value={bank.userdetails.account_id.toString()}
+                className="space-y-2 mt-7"
+              >
+                <p>Name: {bank.userdetails.name}</p>
+                <p>Bank Number: {bank.userdetails.bank_number}</p>
+              </TabsContent>
+            ))}
           </Tabs>
         </TabsContent>
+
+        {/* Pay methods tabs  */}
         <TabsContent value="pay" className="space-y-3">
-          <p>Select your Preferred pay</p>
-          <Tabs defaultValue="kbz" className="w-[300px]">
+          <p>Select your Preferred Pay</p>
+          <Tabs
+            defaultValue={payData[0]?.userdetails.account_id.toString()}
+            onValueChange={(value) => handlePaymentSelection(Number(value))}
+            className="w-[300px]"
+          >
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="kbz">Kbz pay</TabsTrigger>
-              <TabsTrigger value="cb">Cb pay</TabsTrigger>
+              {payData.map((pay) => (
+                <TabsTrigger
+                  key={pay.userdetails.account_id}
+                  value={pay.userdetails.account_id.toString()}
+                >
+                  {pay.name}
+                </TabsTrigger>
+              ))}
             </TabsList>
+            {payData.map((pay) => (
+              <TabsContent
+                key={pay.userdetails.account_id.toString()}
+                value={pay.userdetails.account_id.toString()}
+                className="space-y-2 mt-7"
+              >
+                <p>Recipient's Name - {pay.userdetails.name}</p>
+                <p>Recipient's Number - {pay.userdetails.pay_number}</p>
+              </TabsContent>
+            ))}
           </Tabs>
         </TabsContent>
       </Tabs>
-      <div>
+
+      {/* Form components  */}
+      {/* <div>
         <FormItem>
           <FormLabel>Bank Account Name Name</FormLabel>
           <FormControl>
@@ -71,7 +159,7 @@ const PaymentMethodContent = () => {
           </FormControl>
           <FormMessage />
         </FormItem>
-      </div>
+      </div> */}
       <div className="space-y-3">
         <input
           id="picture"
@@ -94,6 +182,7 @@ const PaymentMethodContent = () => {
         <Button type="submit" className="w-full bg-red-700">
           Checkout
         </Button>
+        <small className="flex justify-center">get it soon now</small>
       </div>
     </div>
   );

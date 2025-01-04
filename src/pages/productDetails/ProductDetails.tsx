@@ -26,28 +26,34 @@ const ProductDetails = () => {
     if (isSuccess) {
       if (productDetail) {
         dispatch(setProductDetail(productDetail));
-        dispatch(setSelectedItem(productDetail.items[0]));
+        if (productDetail.items && productDetail.items.length > 0) {
+          dispatch(setSelectedItem(productDetail.items[0]));
+        }
       }
     }
   }, [productDetail, isSuccess]);
   return (
-    <div className="px-4 py-8">
-      <h4 className="flex items-center gapa-4">
-        Hair
-        <ChevronLeft width={20} height={20} className="text-gray-600" />
-        Styling
-        <ChevronLeft width={20} height={20} className="text-gray-600" />
-        Cut
-      </h4>
+    <div>
+      {isSuccess && (
+        <div className="px-4 py-8">
+          <h4 className="flex items-center gapa-4">
+            Hair
+            <ChevronLeft width={20} height={20} className="text-gray-600" />
+            Styling
+            <ChevronLeft width={20} height={20} className="text-gray-600" />
+            Cut
+          </h4>
 
-      <ProductsInfo />
-      <ProductAccordion />
-      <SimilarProduct />
-      <SuggestionProduct />
-      <HeroSection />
-      <SimilarProduct />
-      <SuggestionProduct />
-      <HeroSection />
+          <ProductsInfo />
+          <ProductAccordion />
+          <SimilarProduct />
+          <SuggestionProduct />
+          <HeroSection />
+          <SimilarProduct />
+          <SuggestionProduct />
+          <HeroSection />
+        </div>
+      )}
     </div>
   );
 };

@@ -7,6 +7,8 @@ const initialState: UserT = {
   role: "",
   email: "",
   phone: "",
+  order_count: 0,
+  whilist_count: 0,
 };
 
 export const userSlice = createSlice({
@@ -19,6 +21,8 @@ export const userSlice = createSlice({
       state.email = action.payload.email;
       state.phone = action.payload.phone;
       state.name = action.payload.name;
+      state.order_count = action.payload.order_count;
+      state.whilist_count = action.payload.whilist_count;
     },
     setEmail(state, action: PayloadAction<{ email: string }>) {
       state.email = action.payload.email;

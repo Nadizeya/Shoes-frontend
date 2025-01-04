@@ -21,6 +21,8 @@ export const LazyCreateProfile = lazy(
   () => import("@/pages/auth/CreateProfile")
 );
 export const LazyLoveList = lazy(() => import("@/pages/loves"));
+export const LazyOrderList = lazy(() => import("@/pages/order"));
+export const LazyOrderDetail = lazy(() => import("@/pages/orderDetail"));
 
 // private pages (add your private page imports here as needed)
 export const LazyProfile = lazy(() => import("@/pages/profile"));

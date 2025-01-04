@@ -10,25 +10,24 @@
   padding: 0;
 }
 
-
 @font-face {
-  font-family: 'HelveticaNeueBold';
-  src: url('../public/fonts/HelveticaNeueBold.otf');
+  font-family: "HelveticaNeueBold";
+  src: url("../public/fonts/HelveticaNeueBold.otf");
 }
 @font-face {
-  font-family: 'HelveticaNeueMedium';
-  src: url('../public/fonts/HelveticaNeueMedium.otf');
+  font-family: "HelveticaNeueMedium";
+  src: url("../public/fonts/HelveticaNeueMedium.otf");
 }
 @font-face {
-  font-family: 'HelveticaNeueThin';
-  src: url('../public/fonts/HelveticaNeueThin.otf');
+  font-family: "HelveticaNeueThin";
+  src: url("../public/fonts/HelveticaNeueThin.otf");
 }
 @font-face {
-  font-family: 'HelveticaNeueLight';
-  src: url('../public/fonts/HelveticaNeueLight.otf');
+  font-family: "HelveticaNeueLight";
+  src: url("../public/fonts/HelveticaNeueLight.otf");
 }
 body {
-  font-family: 'HelveticaNeueLight', 'Poppins', sans-serif !important;
+  font-family: "HelveticaNeueLight", "Poppins", sans-serif !important;
   background-color: hsl(220, 50%, 98%);
   color: hsl(0, 0%, 20%);
 }
@@ -47,10 +46,25 @@ li {
   list-style: none;
 } */
 
-.search:focus{
+.search:focus {
   outline: none !important;
   border: none !important;
   box-shadow: none !important;
+}
+
+.group-hover:opacity-100 {
+  opacity: 1;
+}
+
+.group-hover:visible {
+  visibility: visible;
+  width: auto;
+}
+
+.group:hover .group-hover\:opacity-100,
+.group:hover .group-hover\:visible {
+  opacity: 1;
+  visibility: visible;
 }
 @layer base {
   :root {

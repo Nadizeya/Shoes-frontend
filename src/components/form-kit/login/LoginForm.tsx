@@ -60,8 +60,8 @@ function LoginForm({ mobile }: LoginPropsT) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "nadilay@example.com",
-      password: "Password@123",
+      username: "silvernadi99@gmail.com",
+      password: "Nadizeya@123",
     },
   });
   const { mutate, isError } = useMutation({

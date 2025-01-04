@@ -4,4 +4,6 @@ export type UserT = {
   email: string;
   role: string;
   phone?: string;
+  order_count: number;
+  whilist_count: number;
 };

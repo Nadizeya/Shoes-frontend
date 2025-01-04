@@ -34,9 +34,11 @@ const sortOptions: {
 ];
 
 export const LoveListSort = ({
+  type,
   onSortChange,
 }: {
   onSortChange: (sort: string) => void;
+  type: string;
 }) => {
   const [sortList, setsortList] = useState("Recenty Added");
 
@@ -47,12 +49,19 @@ export const LoveListSort = ({
 
   return (
     <div className="flex justify-between">
-      <span className="flex gap-2 font-bold">
-        <Export size={23} />
-        Share
-      </span>
+      {type === "love-list" && (
+        <span className="flex gap-2 font-bold">
+          <Export size={23} />
+          Share
+        </span>
+      )}
+      {type === "order-list" && (
+        <span className="flex gap-2 font-bold text-sm">
+          Check the status of recent orders, and discover similar products.
+        </span>
+      )}
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 text-xs items-center">
         <p>Sort By:</p>
 
         <DropdownMenu>

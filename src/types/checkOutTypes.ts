@@ -29,8 +29,9 @@ export interface CheckOutT {
   cartItems: CartProduct[];
   deliveryInfo: DeliveryInfo;
   orderCost: OrderCost;
+  paymentData: PaymentDataList;
   paymentId: number;
-  paymentFile: File | null; // Use File type if you're handling file uploads
+  paymentFile: File | null;
 }
 
 type Product = {
@@ -60,3 +61,19 @@ export type CartResponseType = {
   data: CartProductsList;
   total: number;
 };
+
+export type Userdetails = {
+  account_id: number;
+  name: string;
+  pay_number: string;
+  bank_number: string;
+};
+
+export type PaymentData = {
+  id: number;
+  name: string;
+  bank_type: string;
+  userdetails: Userdetails;
+};
+
+export type PaymentDataList = PaymentData[];

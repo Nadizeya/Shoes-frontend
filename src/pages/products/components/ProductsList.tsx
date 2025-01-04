@@ -1,42 +1,50 @@
 import React, { useEffect, useState } from "react";
-import { products } from "@/pages/home/products";
+// import { products } from "@/pages/home/products";
 import ProductCard from "@/components/shared/ProductCard";
+import { categoryProduct } from "@/types/categoryTypes";
 
-const sliceLengths = {
-  xs: 6,
-  sm: 8,
-  md: 12,
-  lg: 18,
-  xl: 24,
+// const sliceLengths = {
+//   xs: 6,
+//   sm: 8,
+//   md: 12,
+//   lg: 18,
+//   xl: 24,
+// };
+
+// const screenWidth = window.innerWidth;
+// let sliceLength;
+// if (screenWidth < 640) {
+//   sliceLength = sliceLengths.xs;
+// } else if (screenWidth < 768) {
+//   sliceLength = sliceLengths.sm;
+// } else if (screenWidth < 1024) {
+//   sliceLength = sliceLengths.md;
+// } else if (screenWidth < 1280) {
+//   sliceLength = sliceLengths.lg;
+// } else {
+//   sliceLength = sliceLengths.xl;
+// }
+
+type ProductListProps = {
+  products: categoryProduct[];
+  loadMore: () => void;
+  isLoading: boolean;
 };
 
-const screenWidth = window.innerWidth;
-let sliceLength;
-if (screenWidth < 640) {
-  sliceLength = sliceLengths.xs;
-} else if (screenWidth < 768) {
-  sliceLength = sliceLengths.sm;
-} else if (screenWidth < 1024) {
-  sliceLength = sliceLengths.md;
-} else if (screenWidth < 1280) {
-  sliceLength = sliceLengths.lg;
-} else {
-  sliceLength = sliceLengths.xl;
-}
+const ProductList = ({ products, loadMore, isLoading }: ProductListProps) => {
+  console.log(products);
+  // const [width, setWidth] = useState(window.innerWidth);
+  // function updateDimensionWidth() {
+  //   setWidth(window.innerWidth);
+  // }
 
-const ProductList = () => {
-  const [width, setWidth] = useState(window.innerWidth);
-  function updateDimensionWidth() {
-    setWidth(window.innerWidth);
-  }
+  // const [showAll, setShowAll] = useState(false);
+  // const displayedData = showAll ? products : products.slice(0, sliceLength);
 
-  const [showAll, setShowAll] = useState(false);
-  const displayedData = showAll ? products : products.slice(0, sliceLength);
-
-  useEffect(() => {
-    window.addEventListener("resize", updateDimensionWidth);
-    return () => window.removeEventListener("resize", updateDimensionWidth);
-  }, [width]);
+  // useEffect(() => {
+  //   window.addEventListener("resize", updateDimensionWidth);
+  //   return () => window.removeEventListener("resize", updateDimensionWidth);
+  // }, [width]);
 
   const results = 15000;
   return (
@@ -44,26 +52,34 @@ const ProductList = () => {
       <small className="text-muted-foreground">{results} results</small>
 
       <div className="grid grid-col sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-x-2 gap-y-6">
-        {displayedData.map((brand: any) => (
+        {products.map((product: categoryProduct) => (
           <ProductCard
-            key={brand.id}
-            id={brand.id}
-            tags={brand.tags}
-            desc={brand.desc}
-            image={brand.image}
-            price={brand.price}
-            title={brand.title}
+            key={product.id}
+            id={product.id}
+            brand_name={product.brand_name}
+            category_name={product.category_name}
+            image={product.images?.[0] || "/assets/products/product3.png"}
+            name={product.name}
+            short_description={product.short_description}
+            original_price={product.original_price}
+            videos={product.videos}
           />
         ))}
       </div>
-      {!showAll && products.length > 10 && (
+      <p
+        className="text-center text-black cursor-pointer border w-1/6 border-black rounded-full mx-auto mt-6"
+        onClick={loadMore}
+      >
+        {isLoading ? "Loading..." : "Show More Products"}
+      </p>
+      {/* {!showAll && products.length > 10 && (
         <p
           className="text-center text-black cursor-pointer border w-1/6 border-black rounded-full mx-auto mt-6"
           onClick={() => setShowAll(!showAll)}
         >
           Show More Products
         </p>
-      )}
+      )} */}
     </div>
   );
 };

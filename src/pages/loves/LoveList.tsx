@@ -10,17 +10,21 @@ import { LoveListSort } from "./components/LoveListSort";
 import { BASE_URL } from "@/api/BaseService";
 
 const LoveProduct = ({
+  name,
   id,
   image,
-  title,
+  size,
+  color,
   desc,
   price,
 }: {
+  name: string;
   id: number;
   image: string;
-  title: string;
   desc: string;
   price: number;
+  size: string;
+  color: string;
 }) => {
   const navigate = useNavigate();
 
@@ -34,16 +38,18 @@ const LoveProduct = ({
           src={BASE_URL + image}
           width={150}
           height={150}
-          alt={title}
+          alt={name}
           className="place-self-center"
         />
 
         <div className="flex flex-col items-start gap-2">
-          <h6 className="font-bold">{title}</h6>
+          <h6 className="font-bold">{name}</h6>
           <p>{desc}</p>
-          <p>SIZE 30ml</p>
-          <p>Color : Red</p>
-          <p className="text-sky-500">View similar products</p>
+          <p>{size}</p>
+          <p>{color}</p>
+          <p className="text-sky-500 text-sm md:text-[16px]">
+            View similar products
+          </p>
           <div className=" md:hidden flex items-center gap-3">
             <Button
               className="text-white bg-red-600 rounded-full px-5"
@@ -113,14 +119,18 @@ const LoveList = () => {
         console.log("Date A:", dateA, "Date B:", dateB);
         return dateB - dateA;
       } else if (sort === "Price low to high") {
-        console.log(a.original_price, b.original_price, " a and b");
-        return a.original_price - b.original_price;
+        console.log(
+          a.product.original_price,
+          b.product.original_price,
+          " a and b"
+        );
+        return a.product.original_price - b.product.original_price;
       } else if (sort === "Price high to low") {
-        return b.original_price - a.original_price;
+        return a.product.original_price - b.product.original_price;
       } else if (sort === "Name A to Z") {
-        return a.name.localeCompare(b.name);
+        return a.product.name.localeCompare(b.product.name);
       } else if (sort === "Name Z to A") {
-        return b.name.localeCompare(a.name);
+        return b.product.name.localeCompare(a.product.name);
       }
       return 0;
     });
@@ -153,7 +163,7 @@ const LoveList = () => {
             <div className="">
               <h1 className="font-medium text-2xl">Loves</h1>
               <Separator className="my-4 bg-gray-400" />
-              <LoveListSort onSortChange={handleSortChange} />
+              <LoveListSort onSortChange={handleSortChange} type="love-list" />
 
               <div className="grid grid-cols-1 gap-4 w-full mt-4">
                 {sortedData?.map((product) => {
@@ -161,10 +171,14 @@ const LoveList = () => {
                     <LoveProduct
                       key={product.id}
                       id={product.id}
-                      image={product.images?.[0]?.path || "default-image.jpg"}
-                      price={product.original_price}
-                      title={product.name}
-                      desc={product.description}
+                      size={product.size}
+                      color={product.color}
+                      image={
+                        product.product.images?.[0]?.path || "default-image.jpg"
+                      }
+                      price={product.product.original_price}
+                      name={product.product.name}
+                      desc={product.product.short_description}
                     />
                   );
                 })}

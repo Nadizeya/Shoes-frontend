@@ -27,7 +27,7 @@ export const addToWishList = async (
 export const removeWishList = async (
   data: any
 ): Promise<{ data: ProductData }> => {
-  const response = await ProtectedService.post(`/whitelist/remove`, data);
+  const response = await ProtectedService.post(`/whitelists/remove`, data);
   if (response.status != 200) {
     throw new Error("Problem with fetching");
   }

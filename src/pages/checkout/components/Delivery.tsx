@@ -17,7 +17,7 @@ const DeliveryContent = () => {
       <h1 className="mb-2">Delivery</h1>
       <FormField
         control={control}
-        name="delivery_info.name"
+        name="user_name"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Phone Name</FormLabel>
@@ -31,7 +31,7 @@ const DeliveryContent = () => {
 
       <FormField
         control={control}
-        name="delivery_info.address"
+        name="address"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Your Address</FormLabel>
@@ -44,7 +44,7 @@ const DeliveryContent = () => {
       />
       <FormField
         control={control}
-        name="delivery_info.phoneNumber"
+        name="phone_number"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Phone No.</FormLabel>

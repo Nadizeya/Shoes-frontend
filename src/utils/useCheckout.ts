@@ -1,20 +1,28 @@
-import { fetchCartItems } from "@/api/endpoints/checkoutApi";
-import { fetchProductbyId, postAddToCart } from "@/api/endpoints/productsApi";
-import { CartProductsList, CartResponseType } from "@/types/checkOutTypes";
-import { ProductData } from "@/types/productDetailType";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { fetchCartItems, fetchPaymentData } from "@/api/endpoints/checkoutApi";
+import { CartProductsList, PaymentDataList } from "@/types/checkOutTypes";
+import { useQuery, useQueries } from "@tanstack/react-query";
 
 export const useCheckoutItems = () => {
-  const query = useQuery({
-    queryKey: ["cartProducts"],
-    queryFn: fetchCartItems,
+  const queries = useQueries({
+    queries: [
+      { queryKey: ["cartProducts"], queryFn: fetchCartItems },
+      { queryKey: ["payment"], queryFn: fetchPaymentData },
+    ],
   });
+
+  const [cartProductsQuery, paymentQuery] = queries;
+
+  const isLoading = cartProductsQuery.isLoading || paymentQuery.isLoading;
+  const isError = cartProductsQuery.isError || paymentQuery.isError;
+  const isSuccess = cartProductsQuery.isSuccess && paymentQuery.isSuccess;
+
   return {
-    cartProducts: query.data?.data as CartProductsList,
-    isLoading: query.isLoading,
-    isError: query.isError,
-    isSuccess: query.isSuccess,
+    cartProducts: cartProductsQuery.data?.data as CartProductsList,
+    paymentData: paymentQuery.data?.data as PaymentDataList,
+    total: cartProductsQuery.data?.total as number,
+    isLoading,
+    isError,
+    isSuccess,
   };
 };
 

@@ -27,7 +27,7 @@ const Home = () => {
     <div>
       {isLoading && <MainLoading />}
       {isSuccess && (
-        <div className="space-y-10 pb-10">
+        <div className="space-y-8 pb-10">
           <HeroSection />
           <ProductsHomeComp
             id={1}

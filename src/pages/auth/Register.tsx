@@ -9,17 +9,9 @@ import useResponsive from "@/utils/useResponsive";
 
 const DesktopRegisterComp = () => {
   return (
-    <Card className="shadow-lg rounded-lg  border border-gray-100 h-[80vh] min-h-[80vh] max-h-[80vh]">
-      <CardContent className="p-4 h-full">
-        <div className="text-center mt-4">
-          <h1 className="text-black text-2xl font-bold">Create Account</h1>
-          <p className="my-4">
-            Please create your account to explore all the products
-          </p>
-        </div>
-        <div className="h-full">
-          <RegisterForm />
-        </div>
+    <Card className="shadow-lg rounded-lg  border border-gray-100 w-[60vh] h-[70vh] max-h-[70vh]">
+      <CardContent className="px-4">
+        <RegisterForm />
       </CardContent>
     </Card>
   );
@@ -36,14 +28,8 @@ const MobileRegisterComp = () => {
         <ArrowLeft />
       </p>
 
-      <div className="flex flex-col items-center justify-center h-full">
+      <div className="flex flex-col items-center justify-center h-full text-sm">
         <AuthLogo width={80} height={80} mobile={true} />
-        <div className="text-center">
-          <h1 className="text-black text-xl font-bold my-3">Create Account</h1>
-          <p className="my-4 text-sm">
-            Please create your account to explore all the products
-          </p>
-        </div>
         <div className="w-[80%] md:max-w-[40%]">
           <RegisterForm />
         </div>

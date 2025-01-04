@@ -3,18 +3,21 @@ import { Link } from "react-router-dom";
 
 interface Props {
   data: CategoryT[];
+  mouseLeave: any;
 }
 
-const CategoriesDropDown = ({ data }: Props) => {
-  // Create chunks of 3 categories for each row
+const CategoriesDropDown = ({ data, mouseLeave }: Props) => {
   const chunkedData = [];
-  for (let i = 0; i < data.length; i += 3) {
-    chunkedData.push(data.slice(i, i + 3));
+  for (let i = 0; i < data.length; i += 2) {
+    chunkedData.push(data.slice(i, i + 5));
   }
 
   return (
-    <div className="absolute text-sm bg-white text-black p-4 w-full">
-      <div className="space-y-4 max-w-screen-xl mx-auto px-8">
+    <div
+      className="fixed top-36 left-0  text-sm w-screen bg-white text-black p-4 "
+      onMouseLeave={mouseLeave}
+    >
+      <div className="space-y-4 px-12">
         {chunkedData.map((row, rowIndex) => (
           <div className="flex justify-start" key={rowIndex}>
             {row.map((category, index) => (

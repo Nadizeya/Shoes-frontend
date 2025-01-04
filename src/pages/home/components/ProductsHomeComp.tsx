@@ -13,9 +13,9 @@ const ProductsHomeComp = (props: ProductListProps) => {
   const { data } = props;
   return (
     <div className="space-y-4" key={props.id}>
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center">
         <h1 className="text-xl font-bold">{props.name}</h1>
-        <Link to={`/products`} className="text-blue-400">
+        <Link to={`/products`} className="text-blue-400 text-sm font-bold">
           Show More
         </Link>
       </div>

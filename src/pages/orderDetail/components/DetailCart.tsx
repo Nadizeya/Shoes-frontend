@@ -180,10 +180,11 @@ const MobileCartItem = ({
   );
 };
 
-const CartComp = () => {
+const DetailCart = () => {
   const { desktopResponsive, mobileResponsive, tabletResponsive } =
     useResponsive();
   const cartItems = useAppSelector((state) => state.checkout.cartItems);
+  console.log(cartItems);
   const dispatch = useDispatch();
   const mutation = useMutation({
     mutationFn: deleteOrder,
@@ -196,39 +197,40 @@ const CartComp = () => {
   };
 
   return (
-    <div className="w-full sm:w-[80%] lg:w-[60%] border rounded-lg shadow-lg">
-      {desktopResponsive &&
-        cartItems?.map((item, index) => (
-          <CartItem
-            key={index}
-            id={item.id}
-            title={item.product.name}
-            image={BASE_URL + item.product.image}
-            color={item.product.item.color}
-            desc={item.product.short_description}
-            price={item.product.original_price}
-            size={item.product.item.size}
-            quantity={item.quantity}
-            onDelete={handleDelete}
-          />
-        ))}
-      {(mobileResponsive || tabletResponsive) &&
-        cartItems?.map((item, index) => (
-          <MobileCartItem
-            key={index}
-            id={item.id}
-            title={item.product.name}
-            image={BASE_URL + item.product.image}
-            color={item.product.item.color}
-            desc={item.product.short_description}
-            price={item.product.original_price}
-            size={item.product.item.size}
-            quantity={item.quantity}
-            onDelete={handleDelete}
-          />
-        ))}
-    </div>
+    // <div className="w-full sm:w-[80%] lg:w-[60%] border rounded-lg shadow-lg">
+    //   {desktopResponsive &&
+    //     cartItems?.map((item, index) => (
+    //       <CartItem
+    //         key={index}
+    //         id={item.id}
+    //         title={item.created_at}
+    //         image={BASE_URL + item.product.image}
+    //         color={item.product.item.color}
+    //         desc={item.product.short_description}
+    //         price={item.product.original_price}
+    //         size={item.product.item.size}
+    //         quantity={item.quantity}
+    //         onDelete={handleDelete}
+    //       />
+    //     ))}
+    //   {(mobileResponsive || tabletResponsive) &&
+    //     cartItems?.map((item, index) => (
+    //       <MobileCartItem
+    //         key={index}
+    //         id={item.id}
+    //         title={item.product.name}
+    //         image={BASE_URL + item.product.image}
+    //         color={item.product.item.color}
+    //         desc={item.product.short_description}
+    //         price={item.product.original_price}
+    //         size={item.product.item.size}
+    //         quantity={item.quantity}
+    //         onDelete={handleDelete}
+    //       />
+    //     ))}
+    // </div>
+    <div>Cart Items</div>
   );
 };
 
-export default CartComp;
+export default DetailCart;

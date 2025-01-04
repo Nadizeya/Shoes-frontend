@@ -10,12 +10,18 @@ import { toast } from "@/components/ui/use-toast";
 
 import {
   setCartItems,
+  setPayment,
+  setTotalCost,
   updateDeliveryInfo,
   updateOrderCost,
+  updateTotalCost,
 } from "@/store/slices/Checkout/checkOutSlice";
 import { CheckOutT } from "@/types/checkOutTypes";
 import ProductsHomeComp from "../home/components/ProductsHomeComp";
 import { useCheckoutItems } from "@/utils/useCheckout";
+import { addOrder } from "@/api/endpoints/checkoutApi";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 // export const itemData = [
 //   {
@@ -52,14 +58,12 @@ import { useCheckoutItems } from "@/utils/useCheckout";
 
 // Zod schema for form validation
 const formSchema = z.object({
-  delivery_info: z.object({
-    name: z.string().min(1, "Name is required"),
-    phoneNumber: z
-      .string()
-      .regex(/^\d+$/, "Phone number should contain digits only")
-      .min(10, "Phone number should be at least 10 digits"),
-    address: z.string().min(5, "Address must be at least 5 characters"),
-  }),
+  user_name: z.string().min(1, "Name is required"),
+  phone_number: z
+    .string()
+    .regex(/^\d+$/, "Phone number should contain digits only")
+    .min(10, "Phone number should be at least 10 digits"),
+  address: z.string().min(5, "Address must be at least 5 characters"),
   // order_cost: z.object({
   //   total: z.number().min(0, "Total must be a positive number"),
   //   delivery_cost: z.number().min(0, "Delivery cost must be a positive number"),
@@ -72,23 +76,29 @@ const formSchema = z.object({
 });
 
 const Checkout = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { cartProducts, isSuccess, isError, isLoading } = useCheckoutItems();
+  const { cartProducts, paymentData, isSuccess, isError, isLoading, total } =
+    useCheckoutItems();
+  // console.log(paymentData, "Payment data");
   useEffect(() => {
-    dispatch(setCartItems(cartProducts));
-  }, [cartProducts, dispatch]);
+    if (isSuccess) {
+      dispatch(setCartItems(cartProducts));
+      dispatch(setPayment(paymentData));
+      dispatch(setTotalCost(total));
+    }
+  }, [cartProducts, paymentData, dispatch]);
 
   // const cartItems = useAppSelector((state) => state.checkout.cartItems);
-  const orderCost = useAppSelector((state) => state.checkout.orderCost);
+  const totalCost = useAppSelector((state) => state.checkout.orderCost.total);
+  const paymentId = useAppSelector((state) => state.checkout.paymentId);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      delivery_info: {
-        name: "",
-        phoneNumber: "",
-        address: "",
-      },
+      name: "",
+      phoneNumber: "",
+      address: "",
       // order_cost: {
       //   total: 0,
       //   delivery_cost: 0,
@@ -102,6 +112,10 @@ const Checkout = () => {
   const { formState } = form;
   console.log("Errors:", formState.errors);
 
+  const mutation = useMutation({
+    mutationFn: addOrder,
+  });
+
   // console.log(form);
 
   const onSubmit = (data: any) => {
@@ -110,8 +124,23 @@ const Checkout = () => {
       description:
         "Your order is submitted successful. Please wait for the admin to confirm the order.",
     });
-    data = { orderCost: orderCost, cartItems: cartProducts, ...data };
-    console.log(data);
+    console.log(data, "checkout data");
+
+    const products = cartProducts
+      .filter((item) => item.quantity && item.id)
+      .map((item: any) => ({
+        variation_id: item.product.item.id,
+        quantity: item.quantity,
+      }));
+    data = {
+      user_id: cartProducts[0].user_id,
+      total_price: totalCost,
+      products: products,
+      account_id: paymentId,
+      ...data,
+    };
+    mutation.mutate(data);
+    navigate("/");
   };
   return (
     <div>
@@ -124,10 +153,6 @@ const Checkout = () => {
                 <CartComp />
                 <CheckoutComp />
               </div>
-
-              {/* <Button type="submit" variant="welcome">
-              Submit{" "}
-            </Button> */}
             </form>
           </FormProvider>
           {/* <div className="mt-5">

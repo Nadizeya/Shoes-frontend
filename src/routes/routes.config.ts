@@ -6,6 +6,7 @@ import { checkOutRoutes } from "./checkout/CheckOutRoute";
 import { homeRoutes } from "./home/homeRoutes";
 import { profileRoutes } from "./profile/profileRoutes";
 import { loveRoutes } from "./loves/LoveRoute";
+import { orderRoutes } from "./order/OrderRoute";
 
 export const authenticationRoutes = [...authRoutes];
 
@@ -19,4 +20,5 @@ export const privateRoutes = [
   ...profileRoutes,
   ...checkOutRoutes,
   ...loveRoutes,
+  ...orderRoutes,
 ];

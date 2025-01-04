@@ -2,37 +2,31 @@ export type ProductImage = {
   id: number;
   product_id: number;
   path: string;
-  created_at: string; // ISO 8601 timestamp
-  updated_at: string; // ISO 8601 timestamp
 };
 
-export type WishListProduct = {
+interface WishListProduct {
   id: number;
-  name: string;
-  short_description: string;
-  description: string;
+  product_id: number;
+  size: string;
+  color: string;
   quantity: number;
-  instock: number;
-  images: ProductImage[];
-  original_price: number;
-  discount_price: number;
-  sell_qty: number;
-  stock_qty: number;
-  is_recommend: "TRUE" | "FALSE";
-  is_discount: "TRUE" | "FALSE";
-  discount_percent: number;
-  category_id: number;
-  subcategory_id: number | null;
-  brand_id: number;
-  created_at: string; // ISO date string
-  updated_at: string; // ISO date string
+  price: string;
+  created_at: string | null;
+  updated_at: string;
   pivot: {
     user_id: number;
-    product_id: number;
-    created_at: string; // ISO date string
-    updated_at: string; // ISO date string
+    product_variation_id: number;
+    created_at: string;
+    updated_at: string;
   };
-};
+  product: {
+    id: number;
+    name: string;
+    original_price: number;
+    short_description: string;
+    images: ProductImage[];
+  };
+}
 
 export type WishListProducts = WishListProduct[];
 

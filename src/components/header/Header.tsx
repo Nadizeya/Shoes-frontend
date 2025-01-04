@@ -48,7 +48,7 @@ const dropDownOptions: dropDownOptionT[] = [
     icon: <Package size={23} />,
     title: "Orders",
     desc: "View and track online or pickup orders",
-    path: "/wishlist",
+    path: "/order-list",
   },
   {
     id: 3,
@@ -94,6 +94,8 @@ const DesktopNav = ({
   const navigate = useNavigate();
 
   const loginUserName = useAppSelector((state) => state.user.name);
+  const whilistCount = useAppSelector((state) => state.user.whilist_count);
+  const order_count = useAppSelector((state) => state.user.order_count);
 
   return (
     <nav className="hidden md:flex items-center justify-between gap-2 ">
@@ -193,12 +195,18 @@ const DesktopNav = ({
         </li>
         <li>
           <Link to="/love-list">
-            <NotificationBadge icon={<Heart size={23} />} count={10} />
+            <NotificationBadge
+              icon={<Heart size={23} />}
+              count={whilistCount}
+            />
           </Link>
         </li>
         <Link to={"/checkout"}>
           <li className="flex items-center gap-4">
-            <NotificationBadge icon={<Basket size={23} />} count={5} />
+            <NotificationBadge
+              icon={<Basket size={23} />}
+              count={order_count}
+            />
           </li>
         </Link>
       </ul>
@@ -213,10 +221,9 @@ const MobileNav = ({
   authenticated: AuthenticatedT;
   logout: () => void;
 }) => {
-  // console.log(authenticated);
   const navigate = useNavigate();
-
-  const loginUserName = useAppSelector((state) => state.user.name);
+  const whilistCount = useAppSelector((state) => state.user.whilist_count);
+  const order_count = useAppSelector((state) => state.user.order_count);
 
   return (
     <nav className="flex items-center justify-between">
@@ -231,12 +238,18 @@ const MobileNav = ({
       <ul className="flex items-center gap-4">
         <li>
           <Link to="/love-list">
-            <NotificationBadge icon={<Heart size={23} />} count={10} />
+            <NotificationBadge
+              icon={<Heart size={23} />}
+              count={whilistCount}
+            />
           </Link>
         </li>
         <Link to={"/checkout"}>
           <li className="flex items-center gap-4">
-            <NotificationBadge icon={<Basket size={23} />} count={5} />
+            <NotificationBadge
+              icon={<Basket size={23} />}
+              count={order_count}
+            />
           </li>
         </Link>
       </ul>
