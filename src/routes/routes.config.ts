@@ -1,7 +1,6 @@
 import authRoutes from "./auth/authRoutes";
 import { categoryRoutes } from "./categories/categoryRoutes";
 import { productRoutes } from "./products/productRoutes";
-import { wishListRoutes } from "./wishList/wishListRoutes";
 import { checkOutRoutes } from "./checkout/CheckOutRoute";
 import { homeRoutes } from "./home/homeRoutes";
 import { profileRoutes } from "./profile/profileRoutes";

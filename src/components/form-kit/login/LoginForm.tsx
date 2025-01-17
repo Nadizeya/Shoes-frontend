@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { openCloseEyesPassword } from "@/utils/helpers/OpenCloseEyesPassword";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -64,7 +63,7 @@ function LoginForm({ mobile }: LoginPropsT) {
       password: "Nadizeya@123",
     },
   });
-  const { mutate, isError } = useMutation({
+  const { mutate, isError, isPending } = useMutation({
     mutationFn: postLogin,
   });
 
@@ -80,8 +79,13 @@ function LoginForm({ mobile }: LoginPropsT) {
         navigate("/");
         localStorage.setItem("authToken", data.token);
       },
-      onError: (err) => {
-        setErrorMessage(err.response?.data?.message || "Login failed"); // Extract message or set a default
+      onError: (err: unknown) => {
+        if (err && typeof err === "object" && "response" in err) {
+          const response = (err as any).response;
+          setErrorMessage(response?.data?.message || "Login failed");
+        } else {
+          setErrorMessage("Login failed");
+        }
       },
     });
 
@@ -148,7 +152,12 @@ function LoginForm({ mobile }: LoginPropsT) {
           </FormDescription>
         </div>
         <div className="text-center">
-          <Button type="submit" variant="welcome" className="w-full">
+          <Button
+            type="submit"
+            variant="welcome"
+            className="w-full"
+            disabled={isPending}
+          >
             Sign In
           </Button>
           <p

@@ -1,7 +1,7 @@
 // import { HomeApiResponse, Data } from "@/types/Home/homeTypes";
 import { ProductData } from "@/types/productDetailType";
 import PublicService from "../PublicService";
-import { postAddToCartT } from "@/utils/useProductDetail";
+import { postAddToCartT } from "@/utils/api hooks/useProductDetail";
 import ProtectedService from "../ProtectedService";
 
 // Fetch all products

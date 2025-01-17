@@ -9,10 +9,8 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import {
@@ -27,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const FormSchema = z.object({
-  otp: z.string().min(6, {
+  otp_code: z.string().min(6, {
     message: "Your one-time password must be 6 characters.",
   }),
 });
@@ -36,27 +34,30 @@ export function InputOTPForm() {
   const navigate = useNavigate();
   const email = useAppSelector((state) => state.user.email);
   const [errorMessage, setErrorMessage] = useState("");
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      otp: "",
+      otp_code: "",
     },
   });
-  type FormDataWithEmail = { email: string; otp_code: number };
+
   const { mutate, isError } = useMutation({
     mutationFn: postOtpValidation,
   });
 
-  function onSubmit(data: FormDataWithEmail) {
-    const otpAsNumber = Number(data.otp);
-    console.log("object");
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    const otpAsNumber = Number(data.otp_code);
 
     if (isNaN(otpAsNumber)) {
       setErrorMessage("Invalid OTP value");
       return;
     }
-    data = { otp_code: otpAsNumber, email: email };
-    mutate(data, {
+
+    const payload = { otp_code: otpAsNumber, email };
+    console.log("Payload:", payload);
+
+    mutate(payload, {
       onSuccess: (response) => {
         console.log(response.data);
         toast({
@@ -64,7 +65,7 @@ export function InputOTPForm() {
           description: (
             <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
               <code className="text-white">
-                {JSON.stringify(data, null, 2)}
+                {JSON.stringify(payload, null, 2)}
               </code>
             </pre>
           ),
@@ -72,7 +73,8 @@ export function InputOTPForm() {
         navigate("/reset-password");
       },
       onError: (err) => {
-        setErrorMessage(err.response?.data?.msg || "Wrong OTP code"); // Extract message or set a default
+        console.error(err);
+        setErrorMessage("Wrong OTP code");
       },
     });
   }
@@ -82,29 +84,16 @@ export function InputOTPForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <FormField
           control={form.control}
-          name="otp"
+          name="otp_code"
           render={({ field }) => (
-            <FormItem className="">
+            <FormItem>
               <FormControl>
                 <InputOTP maxLength={6} {...field}>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                  </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={1} />
-                  </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={2} />
-                  </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={3} />
-                  </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={4} />
-                  </InputOTPGroup>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
+                  {[...Array(6)].map((_, index) => (
+                    <InputOTPGroup key={index}>
+                      <InputOTPSlot index={index} />
+                    </InputOTPGroup>
+                  ))}
                 </InputOTP>
               </FormControl>
               <FormMessage />
@@ -112,7 +101,6 @@ export function InputOTPForm() {
           )}
         />
         {isError && <small className="text-red-600 mt-4">{errorMessage}</small>}
-
         <Button
           type="submit"
           variant="welcome"

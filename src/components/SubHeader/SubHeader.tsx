@@ -1,71 +1,51 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import CategoriesDropDown from "./CategoriesDropDown";
 import { useAppSelector } from "@/store/hook";
 import useResponsive from "@/utils/useResponsive";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@radix-ui/react-hover-card";
 
 const SubHeader = () => {
   const maincategories = useAppSelector((state) => state.home.maincategroies);
   const { desktopResponsive, mobileResponsive, tabletResponsive } =
     useResponsive();
 
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const [activeIndex] = useState<number | null>(null);
 
-  const handleMouseEnter = (index: number) => {
-    setActiveIndex(index);
-  };
-
-  const handleMouseLeave = () => {
-    setActiveIndex(null);
-  };
-  // const handleClickOutside = (event: MouseEvent) => {
-  //   if (
-  //     dropdownRef.current &&
-  //     !dropdownRef.current.contains(event.target as Node)
-  //   ) {
-  //     setActiveIndex(null);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (activeIndex !== null) {
-  //     document.addEventListener("mousedown", handleClickOutside);
-  //   } else {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   }
-
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, [activeIndex]);
+  useEffect(() => {
+    console.log("Active index changed:", activeIndex);
+  }, [activeIndex]);
 
   const DesktopNav = () => {
     return (
-      <nav className="flex items-center justify-evenly text-white text-xs ">
-        {maincategories.map((data: any, index: number) => (
+      // <div className="">
+      <nav className="flex items-center justify-evenly text-white text-xs">
+        {maincategories.map((data, index) => (
           <div
             key={data.id}
-            onMouseEnter={() => handleMouseEnter(index)}
-            onMouseLeave={handleMouseLeave}
-            className="relative group"
+            // onMouseEnter={(event) => handleMouseEnter(index, event)}
+            className="relative"
           >
-            <p
-              className={`cursor-pointer p-2 ${
-                activeIndex === data.id ? "text-blue-500" : ""
-              }hover:text-blue-400`}
-            >
-              {data.name}
-            </p>
-            {activeIndex === index && (
-              <div className="absolute top-full left-0 w-full">
-                <CategoriesDropDown
-                  data={data.categories}
-                  mouseLeave={handleMouseLeave}
-                />
-              </div>
-            )}
+            <HoverCard openDelay={200} closeDelay={100}>
+              <HoverCardTrigger asChild>
+                <p
+                  className={`cursor-pointer p-2 ${
+                    activeIndex === index ? "text-blue-500" : ""
+                  } hover:text-blue-400`}
+                >
+                  {data.name}
+                </p>
+              </HoverCardTrigger>
+
+              <HoverCardContent className="bg-white w-screen text-black shadow-lg  p-4 z-40 text-sm transform translate-y-2">
+                <CategoriesDropDown data={data.categories} />
+              </HoverCardContent>
+            </HoverCard>
           </div>
         ))}
       </nav>

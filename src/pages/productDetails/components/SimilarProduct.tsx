@@ -1,4 +1,3 @@
-import React from "react";
 import { products } from "@/pages/home/products";
 import ProductCard from "../../../components/shared/ProductCard";
 

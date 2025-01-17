@@ -1,6 +1,4 @@
-import { useQuery, useQueries } from "@tanstack/react-query";
-import { fetchMainCategories, fetchHome } from "@/api/endpoints/homeApi";
-import { Maincategroies, HomeProducts } from "@/types/homeTypes";
+import { useQuery } from "@tanstack/react-query";
 import { getAllWishLists } from "@/api/endpoints/wishlistApi";
 import { WishListProducts } from "@/types/wishlistTypes";
 

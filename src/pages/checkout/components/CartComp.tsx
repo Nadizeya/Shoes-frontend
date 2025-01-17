@@ -43,7 +43,6 @@ const CartItem = ({
   price,
   size,
   color,
-  quantity,
   onDelete,
 }: {
   id: number;
@@ -77,9 +76,11 @@ const CartItem = ({
   };
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex justify-around">
-        <img src={image} alt={title} className="w-[250px] h-[250px] py-4" />
+        <div>
+          <img src={image} alt={title} className="w-[250px] h-[250px] py-4" />
+        </div>
         <div className="flex flex-col justify-center ">
           <div className="mb-2 flex justify-between items-center">
             <h2 className="font-bold">{title}</h2>
@@ -115,7 +116,6 @@ const MobileCartItem = ({
   price,
   size,
   color,
-  quantity,
   onDelete,
 }: {
   id: number;
@@ -159,7 +159,7 @@ const MobileCartItem = ({
           <span className="text-xs">{color}</span>
         </div>
       </div>
-      <div className="flex justify-between items-center mt-4 p-4">
+      <div className="flex justify-between items-center mt-4 p-4 px-10 md:px-16 ">
         <div className="flex gap-2">
           <ItemQuantity
             quantity={itemQuantity}
@@ -196,7 +196,7 @@ const CartComp = () => {
   };
 
   return (
-    <div className="w-full sm:w-[80%] lg:w-[60%] border rounded-lg shadow-lg">
+    <div className="w-full sm:w-[80%] lg:w-[70%] xl:w-[70%] border rounded-lg shadow-lg">
       {desktopResponsive &&
         cartItems?.map((item, index) => (
           <CartItem

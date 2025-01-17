@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { CaretLeft, Export, CaretDown } from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
+import { CaretLeft } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Delete from "/assets/add-to-cart/delete.svg";
-import { products } from "../home/products";
-import { useWishList } from "@/utils/useWishList";
+import { useWishList } from "@/utils/api hooks/useWishList";
 import { LoveListSort } from "./components/LoveListSort";
 import { BASE_URL } from "@/api/BaseService";
 
@@ -98,7 +97,7 @@ const LoveProduct = ({
 
 const LoveList = () => {
   const navigate = useNavigate();
-  const { isError, isLoading, isSuccess, wishListsData } = useWishList();
+  const { isSuccess, wishListsData } = useWishList();
   const [sortedData, setSortedData] = useState(wishListsData || []);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
-import { useQuery, useQueries, keepPreviousData } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { getCategoryById } from "@/api/endpoints/categoryApi";
-import { CategoryData, categoryProduct } from "@/types/categoryTypes";
+import { categoryProduct } from "@/types/categoryTypes";
 import React from "react";
 
 export const useCategoryDetail = () => {

@@ -9,7 +9,7 @@ import { useAppSelector, useAppDispatch } from "@/store/hook";
 
 export function useAuth() {
   const dispatch = useAppDispatch();
-  const { token, signedIn } = useAppSelector(accessTokenState);
+  const { token, signedIn } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
   // this will probably be api fetching
@@ -31,6 +31,8 @@ export function useAuth() {
         role: "",
         email: "",
         phone: "",
+        order_count: 0,
+        whilist_count: 0,
       })
     );
     dispatch(signOutSuccess());

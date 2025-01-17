@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Suspense } from "react";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
-import Layout from "./layout";
 import {
   publicRoutes,
   privateRoutes,
@@ -9,6 +8,7 @@ import {
 } from "@/routes/routes.config";
 import NotFound from "@/pages/notFound";
 import MainLoading from "./components/shared/MainLoading";
+import Layout from "./layout/Layout";
 
 const App = () => {
   return (
@@ -55,7 +55,7 @@ const App = () => {
                   key={route.key}
                   path={route.path}
                   element={
-                    <Suspense fallback={<MainLoading/>}>
+                    <Suspense fallback={<MainLoading />}>
                       {route.element}
                     </Suspense>
                   }

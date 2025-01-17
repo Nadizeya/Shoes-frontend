@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Warejeans from "/assets/resetpassword.png";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -8,7 +8,6 @@ import { toast } from "@/components/ui/use-toast";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -37,7 +36,6 @@ const FormSchema = z
 
 const ResetPassword = () => {
   const email = useAppSelector((state) => state.user.email);
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -50,22 +48,25 @@ const ResetPassword = () => {
     },
   });
 
-  const { mutate, isError, isPending } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: postResetPassword,
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     const formData = { email, password: data.password };
     mutate(formData, {
-      onSuccess: (response) => {
+      onSuccess: () => {
         toast({
           title: "Changing Password is successful.",
         });
-        // dispatch(setEmail(data));
         navigate("/success");
       },
-      onError: (err) => {
-        setErrorMessage(err.response?.data?.msg || "Email is invalid"); // Extract message or set a default
+      onError: (err: any) => {
+        const message = err?.response?.data?.msg || "Email is invalid";
+        toast({
+          title: message,
+          variant: "destructive",
+        });
       },
     });
   }

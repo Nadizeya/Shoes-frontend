@@ -1,15 +1,6 @@
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { CartCardShared } from "../CartCardShared";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { useRef, useState } from "react";
 import { useAppSelector } from "@/store/hook";
 import { useDispatch } from "react-redux";
@@ -18,6 +9,7 @@ import {
   changePaymentId,
 } from "@/store/slices/Checkout/checkOutSlice";
 import { Bank, HandCoins } from "@phosphor-icons/react";
+import { BASE_URL } from "@/api/BaseService";
 
 const PaymentMethodContent = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -39,7 +31,6 @@ const PaymentMethodContent = () => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0] || null;
 
-    const formData = new FormData();
     console.log(selectedFile, "select file");
     if (selectedFile) {
       // setFile(selectedFile);
@@ -78,15 +69,23 @@ const PaymentMethodContent = () => {
           <Tabs
             defaultValue={bankData[0]?.userdetails.account_id.toString()}
             onValueChange={(value) => handlePaymentSelection(Number(value))}
-            className="w-[300px]"
+            className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full bg-white grid-cols-3  p-0">
               {bankData.map((bank) => (
                 <TabsTrigger
                   key={bank.userdetails.account_id}
                   value={bank.userdetails.account_id.toString()}
+                  className="border border-transparent rounded-sm p-2 focus:outline-none data-[state=active]:border-black data-[state=active]:shadow-sm"
                 >
-                  {bank.name}
+                  <img
+                    src={
+                      bank.image
+                        ? `${BASE_URL}${bank.image}`
+                        : "/assets/products/product3.png"
+                    }
+                    className="w-full h-10 object-contain"
+                  />
                 </TabsTrigger>
               ))}
             </TabsList>
@@ -119,13 +118,23 @@ const PaymentMethodContent = () => {
             onValueChange={(value) => handlePaymentSelection(Number(value))}
             className="w-[300px]"
           >
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               {payData.map((pay) => (
                 <TabsTrigger
                   key={pay.userdetails.account_id}
                   value={pay.userdetails.account_id.toString()}
+                  className="gap-2"
                 >
-                  {pay.name}
+                  <img
+                    src={
+                      pay.image
+                        ? `${BASE_URL}${pay.image}`
+                        : "/assets/products/product3.png"
+                    }
+                    width={20}
+                    height={20}
+                  />
+                  <p>{pay.name}</p>
                 </TabsTrigger>
               ))}
             </TabsList>

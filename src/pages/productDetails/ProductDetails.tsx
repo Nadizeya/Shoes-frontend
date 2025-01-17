@@ -1,24 +1,23 @@
-import ProductsInfo from "./components/ProductsInfo";
-import ProductAccordion from "./components/ProductAccordion";
-import SimilarProduct from "./components/SimilarProduct";
-import SuggestionProduct from "./components/SuggestionProduct";
-import HeroSection from "../home/components/HeroSection";
-import { ChevronLeft } from "lucide-react";
-import { useParams } from "react-router-dom";
-import { useProductDetails } from "@/utils/useProductDetail";
+import { useAppDispatch } from "@/store/hook";
 import {
   setProductDetail,
   setSelectedItem,
 } from "@/store/slices/Products/productSlice";
-import { useAppDispatch } from "@/store/hook";
+import { useProductDetails } from "@/utils/api hooks/useProductDetail";
+import { ChevronLeft } from "lucide-react";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import HeroSection from "../home/components/HeroSection";
+import ProductAccordion from "./components/ProductAccordion";
+import ProductsInfo from "./components/ProductsInfo";
+import SimilarProduct from "./components/SimilarProduct";
+import SuggestionProduct from "./components/SuggestionProduct";
 
 const ProductDetails = () => {
   const dispatch = useAppDispatch();
   const { productId } = useParams<{ productId: string }>();
   const numericProductId = Number(productId);
-  const { productDetail, isSuccess, isError, isLoading } =
-    useProductDetails(numericProductId);
+  const { productDetail, isSuccess } = useProductDetails(numericProductId);
 
   console.log(productDetail);
 
@@ -46,11 +45,11 @@ const ProductDetails = () => {
 
           <ProductsInfo />
           <ProductAccordion />
-          <SimilarProduct />
-          <SuggestionProduct />
+          {/* <SimilarProduct /> */}
+          {/* <SuggestionProduct /> */}
           <HeroSection />
-          <SimilarProduct />
-          <SuggestionProduct />
+          {/* <SimilarProduct /> */}
+          {/* <SuggestionProduct /> */}
           <HeroSection />
         </div>
       )}

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 // import { products } from "../products";
 import ProductCard from "../../../components/shared/ProductCard";
@@ -24,13 +23,14 @@ const ProductsHomeComp = (props: ProductListProps) => {
       <div className="flex overflow-x-scroll no-scrollbar gap-4">
         {data.map((product: ProductT) => (
           <ProductCard
-            key={product.id}
             id={product.id}
-            // tags={product.tags}
-            desc={product.short_description}
-            image={product.image?.[0] || "/assets/products/product3.png"}
-            price={product.original_price}
-            title={product.name}
+            name={product.name}
+            category_name={product.category_name}
+            brand_name={product.brand_name} // Optional
+            short_description={product.short_description}
+            original_price={product.original_price}
+            image={product.image}
+            videos={product.videos} // Optional
           />
         ))}
       </div>

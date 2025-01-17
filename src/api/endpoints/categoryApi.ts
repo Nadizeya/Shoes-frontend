@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import ProtectedService from "../ProtectedService";
-import { CategoryData, categoryProduct } from "@/types/categoryTypes";
+import { categoryProduct } from "@/types/categoryTypes";
 
 export const getCategoryById = async (
   page: number,

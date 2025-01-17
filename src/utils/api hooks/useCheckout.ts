@@ -1,6 +1,6 @@
 import { fetchCartItems, fetchPaymentData } from "@/api/endpoints/checkoutApi";
 import { CartProductsList, PaymentDataList } from "@/types/checkOutTypes";
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 
 export const useCheckoutItems = () => {
   const queries = useQueries({

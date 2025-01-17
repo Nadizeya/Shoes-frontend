@@ -1,20 +1,16 @@
 import ProductsHomeComp from "./components/ProductsHomeComp";
 import HeroSection from "./components/HeroSection";
 // import { useApiGet } from "@/utils/useQueryHook";
-import { useQuery } from "@tanstack/react-query";
-import { GetAllResponse } from "@/types/common";
-import { fetchProducts } from "@/api/endpoints/productsApi";
 import { useEffect } from "react";
 import { useAppDispatch } from "@/store/hook";
-import { setMainCategories, setProducts } from "@/store/slices/Home/homeSlice";
-import { useHomeData } from "@/utils/useHomeData";
+import { setMainCategories } from "@/store/slices/Home/homeSlice";
+import { useHomeData } from "@/utils/api hooks/useHomeData";
 import MainLoading from "@/components/shared/MainLoading";
 
 const Home = () => {
   const dispatch = useAppDispatch();
 
-  const { mainCategories, productsData, isLoading, isError, isSuccess } =
-    useHomeData();
+  const { mainCategories, productsData, isLoading, isSuccess } = useHomeData();
 
   useEffect(() => {
     if (isSuccess) {

@@ -28,7 +28,7 @@ export const postForgotPassword = async (
 };
 
 export const postOtpValidation = async (
-  otpValidatioVal: { email: string; otp: number } // email is string, otp is number
+  otpValidatioVal: { email: string; otp_code: number } // email is string, otp is number
 ) => {
   const response = await PublicService.post("/otp-validation", otpValidatioVal);
 

@@ -13,7 +13,7 @@ export const authSlice = createSlice({
   reducers: {
     signInSuccess(state, action: PayloadAction<string>) {
       state.signedIn = true;
-      state.token = action.payload.token;
+      state.token = action.payload;
     },
     signOutSuccess(state) {
       state.signedIn = false;

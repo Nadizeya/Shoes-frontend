@@ -1,11 +1,10 @@
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 import { Outlet } from "react-router-dom";
 import SubHeader from "@/components/SubHeader/SubHeader";
-import { Toaster } from "@/components/ui/toaster";
 import { House, UsersThree } from "@phosphor-icons/react";
 import Icon from "@/components/ui/icon";
 import Logo from "/assets/logo/logo.jpg";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 
 const Layout = () => {
   const StickyNav = () => {

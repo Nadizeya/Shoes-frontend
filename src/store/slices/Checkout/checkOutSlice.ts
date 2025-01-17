@@ -5,7 +5,6 @@ import {
   CheckOutT,
   DeliveryInfo,
   OrderCost,
-  PaymentData,
   PaymentDataList,
 } from "../../../types/checkOutTypes";
 

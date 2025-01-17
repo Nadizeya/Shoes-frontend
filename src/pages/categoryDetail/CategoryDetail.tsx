@@ -1,11 +1,8 @@
-import React from "react";
 import ProductList from "../products/components/ProductsList";
-import { useCategoryDetail } from "@/utils/useCategory";
+import { useCategoryDetail } from "@/utils/api hooks/useCategory";
 
 const CategoryDetails = () => {
-  const [page, setPage] = React.useState(1);
-  const { products, isLoading, isError, isSuccess, loadMore } =
-    useCategoryDetail();
+  const { products, isLoading, isError, loadMore } = useCategoryDetail();
 
   if (isLoading) {
     return <div>Loading...</div>;

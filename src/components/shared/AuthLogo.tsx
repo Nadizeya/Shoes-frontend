@@ -1,4 +1,4 @@
-import Logo from "/assets/logo/logo.jpg";
+import Logo from "/assets/footer/Badge.png";
 
 export const AuthLogo = ({
   width,

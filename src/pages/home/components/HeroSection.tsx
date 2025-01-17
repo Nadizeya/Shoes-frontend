@@ -1,4 +1,3 @@
-import React from "react";
 import HeroCard from "../../../components/shared/HeroCard";
 import { heroCardsData } from "../hero";
 

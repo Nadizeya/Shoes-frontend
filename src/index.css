@@ -52,20 +52,21 @@ li {
   box-shadow: none !important;
 }
 
-.group-hover:opacity-100 {
+/* .group-hover\:opacity-100 {
   opacity: 1;
 }
 
-.group-hover:visible {
+.group-hover\:visible {
   visibility: visible;
-  width: auto;
 }
 
 .group:hover .group-hover\:opacity-100,
 .group:hover .group-hover\:visible {
   opacity: 1;
   visibility: visible;
-}
+  width: auto;
+} */
+
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -1,4 +1,3 @@
-import React from "react";
 import Accordion from "@/components/ui/Accordion";
 import { Separator } from "@/components/ui/separator";
 

@@ -2,17 +2,13 @@ import { Separator } from "@/components/ui/separator";
 import { CaretLeft } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
 import { LoveListSort } from "../loves/components/LoveListSort";
-import { Button } from "@/components/ui/button";
-import Delete from "/assets/add-to-cart/delete.svg";
-import { BASE_URL } from "@/api/BaseService";
-import { useOrder } from "@/utils/useOrder";
+import { useOrder } from "@/utils/api hooks/useOrder";
 import { useAppSelector } from "@/store/hook";
 import { OrderItem, status } from "@/types/orderTypes";
 import { format } from "date-fns";
 
 const OrderProduct = ({
   id,
-  status,
   created_at,
   items,
   total_price,
@@ -78,11 +74,11 @@ const OrderProduct = ({
 const OrderList = () => {
   const navigate = useNavigate();
   const userId = useAppSelector((state) => state.user.id);
-  const { isError, isLoading, isSuccess, orderHistory } = useOrder(userId);
+  const { orderHistory } = useOrder(userId);
   console.log(orderHistory);
 
   const handleSortChange = (sort: string) => {
-    console.log("Hello world");
+    console.log(sort);
   };
   return (
     <div className="py-6  space-y-4">

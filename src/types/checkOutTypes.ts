@@ -71,6 +71,7 @@ export type Userdetails = {
 
 export type PaymentData = {
   id: number;
+  image: string;
   name: string;
   bank_type: string;
   userdetails: Userdetails;

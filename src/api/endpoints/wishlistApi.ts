@@ -1,9 +1,6 @@
 // import { HomeApiResponse, Data } from "@/types/Home/homeTypes";
 import { ProductData } from "@/types/productDetailType";
-import PublicService from "../PublicService";
-import { postAddToCartT } from "@/utils/useProductDetail";
 import ProtectedService from "../ProtectedService";
-import { HomeProducts } from "@/types/homeTypes";
 import { WishListProducts } from "@/types/wishlistTypes";
 
 export const getAllWishLists = async (): Promise<{

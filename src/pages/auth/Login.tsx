@@ -1,11 +1,11 @@
 import { CardShared } from "@/components/shared/CardShared";
 import { AuthLogo } from "@/components/shared/AuthLogo";
 import { AuthBg } from "@/components/shared/AuthBg";
-import LoginForm from "@/components/form-kit/login";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import useResponsive from "@/utils/useResponsive";
 import { ArrowLeft } from "lucide-react";
+import LoginForm from "@/components/form-kit/login/LoginForm";
 
 const DesktopLoginComp = () => {
   return (
@@ -44,7 +44,7 @@ const MobileLoginComp = () => {
             Please enter your account details to sign in your account
           </p>
         </div>
-        <div className="w-[80%] md:max-w-[40%]">
+        <div className="w-[90%] md:max-w-[40%]">
           <LoginForm mobile={true} />
         </div>
       </div>

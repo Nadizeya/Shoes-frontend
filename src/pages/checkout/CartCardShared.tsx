@@ -13,7 +13,7 @@ export const CartCardShared = ({
   contentClassName,
 }: CardProps) => {
   const defaultCardClassName =
-    "bg-white w-[350px] min-w-[250px] max-w-[350px] rounded-xl overflow-hidden border border-gray-50 shadow-sm";
+    "bg-white w-full min-w-[250px] max-w-full rounded-xl overflow-hidden border border-gray-50 shadow-sm";
   const defaultContentClassName = "p-5";
 
   return (

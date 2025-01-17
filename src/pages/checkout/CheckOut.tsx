@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import CartComp from "./components/CartComp";
 import CheckoutComp from "./components/CheckoutComp";
 import { FormProvider, useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
@@ -12,49 +11,13 @@ import {
   setCartItems,
   setPayment,
   setTotalCost,
-  updateDeliveryInfo,
-  updateOrderCost,
-  updateTotalCost,
 } from "@/store/slices/Checkout/checkOutSlice";
-import { CheckOutT } from "@/types/checkOutTypes";
-import ProductsHomeComp from "../home/components/ProductsHomeComp";
-import { useCheckoutItems } from "@/utils/useCheckout";
+import { useCheckoutItems } from "@/utils/api hooks/useCheckout";
 import { addOrder } from "@/api/endpoints/checkoutApi";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-
-// export const itemData = [
-//   {
-//     id: 1,
-//     title: "Gro Hair Serum",
-//     image: "/assets/products/product1.png",
-//     color: "Color: Adulterous - 828",
-//     desc: "sdfsdfRepair 10-In-1 Hair Oil for Dry Hair",
-//     price: 10000,
-//     size: "30mL",
-//     quantity: 1,
-//   },
-//   {
-//     id: 2,
-//     title: "Gro Hair Serum",
-//     image: "/assets/products/product3.png",
-//     color: "Color: Adulterous - 828",
-//     desc: "Absolut Repair 10-In-1 Hair Oil for Dry Hair",
-//     price: 10000,
-//     size: "30mL",
-//     quantity: 1,
-//   },
-//   {
-//     id: 3,
-//     title: "Gro Hair Serum",
-//     image: "/assets/products/product2.png",
-//     color: "Color: Adulterous - 828",
-//     desc: "lsdfd Repair 10-In-1 Hair Oil for Dry Hair",
-//     price: 10000,
-//     size: "45mL",
-//     quantity: 1,
-//   },
-// ];
+import ProductsHomeComp from "../home/components/ProductsHomeComp";
+import { useHomeData } from "@/utils/api hooks/useHomeData";
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -78,8 +41,9 @@ const formSchema = z.object({
 const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { cartProducts, paymentData, isSuccess, isError, isLoading, total } =
-    useCheckoutItems();
+  const { cartProducts, paymentData, isSuccess, total } = useCheckoutItems();
+  const { productsData } = useHomeData();
+
   // console.log(paymentData, "Payment data");
   useEffect(() => {
     if (isSuccess) {
@@ -145,21 +109,30 @@ const Checkout = () => {
   return (
     <div>
       {isSuccess && (
-        <div className="py-8">
-          <h1 className="mb-5">Your Basket</h1>
-          <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="flex flex-col md:flex-row gap-7 items-center md:items-start md:justify-evenly">
-                <CartComp />
-                <CheckoutComp />
-              </div>
-            </form>
-          </FormProvider>
-          {/* <div className="mt-5">
-          <ProductsHomeComp id={1} name="Beauty Offers (25)" />
-          <ProductsHomeComp id={1} name="Beauty Offers (25)" />
-          <ProductsHomeComp id={1} name="Beauty Offers (25)" />
-        </div> */}
+        <div className="mb-4">
+          <div className="xl:p-8 py-8">
+            <h1 className="mb-5">Your Basket</h1>
+            <FormProvider {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <div className="w-full flex flex-col md:flex-row gap-4 items-center md:items-start ">
+                  <CartComp />
+                  <CheckoutComp />
+                </div>
+              </form>
+            </FormProvider>
+          </div>
+          <div className="space-y-4">
+            <ProductsHomeComp
+              id={1}
+              name="Your beauty picks"
+              data={productsData.beauty_offer}
+            />
+            <ProductsHomeComp
+              id={2}
+              name="Recommended for you"
+              data={productsData.Choose_for_you}
+            />
+          </div>
         </div>
       )}
     </div>

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Heart,
   Basket,
@@ -7,7 +6,7 @@ import {
   Notepad,
   UserRectangle,
 } from "@phosphor-icons/react";
-import { NavLink, useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import NotificationBadge from "@/components/ui/notification-badge";
 import {
@@ -214,14 +213,10 @@ const DesktopNav = ({
   );
 };
 
-const MobileNav = ({
-  authenticated,
-  logout,
-}: {
+const MobileNav = ({}: {
   authenticated: AuthenticatedT;
   logout: () => void;
 }) => {
-  const navigate = useNavigate();
   const whilistCount = useAppSelector((state) => state.user.whilist_count);
   const order_count = useAppSelector((state) => state.user.order_count);
 

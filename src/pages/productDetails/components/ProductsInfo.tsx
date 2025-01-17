@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -6,16 +6,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import useEmblaCarousel from "embla-carousel-react";
 import { FaHeart } from "react-icons/fa6";
 import { FaRegHeart } from "react-icons/fa";
 import { Plus, Minus } from "@phosphor-icons/react";
-import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { BASE_URL } from "@/api/BaseService";
 import { useAuth } from "@/utils/useAuth";
 import { useNavigate } from "react-router-dom";
-import { postAddToCartT } from "@/utils/useProductDetail";
+import { postAddToCartT } from "@/utils/api hooks/useProductDetail";
 import { useMutation } from "@tanstack/react-query";
 import { postAddToCart } from "@/api/endpoints/productsApi";
 import {
@@ -50,7 +48,7 @@ const ProductsInfo = () => {
   const [selectedQuantity, setSelectQuantity] = React.useState(1);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [changeheart, setChangeheart] = React.useState(false);
-  const [carouselRef, api] = useEmblaCarousel();
+  const [api, setApi] = React.useState(null);
 
   // when size changed only available will show
   const availableColors = items
@@ -58,15 +56,12 @@ const ProductsInfo = () => {
     .map((item) => item.color);
   console.log(selectedItem);
 
-  const handleThumbnailClick = React.useCallback(
-    (index: any) => {
+  const handleThumbnailClick = (index: number) => {
+    if (api) {
       setSelectedIndex(index);
-      if (api) {
-        api.scrollTo(index); // Ensure the carousel scrolls to the selected image
-      }
-    },
-    [api]
-  );
+      api.scrollTo(index); // Scroll to the selected index
+    }
+  };
 
   // Mutations called
   const addMutation = useMutation({
@@ -144,28 +139,43 @@ const ProductsInfo = () => {
     basketMutation.mutate(addToCartProduct);
   };
 
-  // Sync selected index with carousel when using Next/Previous buttons
-  React.useEffect(() => {
+  // useEffect(() => {
+  //   if (!api) return;
+
+  //   api.on("scroll", (type) => {
+  //     console.log("Embla event triggered:", type);
+  //   });
+  // }, [api]);
+
+  // ...
+  useEffect(() => {
     if (!api) return;
+
     const onSelect = () => {
-      setSelectedIndex(api.selectedScrollSnap());
+      const currentIndex = api.selectedScrollSnap(); // Get the current visible index
+      setSelectedIndex(currentIndex);
     };
+
     api.on("select", onSelect);
-    return () => api.off("select", onSelect);
+
+    return () => {
+      api.off("select", onSelect);
+    };
   }, [api]);
 
   return (
+    // Thumbnails Comp
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
       <div className="flex flex-start h-full">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 h-60 overflow-y-scroll no-scrollbar">
           {productsDetailsData.images &&
           productsDetailsData.images.length > 0 ? (
             productsDetailsData.images.map((imgUrl, index) => (
               <div
                 key={index}
                 onClick={() => handleThumbnailClick(index)}
-                className={`rounded-full w-12 h-12 border border-gray-400 cursor-pointer hover:border-blue-500 ${
-                  selectedIndex === index ? "border-blue-500" : ""
+                className={`rounded-full w-12 h-12 border cursor-pointer hover:border-blue-500 ${
+                  selectedIndex === index ? "border-black border-2" : ""
                 }`}
               >
                 <img
@@ -187,16 +197,14 @@ const ProductsInfo = () => {
         </div>
 
         <div className="basis-[60%] mx-auto">
-          <Carousel ref={carouselRef}>
+          <Carousel setApi={setApi}>
             <CarouselContent>
               {productsDetailsData.images?.map((imgUrl, index) => (
                 <CarouselItem key={index} className="h-60">
                   <img
                     src={BASE_URL + imgUrl || "/assets/products/product3.png"}
                     alt={`Product ${index}`}
-                    className={`w-full h-full object-contain ${
-                      index === selectedIndex ? "opacity-100" : "opacity-50"
-                    }`} // Highlight selected image with opacity
+                    className={`w-full h-full object-contain`}
                   />
                 </CarouselItem>
               ))}
@@ -206,7 +214,6 @@ const ProductsInfo = () => {
           </Carousel>
         </div>
       </div>
-
       {/* product info left side */}
       <div className="space-y-4">
         <div className="">

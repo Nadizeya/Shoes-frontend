@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Warejeans from "/assets/forgotpassword.jpg";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -7,7 +6,6 @@ import { toast } from "@/components/ui/use-toast";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormMessage,
@@ -17,14 +15,16 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { postForgotPassword } from "@/api/endpoints/authApi";
 import { useMutation } from "@tanstack/react-query";
-import { setEmail, setUser } from "@/store/slices/user/userSlice";
+import { setEmail } from "@/store/slices/user/userSlice";
 import { useAppDispatch } from "@/store/hook";
+import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
 
 const FormSchema = z.object({
   email: z.string().email(),
 });
 
-const ResetPassword = () => {
+const ChangePassword = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState("");
@@ -42,15 +42,22 @@ const ResetPassword = () => {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     mutate(data, {
-      onSuccess: (response) => {
+      onSuccess: () => {
         toast({
           title: "OTP code has been sent to your Email successfully!!",
         });
         dispatch(setEmail(data));
         navigate("/change-password/otp-validation");
       },
-      onError: (err) => {
-        setErrorMessage(err.response?.data?.msg || "Email is invalid"); // Extract message or set a default
+      onError: (err: unknown) => {
+        if (err && typeof err === "object" && "response" in err) {
+          const response = (err as any).response;
+          setErrorMessage(
+            response?.data?.message || "Email is invalid! Please try again"
+          );
+        } else {
+          setErrorMessage("Email is invalid");
+        }
       },
     });
   }
@@ -113,4 +120,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ChangePassword;

@@ -1,7 +1,6 @@
-import { fetchProductbyId, postAddToCart } from "@/api/endpoints/productsApi";
+import { fetchProductbyId } from "@/api/endpoints/productsApi";
 import { ProductData } from "@/types/productDetailType";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 export const useProductDetails = (productId: number) => {
   const query = useQuery({

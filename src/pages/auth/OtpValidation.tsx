@@ -1,8 +1,6 @@
-import React, { useState } from "react";
 import Warejeans from "/assets/otpvalidation.png";
 
 import { InputOTPForm } from "@/components/form-kit/otp/OtpForm";
-import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/store/hook";
 import { postForgotPassword } from "@/api/endpoints/authApi";
 import { useMutation } from "@tanstack/react-query";
@@ -10,24 +8,22 @@ import { toast } from "@/components/ui/use-toast";
 
 const OtpValidation = () => {
   const email = useAppSelector((state) => state.user.email);
-  const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState("");
 
-  const { mutate, isError, isPending } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: postForgotPassword,
   });
 
   function handleResend(data: { email: string }) {
     mutate(data, {
-      onSuccess: (response) => {
+      onSuccess: () => {
         toast({
           title: "OTP code has been sent to your Email successfully!!",
         });
       },
-      onError: (err) => {
-        setErrorMessage(err.response?.data?.msg || "Email is invalid"); // Extract message or set a default
+      onError: (err: any) => {
+        const message = err?.response?.data?.msg || "Email is invalid";
         toast({
-          title: errorMessage,
+          title: message,
           variant: "destructive",
         });
       },
@@ -58,7 +54,9 @@ const OtpValidation = () => {
         <span>
           If you didn’t receive the OTspan,{" "}
           <span
-            onClick={!isPending ? () => handleResend({ email: email }) : null}
+            onClick={
+              !isPending ? () => handleResend({ email: email }) : undefined
+            }
             className={`cursor-pointer ${
               isPending ? "text-slate-400" : "text-blue-500"
             }`}

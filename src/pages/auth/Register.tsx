@@ -2,10 +2,10 @@ import { ArrowLeft } from "lucide-react";
 import { CardShared } from "@/components/shared/CardShared";
 import { AuthLogo } from "@/components/shared/AuthLogo";
 import { AuthBg } from "@/components/shared/AuthBg";
-import RegisterForm from "@/components/form-kit/register";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import useResponsive from "@/utils/useResponsive";
+import RegisterForm from "@/components/form-kit/register/RegisterForm";
 
 const DesktopRegisterComp = () => {
   return (

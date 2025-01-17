@@ -1,13 +1,5 @@
-import { ProductData } from "@/types/productDetailType";
 import ProtectedService from "../ProtectedService";
-import { WishListProducts } from "@/types/wishlistTypes";
-import {
-  CartItem,
-  CartProductsList,
-  CartResponseType,
-  PaymentData,
-  PaymentDataList,
-} from "@/types/checkOutTypes";
+import { CartResponseType, PaymentDataList } from "@/types/checkOutTypes";
 
 export const fetchCartItems = async (): Promise<CartResponseType> => {
   const response = await ProtectedService.get("/add-to-cart/all");

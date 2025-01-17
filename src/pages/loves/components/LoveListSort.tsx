@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CaretLeft, Export, CaretDown } from "@phosphor-icons/react";
+import { Export, CaretDown } from "@phosphor-icons/react";
 import { useState } from "react";
 
 const sortOptions: {

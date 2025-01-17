@@ -6,7 +6,6 @@ import Telegram from "/assets/footer/telegram.svg";
 import Icon from "../ui/icon";
 import useResponsive from "@/utils/useResponsive";
 import { FacebookLogo } from "@phosphor-icons/react";
-import { Separator } from "@radix-ui/react-dropdown-menu";
 
 const MobileAndTabletFooter = () => {
   // TODO : MOBILE

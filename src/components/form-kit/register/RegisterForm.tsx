@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,7 +17,6 @@ import {
 import { postRegister } from "@/api/endpoints/authApi";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "@/components/ui/use-toast";
-import login from "../login";
 import { useAuth } from "@/utils/useAuth";
 
 const stepOneSchema = z
@@ -61,7 +60,6 @@ const stepThreeSchema = z.object({
 const RegisterForm = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const { register } = useAuth();
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
@@ -72,7 +70,7 @@ const RegisterForm = () => {
     address: "",
   });
   const schemas = [stepOneSchema, stepTwoSchema, stepThreeSchema];
-  const { mutate, isError } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: postRegister,
   });
 
@@ -82,7 +80,7 @@ const RegisterForm = () => {
     mode: "onChange",
   });
 
-  const handleNextStep = async (data) => {
+  const handleNextStep = async (data: any) => {
     const isValid = await form.trigger();
     if (!isValid) return; // Prevent advancing if validation fails
 
@@ -104,9 +102,10 @@ const RegisterForm = () => {
         localStorage.setItem("authToken", response.data.token);
         navigate("/");
       },
-      onError: (err) => {
+      onError: (err: any) => {
+        const message = err?.response?.data?.msg || "Email is invalid";
         toast({
-          title: err.response?.data?.message || "Submission failed",
+          title: message,
           variant: "destructive",
         });
       },
@@ -282,7 +281,7 @@ const RegisterForm = () => {
           <div className="grid grid-cols-1 gap-5 mt-7">{renderStep()}</div>
         </div>
         <div className="flex flex-col mt-5 gap-2">
-          <Button type="submit">
+          <Button type="submit" disabled={isPending}>
             {currentStep < 3 ? "Confirm" : "Submit"}
           </Button>
           {currentStep > 1 && (
@@ -293,6 +292,7 @@ const RegisterForm = () => {
                 form.reset({ ...formData }); // Reset form to last saved state
                 setCurrentStep((prevStep) => Math.max(1, prevStep - 1));
               }}
+              disabled={isPending}
             >
               Back
             </Button>
