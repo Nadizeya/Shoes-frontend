@@ -6,6 +6,7 @@ import { homeRoutes } from "./home/homeRoutes";
 import { profileRoutes } from "./profile/profileRoutes";
 import { loveRoutes } from "./loves/LoveRoute";
 import { orderRoutes } from "./order/OrderRoute";
+import { brandRoutes } from "./brands/brandRoutes";
 
 export const authenticationRoutes = [...authRoutes];
 
@@ -13,6 +14,7 @@ export const publicRoutes = [
   ...homeRoutes,
   ...productRoutes,
   ...categoryRoutes,
+  ...brandRoutes,
 ];
 
 export const privateRoutes = [

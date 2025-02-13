@@ -61,7 +61,7 @@ const dropDownOptions: dropDownOptionT[] = [
     icon: <UserRectangle size={23} />,
     title: "Account Settings",
     desc: "Payment, contact info , addresses, password",
-    path: "/login",
+    path: "/profile",
   },
   {
     id: 5,

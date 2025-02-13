@@ -10,14 +10,14 @@ import { useParams } from "react-router-dom";
 import HeroSection from "../home/components/HeroSection";
 import ProductAccordion from "./components/ProductAccordion";
 import ProductsInfo from "./components/ProductsInfo";
-import SimilarProduct from "./components/SimilarProduct";
-import SuggestionProduct from "./components/SuggestionProduct";
+import ProductsHomeComp from "../home/components/ProductsHomeComp";
 
 const ProductDetails = () => {
   const dispatch = useAppDispatch();
   const { productId } = useParams<{ productId: string }>();
   const numericProductId = Number(productId);
-  const { productDetail, isSuccess } = useProductDetails(numericProductId);
+  const { productDetail, isSuccess, productsAfterDetail } =
+    useProductDetails(numericProductId);
 
   console.log(productDetail);
 
@@ -25,8 +25,11 @@ const ProductDetails = () => {
     if (isSuccess) {
       if (productDetail) {
         dispatch(setProductDetail(productDetail));
-        if (productDetail.items && productDetail.items.length > 0) {
-          dispatch(setSelectedItem(productDetail.items[0]));
+        if (
+          productDetail.product_variations &&
+          productDetail.product_variations.length > 0
+        ) {
+          dispatch(setSelectedItem(productDetail.product_variations[0]));
         }
       }
     }
@@ -36,21 +39,29 @@ const ProductDetails = () => {
       {isSuccess && (
         <div className="px-4 py-8">
           <h4 className="flex items-center gapa-4">
-            Hair
+            {productDetail.maincategory_name}
             <ChevronLeft width={20} height={20} className="text-gray-600" />
-            Styling
+            {productDetail.category_name}
             <ChevronLeft width={20} height={20} className="text-gray-600" />
-            Cut
+            {productDetail.brand_name}
           </h4>
 
           <ProductsInfo />
-          <ProductAccordion />
-          {/* <SimilarProduct /> */}
-          {/* <SuggestionProduct /> */}
-          <HeroSection />
-          {/* <SimilarProduct /> */}
-          {/* <SuggestionProduct /> */}
-          <HeroSection />
+          <div className="space-y-8 pb-10">
+            <ProductAccordion description={productDetail.description} />
+            <ProductsHomeComp
+              id={1}
+              name="Similar Products"
+              data={productsAfterDetail.similar_products}
+            />
+            <ProductsHomeComp
+              id={1}
+              name="You may also like"
+              data={productsAfterDetail.you_may_also_like}
+            />
+
+            <HeroSection />
+          </div>
         </div>
       )}
     </div>

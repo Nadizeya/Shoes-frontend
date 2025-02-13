@@ -1,11 +1,11 @@
 import { CategoryT } from "@/types/common";
-import { Link } from "react-router-dom";
 
 interface Props {
   data: CategoryT[];
+  mainCategoryName: string; // Pass down from parent
 }
 
-const CategoriesDropDown = ({ data }: Props) => {
+const CategoriesDropDown = ({ data, mainCategoryName }: Props) => {
   const chunkedData = [];
   for (let i = 0; i < data.length; i += 2) {
     chunkedData.push(data.slice(i, i + 5));
@@ -16,17 +16,20 @@ const CategoriesDropDown = ({ data }: Props) => {
       {chunkedData.map((row, rowIndex) => (
         <div className="flex justify-start" key={rowIndex}>
           {row.map((category, index) => (
-            <div className=" w-1/5">
-              <Link
-                to={`/categories/${category.id}`}
+            <div className="w-1/5" key={index}>
+              <a
+                href={
+                  mainCategoryName === "Brand"
+                    ? `/brands/${category.id}` // Route for Brand
+                    : `/categories/${category.id}` // Route for other categories
+                }
                 className="inline-block font-bold hover:underline"
-                key={index}
               >
                 {category.name}
-              </Link>
+              </a>
             </div>
           ))}
-          {/* Add empty divs to keep the layout consistent if there's less than 3 items in the row */}
+          {/* Add empty divs to maintain layout if fewer than 3 items */}
           {row.length < 3 &&
             Array(3 - row.length)
               .fill(0)

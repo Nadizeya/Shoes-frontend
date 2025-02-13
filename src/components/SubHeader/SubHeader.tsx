@@ -43,7 +43,10 @@ const SubHeader = () => {
               </HoverCardTrigger>
 
               <HoverCardContent className="bg-white w-screen text-black shadow-lg  p-4 z-40 text-sm transform translate-y-2">
-                <CategoriesDropDown data={data.categories} />
+                <CategoriesDropDown
+                  data={data.categories}
+                  mainCategoryName={data.name}
+                />
               </HoverCardContent>
             </HoverCard>
           </div>

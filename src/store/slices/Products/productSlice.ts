@@ -2,28 +2,34 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import {
   ProductData,
-  productDetailType,
-  ProductItem,
+  ProductDetailType,
+  ProductVariation,
 } from "@/types/productDetailType";
 
-const initialProductDetail: productDetailType = {
+const initialProductDetail: ProductDetailType = {
   productDetail: {
-    colors: [],
     id: 0,
-    images: [],
-    items: [],
     name: "",
-    original_price: 0,
     short_description: "",
-    sizes: [],
+    description: "",
+    image: "",
+    maincategory_id: 0,
+    maincategory_name: "",
+    category_id: 0,
+    category_name: "",
+    brand_id: 0,
+    brand_name: "",
+    product_variations: [],
   },
   selectedItem: {
     id: 0,
-    color: "",
-    price: "",
-    quantity: 0,
     size: "",
-  },
+    price: 0,
+    quantity: 0,
+    stock_qty: 0,
+    images: [],
+    videos: [],
+  }, // Default empty object instead of null
 };
 
 export const productDetailSlice = createSlice({
@@ -33,15 +39,15 @@ export const productDetailSlice = createSlice({
     setProductDetail(state, action: PayloadAction<ProductData>) {
       state.productDetail = action.payload;
     },
-    setSelectedItem(state, action: PayloadAction<ProductItem>) {
+    setSelectedItem(state, action: PayloadAction<ProductVariation>) {
       state.selectedItem = action.payload;
     },
     setSelectedSize(state, action: PayloadAction<string>) {
       state.selectedItem.size = action.payload;
     },
-    setSelectedColor(state, action: PayloadAction<string>) {
-      state.selectedItem.color = action.payload;
-    },
+    // setSelectedColor(state, action: PayloadAction<string>) {
+    //   state.selectedItem.color = action.payload;
+    // },
   },
 });
 
@@ -53,7 +59,7 @@ export const {
   setProductDetail,
   setSelectedItem,
   setSelectedSize,
-  setSelectedColor,
+  // setSelectedColor,
 } = productDetailSlice.actions;
 
 export default productDetailSlice.reducer;

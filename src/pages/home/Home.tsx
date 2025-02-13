@@ -27,7 +27,7 @@ const Home = () => {
           <HeroSection />
           <ProductsHomeComp
             id={1}
-            name="Beauty Offers (25)"
+            name="Beauty Offers (10)"
             data={productsData.beauty_offer}
           />
           <ProductsHomeComp
@@ -35,6 +35,8 @@ const Home = () => {
             name="Chosen For You"
             data={productsData.Choose_for_you}
           />
+          <HeroSection />
+
           <ProductsHomeComp
             id={3}
             name="New Arrival"

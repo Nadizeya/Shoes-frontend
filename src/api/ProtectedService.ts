@@ -2,7 +2,7 @@ import axios from "axios";
 import { store } from "@/store";
 import { signOutSuccess } from "@/store/slices/auth/authSlice";
 
-const BASE_URL = "https://nadiyoonhtike.com/api/";
+const BASE_URL = "http://192.168.1.35:8000/api/";
 
 const ProtectedService = axios.create({
   baseURL: BASE_URL,

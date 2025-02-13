@@ -28,18 +28,18 @@ const DesktopLoginComp = () => {
 const MobileLoginComp = () => {
   const navigate = useNavigate();
   return (
-    <div className="w-screen h-screen relative px-4">
+    <div className="w-screen  relative px-4">
       <p
         className="absolute top-5 left-5 cursor-pointer"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("/")}
       >
         <ArrowLeft />
       </p>
 
-      <div className="flex flex-col items-center justify-center h-full">
+      <div className="flex flex-col items-center mt-20 h-full">
         <AuthLogo width={80} height={80} />
         <div className="text-center">
-          <h1 className="text-black text-lg font-bold">Welcome Back</h1>
+          <h1 className="text-black my-1 text-lg font-bold">Welcome Back</h1>
           <p className="my-4 text-sm">
             Please enter your account details to sign in your account
           </p>

@@ -9,15 +9,11 @@ export type ProductT = {
   name: string;
   category_id: number;
   brand_id: number;
+  brand_name: string;
   category_name: string;
-  brand_name?: string; // Optional because not all responses have this field
   short_description: string;
-  description?: string; // Optional because one response lacks this field
-  original_price: number;
-  discount_price?: number; // Optional because one response lacks this field
-  image?: string | null; // Optional because one response has this as null
-  // images?: string[] | null;
-  videos?: string[] | null; // Optional because it's only in one response
+  price: number;
+  image: string | null;
 };
 
 export type CategoryT = {
@@ -30,10 +26,8 @@ export type CategoryT = {
 
 export type BrandT = {
   id: number;
-  main_category_id: number;
-  category_id: number;
   name: string;
-  image: string | null;
-  created_at: string | null;
-  updated_at: string | null;
+  main_category_name: string;
+  main_category_id: number;
+  image: string;
 };

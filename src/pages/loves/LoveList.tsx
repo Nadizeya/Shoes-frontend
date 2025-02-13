@@ -111,30 +111,30 @@ const LoveList = () => {
   const handleSortChange = (sort: string) => {
     if (!wishListsData || !isSuccess) return; // Ensure sorting only works when data is fetched
 
-    const sorted = [...wishListsData].sort((a, b) => {
-      if (sort === "Recently Added") {
-        const dateA = new Date(a.pivot.created_at).getTime();
-        const dateB = new Date(b.pivot.created_at).getTime();
-        console.log("Date A:", dateA, "Date B:", dateB);
-        return dateB - dateA;
-      } else if (sort === "Price low to high") {
-        console.log(
-          a.product.original_price,
-          b.product.original_price,
-          " a and b"
-        );
-        return a.product.original_price - b.product.original_price;
-      } else if (sort === "Price high to low") {
-        return a.product.original_price - b.product.original_price;
-      } else if (sort === "Name A to Z") {
-        return a.product.name.localeCompare(b.product.name);
-      } else if (sort === "Name Z to A") {
-        return b.product.name.localeCompare(a.product.name);
-      }
-      return 0;
-    });
-    setSortedData(sorted);
-  };
+  //   const sorted = [...wishListsData].sort((a, b) => {
+  //     if (sort === "Recently Added") {
+  //       const dateA = new Date(a.pivot.created_at).getTime();
+  //       const dateB = new Date(b.pivot.created_at).getTime();
+  //       console.log("Date A:", dateA, "Date B:", dateB);
+  //       return dateB - dateA;
+  //     } else if (sort === "Price low to high") {
+  //       console.log(
+  //         a.product.original_price,
+  //         b.product.original_price,
+  //         " a and b"
+  //       );
+  //       return a.product.original_price - b.product.original_price;
+  //     } else if (sort === "Price high to low") {
+  //       return a.product.original_price - b.product.original_price;
+  //     } else if (sort === "Name A to Z") {
+  //       return a.product.name.localeCompare(b.product.name);
+  //     } else if (sort === "Name Z to A") {
+  //       return b.product.name.localeCompare(a.product.name);
+  //     }
+  //     return 0;
+  //   });
+  //   setSortedData(sorted);
+  // };
 
   return (
     <div>
@@ -168,9 +168,9 @@ const LoveList = () => {
                 {sortedData?.map((product) => {
                   return (
                     <LoveProduct
-                      key={product.id}
-                      id={product.id}
-                      size={product.size}
+                      key={product.variation_id}
+                      id={product.variation_id}
+                      size={product.}
                       color={product.color}
                       image={
                         product.product.images?.[0]?.path || "default-image.jpg"

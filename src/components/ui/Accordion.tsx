@@ -19,9 +19,9 @@ const Accordion = ({
       >
         <h5>{title}</h5>
         {accordionOpen ? (
-          <FiChevronDown className="w-7 h-7" />
-        ) : (
           <FiChevronUp className="w-7 h-7" />
+        ) : (
+          <FiChevronDown className="w-7 h-7" />
         )}
       </button>
       <div

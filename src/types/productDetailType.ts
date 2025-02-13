@@ -1,23 +1,29 @@
-export interface ProductItem {
+export type ProductVariation = {
   id: number;
   size: string;
-  price: string;
+  price: number;
   quantity: number;
-  color: string;
-}
+  stock_qty: number; // Added to match API response
+  images: string[]; // Matches API response
+  videos?: string[]; // Optional field as per API response
+};
 
 export interface ProductData {
   id: number;
   name: string;
   short_description: string;
-  original_price: number;
-  images: string[] | null;
-  sizes: string[];
-  colors: string[];
-  items: ProductItem[];
+  description: string;
+  image: string; // Matches API response
+  maincategory_id: number;
+  maincategory_name: string;
+  category_id: number;
+  category_name: string;
+  brand_id: number;
+  brand_name: string;
+  product_variations: ProductVariation[]; // Matches API response structure
 }
 
-export type productDetailType = {
+export type ProductDetailType = {
   productDetail: ProductData;
-  selectedItem: ProductItem;
+  selectedItem: ProductVariation; // Allow null for initial selection
 };

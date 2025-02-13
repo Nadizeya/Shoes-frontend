@@ -9,64 +9,63 @@ import {
 import NotFound from "@/pages/notFound";
 import MainLoading from "./components/shared/MainLoading";
 import Layout from "./layout/Layout";
+import AuthRoutes from "./routes/AuthRoutes";
+
+// Helper function to safely retrieve route elements
+const getRouteElement = (key: string) => {
+  const route = [
+    ...authenticationRoutes,
+    ...publicRoutes,
+    ...privateRoutes,
+  ].find((r) => r.key === key);
+  if (!route) {
+    throw new Error(`Route with key "${key}" not found`);
+  }
+  return route.element;
+};
 
 const App = () => {
   return (
     <Router>
-      <div className="App">
+      <Suspense fallback={<MainLoading />}>
         <Routes>
-          {/* Authentication routes (show first if user has not visited) */}
-          {authenticationRoutes.map((route) => (
-            <Route
-              index={route.key === "welcome"} // Set welcome as index if user hasn't visited
-              key={route.key}
-              path={route.path}
-              element={
-                <Suspense fallback={<MainLoading />}>{route.element}</Suspense>
-              }
-            />
-          ))}
-
-          {/* Main Layout with public and private routes */}
-
-          <Route path="/" element={<Layout />}>
-            {/* Public routes */}
-            {publicRoutes.map((route) => (
+          <Route element={<AuthRoutes />}>
+            {authenticationRoutes.map((route) => (
               <Route
-                index={route.key === "home"} // Set home as index if user has visited
-                path={route.path}
                 key={route.key}
-                element={
-                  <Suspense fallback={<MainLoading />}>
-                    {route.element}
-                  </Suspense>
-                }
+                path={route.path}
+                element={getRouteElement(route.key)}
               />
-            ))}
-
-            {/* Private routes with protected wrapper */}
-            {privateRoutes.map((route) => (
-              <Route
-                path={route.path}
-                key={route.key}
-                element={<ProtectedRoutes />}
-              >
-                <Route
-                  key={route.key}
-                  path={route.path}
-                  element={
-                    <Suspense fallback={<MainLoading />}>
-                      {route.element}
-                    </Suspense>
-                  }
-                />
-              </Route>
             ))}
           </Route>
 
+          {/* Main Layout: Public + Private Routes */}
+          <Route path="/" element={<Layout />}>
+            {/* Public Routes */}
+            {publicRoutes.map((route) => (
+              <Route
+                key={route.key}
+                path={route.path}
+                element={getRouteElement(route.key)}
+              />
+            ))}
+
+            {/* Private Routes wrapped in a single ProtectedRoutes component */}
+            <Route element={<ProtectedRoutes />}>
+              {privateRoutes.map((route) => (
+                <Route
+                  key={route.key}
+                  path={route.path}
+                  element={getRouteElement(route.key)}
+                />
+              ))}
+            </Route>
+          </Route>
+
+          {/* Catch-all Not Found Page */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </div>
+      </Suspense>
     </Router>
   );
 };

@@ -14,13 +14,19 @@ export interface CategoryData {
   products: Categories; // Dynamic categories
 }
 
-export interface categoryProduct {
+export interface DetailType {
   id: number;
   name: string;
-  category_name: string;
-  brand_name: string;
-  short_description: string;
-  original_price: number;
-  images: string | null;
-  videos: string | null;
+  main_category_name: string;
+  main_category_id: number;
+  image: string;
+  products: ProductT[];
+  pagination: PaginationT;
 }
+
+type PaginationT = {
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+};

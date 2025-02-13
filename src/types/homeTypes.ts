@@ -11,6 +11,13 @@ export type HomeProducts = {
   New_Arrivals: ProductT[];
 };
 
+export type ProductDetailProducts = {
+  total: number;
+  similar_products: ProductT[];
+  you_may_also_like: ProductT[];
+  recently_view: ProductT[];
+};
+
 export type MainCategory = {
   id: number;
   name: string;

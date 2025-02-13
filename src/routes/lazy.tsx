@@ -16,6 +16,8 @@ export const LazyProducts = lazy(() => import("@/pages/products"));
 export const LazyProductDetails = lazy(() => import("@/pages/productDetails"));
 export const LazyCategory = lazy(() => import("@/pages/categories"));
 export const LazyCategoryDetails = lazy(() => import("@/pages/categoryDetail"));
+export const LazyBrand = lazy(() => import("@/pages/brands"));
+export const LazyBrandDetails = lazy(() => import("@/pages/brandDetail"));
 export const LazyHome = lazy(() => import("@/pages/home"));
 export const LazyCreateProfile = lazy(
   () => import("@/pages/auth/CreateProfile")

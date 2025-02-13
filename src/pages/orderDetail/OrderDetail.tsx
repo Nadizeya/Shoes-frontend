@@ -11,19 +11,12 @@ const Checkout = () => {
   const userId = useAppSelector((state) => state.user.id);
   const dispatch = useAppDispatch();
   const { orderDetails, isSuccess } = useOrderDetail(Number(orderId), userId);
-  useEffect(() => {
-    if (isSuccess) {
-      dispatch(setCartItems(orderDetails.order_items as any));
-      // dispatch(setPayment(paymentData));
-      // dispatch(setTotalCost(total));
-    }
-  }, [orderDetails, dispatch]);
-
-  // const cartItems = useAppSelector((state) => state.checkout.cartItems);
-  // const totalCost = useAppSelector((state) => state.checkout.orderCost.total);
-  // const paymentId = useAppSelector((state) => state.checkout.paymentId);
-
-  // console.log(form);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     dispatch(setCartItems(orderDetails.order_items as any));
+  //   }
+  // }, [orderDetails, dispatch]);
+  console.log(orderDetails, "Order details");
 
   return (
     <div>

@@ -23,6 +23,7 @@ import { postOtpValidation } from "@/api/endpoints/authApi";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const FormSchema = z.object({
   otp_code: z.string().min(6, {
@@ -32,6 +33,7 @@ const FormSchema = z.object({
 
 export function InputOTPForm() {
   const navigate = useNavigate();
+  const { completeStep } = useAuthGuard();
   const email = useAppSelector((state) => state.user.email);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -70,6 +72,7 @@ export function InputOTPForm() {
             </pre>
           ),
         });
+        completeStep("otpValidated");
         navigate("/reset-password");
       },
       onError: (err) => {

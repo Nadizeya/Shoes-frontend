@@ -1,16 +1,17 @@
 import { AxiosResponse } from "axios";
 import ProtectedService from "../ProtectedService";
-import { categoryProduct } from "@/types/categoryTypes";
+import { DetailType } from "@/types/categoryTypes";
 
 export const getCategoryById = async (
+  id: number,
   page: number,
-  perPage: number = 20
+  perPage: number
 ): Promise<{
-  data: categoryProduct[];
+  data: DetailType;
 }> => {
-  const response: AxiosResponse<{ data: categoryProduct[] }> =
+  const response: AxiosResponse<{ data: DetailType }> =
     await ProtectedService.get(
-      `/all-products?per_page=${perPage}&page=${page}`
+      `/all-categories/${id}?per_page=${perPage}&page=${page}`
     );
 
   return response.data;

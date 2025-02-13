@@ -1,4 +1,4 @@
-import type { Routes } from "@/types/routes";
+import type { AuthRoutes } from "@/types/routes";
 import {
   LazyLogin,
   LazyRegister,
@@ -10,17 +10,9 @@ import {
   LazySuccess,
 } from "../lazy";
 
-const authRoutes: Routes = [
-  {
-    key: "login",
-    path: "/login",
-    element: <LazyLogin />,
-  },
-  {
-    key: "register",
-    path: "/register",
-    element: <LazyRegister />,
-  },
+const authRoutes: AuthRoutes = [
+  { key: "login", path: "/login", element: <LazyLogin /> },
+  { key: "register", path: "/register", element: <LazyRegister /> },
   {
     key: "change-password",
     path: "/change-password",
@@ -36,21 +28,13 @@ const authRoutes: Routes = [
     path: "/reset-password",
     element: <LazyResetPassword />,
   },
-  {
-    key: "welcome",
-    path: "/welcome",
-    element: <LazyWelcome />,
-  },
+  { key: "welcome", path: "/welcome", element: <LazyWelcome /> },
   {
     key: "create-profile",
     path: "/create-profile",
     element: <LazyCreateProfile />,
   },
-  {
-    key: "success",
-    path: "/success",
-    element: <LazySuccess />,
-  },
+  { key: "success", path: "/success", element: <LazySuccess /> },
 ];
 
 export default authRoutes;

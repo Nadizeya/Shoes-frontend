@@ -12,6 +12,7 @@ import useResponsive from "@/utils/useResponsive";
 import { BASE_URL } from "@/api/BaseService";
 import { useMutation } from "@tanstack/react-query";
 import { deleteOrder } from "@/api/endpoints/checkoutApi";
+import { CartProductsList } from "@/types/checkOutTypes";
 
 const ItemQuantity = ({
   quantity,
@@ -179,11 +180,14 @@ const MobileCartItem = ({
     </div>
   );
 };
+type CartCompProps = {
+  cartItems: CartProductsList;
+  isOrderDetail: boolean;
+};
 
-const CartComp = () => {
+const CartComp = ({ cartItems, isOrderDetail }: CartCompProps) => {
   const { desktopResponsive, mobileResponsive, tabletResponsive } =
     useResponsive();
-  const cartItems = useAppSelector((state) => state.checkout.cartItems);
   const dispatch = useDispatch();
   const mutation = useMutation({
     mutationFn: deleteOrder,

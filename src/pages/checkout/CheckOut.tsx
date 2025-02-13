@@ -115,7 +115,7 @@ const Checkout = () => {
             <FormProvider {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="w-full flex flex-col md:flex-row gap-4 items-center md:items-start ">
-                  <CartComp />
+                  <CartComp cartItems={cartProducts} isOrderDetail={false} />
                   <CheckoutComp />
                 </div>
               </form>
