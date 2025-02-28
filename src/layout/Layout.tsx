@@ -26,7 +26,11 @@ const Layout = () => {
 
     return (
       <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white shadow-md lg:hidden p-2 text-sm">
-        <Link to="/" className="flex flex-col items-center gap-2">
+        <Link
+          to="/"
+          className="flex flex-col items-center gap-2"
+          onClick={() => window.scrollTo(0, 0)} // Ensures scroll happens even if you're already on "/"
+        >
           <House size={26} />
           <p>Home</p>
         </Link>

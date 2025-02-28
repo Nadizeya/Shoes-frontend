@@ -9,7 +9,7 @@ import { Bank, HandCoins } from "@phosphor-icons/react";
 import { BASE_URL } from "@/api/BaseService";
 import { useFormContext } from "react-hook-form";
 
-const PaymentMethodContent = () => {
+const PaymentMethodContent = ({ isPending }: { isPending: boolean }) => {
   const {
     setValue,
     watch,
@@ -212,8 +212,12 @@ const PaymentMethodContent = () => {
           </p>
         )} */}
 
-        <Button type="submit" className="w-full bg-red-700">
-          Checkout
+        <Button
+          type="submit"
+          className="w-full bg-red-700"
+          disabled={isPending}
+        >
+          {isPending ? "Processing..." : "Checkout"}
         </Button>
         <small className="flex justify-center">get it soon now</small>
       </div>
@@ -221,11 +225,11 @@ const PaymentMethodContent = () => {
   );
 };
 
-const PaymentMethod = () => {
+const PaymentMethod = ({ isPending }: { isPending: boolean }) => {
   return (
     <div>
       <CartCardShared
-        cardContent={<PaymentMethodContent />}
+        cardContent={<PaymentMethodContent isPending={isPending} />}
         cardClassName="py-3"
       />
     </div>

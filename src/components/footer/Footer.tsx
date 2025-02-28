@@ -77,20 +77,20 @@ const socialLinks = [
     alt: "facebook",
   },
   {
+    href: "https://www.facebook.com/messages/t/100011958466272",
+    icon: <Icon width={20} height={20} src={Messenger} alt="messenger" />,
+  },
+  {
     href: "https://www.instagram.com/nadiyoonhtike/",
-    icon: <Icon width={20} height={20} src={Messenger} alt="instagram" />,
+    icon: <Icon width={20} height={20} src={Instagram} alt="instagram" />,
+  },
+  {
+    href: "https://www.instagram.com/nadiyoonhtike/",
+    icon: <Icon width={20} height={20} src={Telegram} alt="telegram" />,
   },
   {
     href: "https://mail.google.com/mail/u/0/#inbox",
-    icon: <Icon width={20} height={20} src={Instagram} alt="gmail" />,
-  },
-  {
-    href: "https://www.facebook.com/nadiyoon22",
-    icon: <Icon width={20} height={20} src={Telegram} alt="facebook" />,
-  },
-  {
-    href: "https://www.facebook.com/nadiyoon22",
-    icon: <Icon width={20} height={20} src={Gmail} alt="facebook" />,
+    icon: <Icon width={20} height={20} src={Gmail} alt="gmail" />,
   },
 ];
 

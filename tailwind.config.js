@@ -14,7 +14,7 @@ module.exports = {
       padding: "4rem",
       screens: {
         "2xl": "1400px",
-        xs: "464px",
+        xs: "400px",
       },
     },
     extend: {
@@ -77,7 +77,7 @@ module.exports = {
         },
       },
       screens: {
-        xs: "464px",
+        xs: "400px",
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

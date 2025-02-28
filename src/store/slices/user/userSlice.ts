@@ -26,6 +26,7 @@ export const userSlice = createSlice({
       state.order_count = action.payload.order_count;
       state.whilist_count = action.payload.whilist_count;
       state.add_to_cart = action.payload.add_to_cart;
+      state.address = action.payload.address;
     },
     setEmail(state, action: PayloadAction<string>) {
       state.email = action.payload;

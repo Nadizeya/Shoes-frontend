@@ -1,13 +1,17 @@
+import { Link } from "react-router-dom";
+
 const HeroCard = ({
   image,
   title,
   description,
   background,
+  path,
 }: {
   image: string;
   title: string;
   description: string;
   background: string;
+  path: string;
 }) => {
   return (
     <div
@@ -21,7 +25,11 @@ const HeroCard = ({
         <h1 className="font-bold 2xl:text-4xl xl:text-3xl text-2xl">{title}</h1>
         <div className="space-y-4">
           <p>{description}</p>
-          <p className="font-bold"> SHOP NOW {"\u25B6"}</p>
+          <p>
+            <Link to={path} className="font-bold mt-4">
+              SHOP NOW {"\u25B6"}
+            </Link>
+          </p>
         </div>
       </div>
     </div>

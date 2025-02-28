@@ -24,6 +24,7 @@ const HeroSection = () => {
           title={card.title}
           description={card.description}
           background={card.background}
+          path={card.path}
         />
       ))}
     </div>

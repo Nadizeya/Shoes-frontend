@@ -19,6 +19,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import ProductsHomeComp from "../home/components/ProductsHomeComp";
 import { useHomeData } from "@/utils/api hooks/useHomeData";
+import MainLoading from "@/components/shared/MainLoading";
 
 // Zod schema for form validation
 export const formSchema = z.object({
@@ -36,11 +37,12 @@ export const formSchema = z.object({
 const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { cartProducts, paymentData, isSuccess, total } = useCheckoutItems();
+  const { cartProducts, paymentData, isSuccess, total, isLoading } =
+    useCheckoutItems();
   const { productsData } = useHomeData();
   const userId = useAppSelector((state) => state.user.id);
+  const userData = useAppSelector((state) => state.user);
 
-  console.log(paymentData, "Payment data");
   useEffect(() => {
     if (isSuccess) {
       dispatch(setCartItems(cartProducts));
@@ -58,23 +60,20 @@ const Checkout = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      phoneNumber: "",
-      address: "",
+      user_name: userData.name || "",
+      phone_number: userData.phone || "",
+      address: userData.address || "",
       payment_screenshot: null,
-      // order_cost: {
-      //   total: 0,
-      //   delivery_cost: 0,
-      //   subtotal: 0,
-      // },
-      // payment_id: "",
-      // payment_file: null,
     },
   });
 
   const mutation = useMutation({
     mutationFn: addOrder,
   });
+
+  if (isLoading) {
+    return <MainLoading />;
+  }
 
   // console.log(form);
 
@@ -124,7 +123,10 @@ const Checkout = () => {
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="w-full flex flex-col md:flex-row gap-4 items-center md:items-start ">
                   <CartComp cartItems={cartProducts} />
-                  <CheckoutComp isOrderDetail={false} />
+                  <CheckoutComp
+                    isOrderDetail={false}
+                    isPending={mutation.isPending}
+                  />
                 </div>
               </form>
             </FormProvider>

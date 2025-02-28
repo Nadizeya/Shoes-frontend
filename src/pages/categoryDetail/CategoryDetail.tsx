@@ -1,6 +1,7 @@
 import { useLocation, useParams } from "react-router-dom";
 import ProductList from "../products/components/ProductsList";
 import { useCategoryDetail } from "@/utils/api hooks/useDetail";
+import MainLoading from "@/components/shared/MainLoading";
 
 const CategoryDetails = () => {
   const { categoryId } = useParams();
@@ -17,7 +18,7 @@ const CategoryDetails = () => {
   const showMore = lastPage! > currentPage!;
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <MainLoading />;
   }
 
   if (products?.length == 0) {

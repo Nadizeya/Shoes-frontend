@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const BASE_URL = "https://66ab727f636a4840d7cab5a1.mockapi.io/api";
-export const BASE_URL = "https://admin.nadiyoonhtike.com/";
+export const BASE_URL =
+  import.meta.env.VITE_BASE_URL || "https://fallback-url.com";
 
 const baseService = axios.create({
   baseURL: BASE_URL,

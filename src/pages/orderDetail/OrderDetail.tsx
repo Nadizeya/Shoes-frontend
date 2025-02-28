@@ -6,11 +6,15 @@ import { setOrderPayment } from "@/store/slices/OrderDetail/orderDetailslice";
 import OrderDetailCart from "./OrderDetailCart";
 import CheckoutComp from "../checkout/components/CheckoutComp";
 import { useForm, FormProvider } from "react-hook-form";
+import MainLoading from "@/components/shared/MainLoading";
 
 const Checkout = () => {
   const { orderId } = useParams();
   const userId = useAppSelector((state) => state.user.id);
-  const { orderDetails, isSuccess } = useOrderDetail(Number(orderId), userId);
+  const { orderDetails, isSuccess, isLoading } = useOrderDetail(
+    Number(orderId),
+    userId
+  );
   const dispatch = useAppDispatch();
 
   // Initialize form with default values
@@ -33,6 +37,10 @@ const Checkout = () => {
       });
     }
   }, [orderDetails, isSuccess, dispatch, formMethods]);
+
+  if (isLoading) {
+    return <MainLoading />;
+  }
 
   return (
     <FormProvider {...formMethods}>

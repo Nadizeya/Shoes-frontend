@@ -24,7 +24,7 @@ const ProductList = ({
       {/* <small className="text-muted-foreground">{results} results</small> */}
       <h1 className="py-2 tracking-wider font-bold text-2xl">{name}</h1>
 
-      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-x-2 gap-y-6 justify-center place-items-center">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-x-2 gap-y-6 justify-center ">
         {products.map((product: ProductT) => (
           <ProductCard
             category_id={product.category_id}

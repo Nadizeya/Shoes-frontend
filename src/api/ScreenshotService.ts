@@ -2,7 +2,8 @@ import axios from "axios";
 import { store } from "@/store";
 import { signOutSuccess } from "@/store/slices/auth/authSlice";
 
-const BASE_URL = "http://192.168.1.35:8000/api/";
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "https://fallback-api.com/";
 
 const ScreenshotService = axios.create({
   baseURL: BASE_URL,

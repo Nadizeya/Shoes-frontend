@@ -81,7 +81,7 @@ const CartItem = ({
         <div>
           <img src={image} alt={title} className="w-[250px] h-[250px] py-4" />
         </div>
-        <div className="flex flex-col justify-center ">
+        <div className="flex flex-col justify-center min-w-[170px] ">
           <div className="mb-2 flex justify-between items-center">
             <h2 className="font-bold">{title}</h2>
             <img
@@ -90,7 +90,7 @@ const CartItem = ({
               onClick={() => onDelete(id)}
             />
           </div>
-          <p>{desc}</p>
+          <p>{desc.slice(0, 20) + "..."}</p>
           <small className="text-muted-foreground">Size: {size}</small>
           {/* <span className="text-xs">{color}</span> */}
           <div className="flex justify-between items-center gap-4 mt-4">
@@ -153,7 +153,7 @@ const MobileCartItem = ({
           <div className="mb-2 flex justify-between items-center">
             <h2 className="font-bold">{title}</h2>
           </div>
-          <p>{desc}</p>
+          <p>{desc.slice(0, 3) + "..."}</p>
           <small className="text-muted-foreground">Size: {size}</small>
           {/* <span className="text-xs">{color}</span> */}
         </div>

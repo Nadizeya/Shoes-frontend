@@ -25,12 +25,12 @@ const CartItem = ({
         <div className="px-12">
           <img src={image} alt={title} className="w-[250px] h-[250px] py-6" />
         </div>
-        <div className="flex flex-col gap-1  px-12 py-6 ">
+        <div className="flex flex-col gap-1  px-12 py-6  min-w-[150px]">
           <h2 className="font-bold tracking-wider text-lg">{title}</h2>
-          <p>Absolut Repair 10-In-1 Hair Oil for Dry Hair</p>
+          <p className="">Absolut Repair 10-In-1 Hair Oil for Dry Hair</p>
           <small className="text-muted-foreground">Size: {size}</small>
           {/* <span className="text-xs">{color}</span> */}
-          <div className="flex w-[300px] justify-between items-center gap-4 mt-4">
+          <div className="flex w-[150px] justify-between items-center gap-4 mt-4">
             <span className="border rounded-2xl border-black px-4 ">
               {quantity}
             </span>
@@ -63,7 +63,7 @@ const MobileCartItem = ({
     <div>
       <div className="flex justify-around ">
         <img src={image} alt={title} className="w-[200px] h-[200px] p-4" />
-        <div className="flex flex-col justify-center ">
+        <div className="flex flex-col justify-center w-[150px] ">
           <div className="mb-2 flex justify-between items-center">
             <h2 className="font-bold">{title}</h2>
           </div>
@@ -73,7 +73,12 @@ const MobileCartItem = ({
         </div>
       </div>
       <div className="flex justify-between items-center mt-4 p-4 px-10 md:px-16 ">
-        <div className="flex gap-2"></div>
+        <span>
+          quantity:{" "}
+          <span className="border rounded-2xl border-black px-4 ">
+            {quantity}
+          </span>
+        </span>{" "}
         <span>{price} Ks</span>
       </div>
       <Separator />

@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import { CaretLeft } from "@phosphor-icons/react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import Delete from "/assets/add-to-cart/delete.svg";
 import { useWishList } from "@/utils/api hooks/useWishList";
-import { LoveListSort } from "./components/LoveListSort";
 import { BASE_URL } from "@/api/BaseService";
 import { removeWishList } from "@/api/endpoints/wishlistApi";
-import { useMutation } from "@tanstack/react-query";
-import { decrementLoveList } from "@/store/slices/user/userSlice";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch } from "@/store/hook";
+import { decrementLoveList } from "@/store/slices/user/userSlice";
+import MainLoading from "@/components/shared/MainLoading";
 
 type LoveProductProps = {
   variation_id: number;
@@ -19,7 +18,7 @@ type LoveProductProps = {
   name: string;
   short_description: string;
   image: string;
-  // handleDelete: void;
+  onDelete: (id: number) => void;
 };
 
 const LoveProduct = ({
@@ -29,14 +28,14 @@ const LoveProduct = ({
   name,
   short_description,
   image,
-}: // handleDelete,
-LoveProductProps) => {
+  onDelete,
+}: LoveProductProps) => {
   const navigate = useNavigate();
 
   return (
     <div
       key={variation_id}
-      className="flex justify-between border-t border-gray-400 py-2"
+      className="flex text-sm md:text-base justify-between border-t border-gray-400 py-5"
     >
       <div className="flex gap-4 items-start">
         <img
@@ -48,24 +47,27 @@ LoveProductProps) => {
         />
 
         <div className="flex flex-col items-start gap-2">
-          <h6 className="font-bold">{name}</h6>
+          <h6 className="font-bold w-[70px] md:w-full">{name}</h6>
           <p>{short_description}</p>
           {/* <p>{size}</p> */}
           {/* <p>{color}</p> */}
-          <p className="text-sky-500 text-sm md:text-[16px]">
-            View similar products
-          </p>
+          <Link
+            to={`/products/${product_id}`}
+            className="text-sky-500 text-sm md:text-[16px]"
+          >
+            View product's details
+          </Link>
           <div className="md:hidden flex items-center gap-3">
             <Button
               className="text-white bg-red-600 rounded-full px-5"
-              onClick={() => navigate(`/products/${variation_id}`)}
+              onClick={() => navigate(`/products/${product_id}`)}
             >
               Add to Basket
             </Button>
 
             <img
               src={Delete}
-              // onClick={handleDelete(variation_id)}
+              onClick={() => onDelete(variation_id)}
               className="cursor-pointer"
             />
           </div>
@@ -79,8 +81,11 @@ LoveProductProps) => {
         >
           Add to Basket
         </Button>
-
-        <img src={Delete} className="cursor-pointer" />
+        <img
+          src={Delete}
+          onClick={() => onDelete(variation_id)}
+          className="cursor-pointer"
+        />{" "}
       </div>
       <p className="md:hidden font-bold">{price} MMK</p>
     </div>
@@ -89,24 +94,25 @@ LoveProductProps) => {
 
 const LoveList = () => {
   const navigate = useNavigate();
-  const { isSuccess, wishListsData } = useWishList();
-  const [sortedData, setSortedData] = useState(wishListsData || []);
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
+  const { isSuccess, isLoading, wishListsData } = useWishList();
+  const [sortedData, setSortedData] = useState(wishListsData || []);
 
   const mutation = useMutation({
     mutationFn: removeWishList,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+    },
   });
 
-  // const handleDelete = (id: number) => {
-  //   const wishListData = {
-  //     product_variation_id: id,
-  //   };
-  //   mutation.mutate(wishListData, {
-  //     onSuccess: () => {
-  //       dispatch(decrementLoveList());
-  //     },
-  //   });
-  // };
+  const handleDelete = (id: number) => {
+    const wishListData = {
+      product_variation_id: id,
+    };
+    dispatch(decrementLoveList());
+    mutation.mutate(wishListData);
+  };
 
   useEffect(() => {
     if (wishListsData && isSuccess) {
@@ -114,13 +120,9 @@ const LoveList = () => {
     }
   }, [isSuccess, wishListsData]);
 
-  console.log(sortedData, "sorted");
-
-  const handleSortChange = (sort: string) => {
-    if (!wishListsData || !isSuccess) return;
-
-    // Sorting logic can be added here if needed
-  };
+  if (isLoading) {
+    return <MainLoading />;
+  }
 
   return (
     <div>
@@ -131,24 +133,25 @@ const LoveList = () => {
             onClick={() => navigate(-1)}
           >
             <CaretLeft size={20} />
-            Back to Lists
+            Back
           </span>
 
           {sortedData?.length === 0 ? (
-            <div className="h-screen grid place-content-center text-center gap-4">
-              <h5 className="font-bold">
-                You haven't added any products to your Love Lists.
-              </h5>
-              <p className="font-light">
-                Collect all your favorite and must-try products by clicking on
-                the heart while you shop.
-              </p>
+            <div className="md:h-screen grid place-content-center text-center">
+              <div>
+                <img src="/assets/error.png" className="w-4/5 h-4/5" alt="" />
+                <h5 className="font-bold">
+                  You haven't added any products to your Love Lists.
+                </h5>
+                <p className="font-light">
+                  Collect all your favorite and must-try products by clicking on
+                  the heart while you shop.
+                </p>
+              </div>
             </div>
           ) : (
             <div>
-              <h1 className="font-medium text-2xl">Loves</h1>
-              <Separator className="my-4 bg-gray-400" />
-              <LoveListSort onSortChange={handleSortChange} type="love-list" />
+              <h1 className="text-xl md:text-2xl font-bold">Loves</h1>
 
               <div className="grid grid-cols-1 gap-4 w-full mt-4">
                 {sortedData?.map((product) => {
@@ -161,7 +164,7 @@ const LoveList = () => {
                       product_id={product.product_id}
                       short_description={product.short_description}
                       variation_id={product.variation_id}
-                      // handleDelete={handleDelete}
+                      onDelete={handleDelete}
                     />
                   );
                 })}

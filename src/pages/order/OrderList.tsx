@@ -6,6 +6,7 @@ import { useOrder } from "@/utils/api hooks/useOrder";
 import { useAppSelector } from "@/store/hook";
 import { OrderDetailItem, status } from "@/types/orderTypes";
 import { format } from "date-fns";
+import MainLoading from "@/components/shared/MainLoading";
 
 const OrderProduct = ({
   id,
@@ -121,9 +122,10 @@ const OrderProduct = ({
 const OrderList = () => {
   const navigate = useNavigate();
   const userId = useAppSelector((state) => state.user.id);
-  const { orderHistory } = useOrder(userId);
-  console.log(orderHistory);
-
+  const { orderHistory, isLoading } = useOrder(userId);
+  if (isLoading) {
+    return <MainLoading />;
+  }
   return (
     <div className="py-6  space-y-4">
       <small

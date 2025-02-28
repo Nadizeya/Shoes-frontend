@@ -109,6 +109,7 @@ const RegisterForm = () => {
         // Extract message from response
         const message =
           err?.response?.data?.errors?.email || // Specific email error
+          err?.response?.data?.errors?.name || // Specific email error
           err?.response?.data?.message || // General validation message
           "Something went wrong. Please try again."; // Fallback message
 

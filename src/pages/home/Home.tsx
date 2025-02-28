@@ -18,6 +18,9 @@ const Home = () => {
       // if (productsData) dispatch(setProducts(productsData));
     }
   }, [mainCategories, productsData, isSuccess]);
+  if (isLoading) {
+    return <MainLoading />;
+  }
 
   return (
     <div>

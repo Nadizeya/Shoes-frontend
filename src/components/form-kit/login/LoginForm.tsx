@@ -76,7 +76,9 @@ function LoginForm({ mobile }: LoginPropsT) {
       onError: (err: unknown) => {
         if (err && typeof err === "object" && "response" in err) {
           const response = (err as any).response;
-          setErrorMessage(response?.data?.message || "Login failed");
+          setErrorMessage(
+            response?.data?.data || response?.data?.message || "Login failed"
+          );
         } else {
           setErrorMessage("Login failed");
         }

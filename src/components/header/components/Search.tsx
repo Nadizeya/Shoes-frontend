@@ -87,7 +87,7 @@ const SearchBar = () => {
             type="text"
             value={query.value}
             placeholder="Search"
-            className="search w-full appearance-none bg-transparent border-none"
+            className="search w-full appearance-none bg-transparent border-none h-7 sm:h-10"
             onFocus={() => setShowResults(true)} // Show results when focusing the input
             onChange={async (e) => {
               setQuery((prev) => ({

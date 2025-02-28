@@ -15,7 +15,9 @@ export const fetchPaymentData = async (): Promise<{
 };
 
 export const addOrder = async (data: any) => {
-  const response = await ScreenshotService.post(`/orders/create-order`, data);
+  const response = await ScreenshotService.post(`/orders/create-order`, data, {
+    timeout: 5000,
+  });
   if (response.status != 200) {
     throw new Error("Problem with fetching");
   }

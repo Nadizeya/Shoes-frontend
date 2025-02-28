@@ -14,12 +14,12 @@ export function useAuth() {
 
   // this will probably be api fetching
   const login = (data: any) => {
-    dispatch(signInSuccess(data));
+    dispatch(signInSuccess(data.token));
     dispatch(setUser(data));
   };
 
   const register = (data: any) => {
-    dispatch(signInSuccess(data));
+    dispatch(signInSuccess(data.token));
     dispatch(setRegister(data));
   };
 

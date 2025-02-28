@@ -368,35 +368,37 @@ const ProductsInfo = () => {
               </span>
             </div>
             {isLoved ? (
-              <FaHeart
-                key="loved" // Forces re-render when state changes
-                onClick={
-                  removeMutation.isPending
-                    ? undefined
-                    : () => toggleHeart(selectedProductVariation?.id)
+              <button
+                key="loved"
+                onClick={() =>
+                  !removeMutation.isPending &&
+                  toggleHeart(selectedProductVariation?.id)
                 }
-                className={`text-red-500 cursor-pointer ${
+                disabled={removeMutation.isPending} // Properly disables button
+                className={`text-red-500 ${
                   removeMutation.isPending
                     ? "opacity-50 cursor-not-allowed"
-                    : ""
+                    : "cursor-pointer"
                 }`}
-                size={25}
-              />
+              >
+                <FaHeart size={25} />
+              </button>
             ) : (
-              <FaRegHeart
-                key="not-loved" // Forces re-render when state changes
-                onClick={
-                  addMutation.isPending
-                    ? undefined
-                    : () => toggleHeart(selectedProductVariation?.id)
+              <button
+                key="not-loved"
+                onClick={() =>
+                  !addMutation.isPending &&
+                  toggleHeart(selectedProductVariation?.id)
                 }
-                className={`text-red-500 cursor-pointer ${
-                  removeMutation.isPending
+                disabled={addMutation.isPending} // Properly disables button
+                className={`text-red-500 ${
+                  addMutation.isPending
                     ? "opacity-50 cursor-not-allowed"
-                    : ""
+                    : "cursor-pointer"
                 }`}
-                size={25}
-              />
+              >
+                <FaRegHeart size={25} />
+              </button>
             )}
           </div>
         </div>

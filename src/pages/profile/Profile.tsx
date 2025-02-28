@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 
 import { updateUserDetail } from "@/api/endpoints/userApi";
+import MainLoading from "@/components/shared/MainLoading";
 
 const profileSchema = z.object({
   name: z
@@ -34,7 +35,7 @@ const profileSchema = z.object({
 const Profile = () => {
   const navigate = useNavigate();
   const userId = useAppSelector((state) => state.user.id);
-  const { isSuccess, userData } = useUserDetail(userId);
+  const { isSuccess, userData, isLoading } = useUserDetail(userId);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -75,6 +76,10 @@ const Profile = () => {
       });
     },
   });
+
+  if (isLoading) {
+    return <MainLoading />;
+  }
 
   return (
     <div>
