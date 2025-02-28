@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -17,11 +17,17 @@ import { postAddToCartT } from "@/utils/api hooks/useProductDetail";
 import { useMutation } from "@tanstack/react-query";
 import { postAddToCart } from "@/api/endpoints/productsApi";
 import {
+  setItemHeart,
   // setSelectedColor,
   setSelectedItem,
   setSelectedSize,
 } from "@/store/slices/Products/productSlice";
 import { addToWishList, removeWishList } from "@/api/endpoints/wishlistApi";
+import {
+  decrementLoveList,
+  incrementAddToCart,
+  incrementLoveList,
+} from "@/store/slices/user/userSlice";
 
 const ProductsInfo = () => {
   // taking out datas from store
@@ -37,6 +43,30 @@ const ProductsInfo = () => {
   const selectedSize = useAppSelector(
     (state) => state.productDetail.selectedItem.size
   );
+  const isLoved = useAppSelector(
+    (state) => state.productDetail.productDetail.isLoved
+  );
+
+  const media = useMemo(() => {
+    if (!selectedProductVariation) return [];
+
+    const images =
+      selectedProductVariation.images?.map((img) => ({
+        type: "image",
+        url: img,
+      })) || [];
+
+    const videos =
+      selectedProductVariation.videos?.map((vid) => ({
+        type: "video",
+        url: vid,
+      })) || [];
+
+    // Combine both images and videos
+    return [...images, ...videos]; // If order matters, modify accordingly
+  }, [selectedProductVariation]);
+
+  console.log(media, "media");
 
   // using hooks for functions
   const dispatch = useAppDispatch();
@@ -44,7 +74,7 @@ const ProductsInfo = () => {
   const { authenticated } = useAuth();
   const [selectedQuantity, setSelectQuantity] = React.useState(1);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [changeheart, setChangeheart] = React.useState(false);
+  // const [changeheart, setChangeheart] = React.useState(false);
   const [api, setApi] = React.useState(null);
 
   //Logic for sizes and colors
@@ -65,7 +95,7 @@ const ProductsInfo = () => {
   const addMutation = useMutation({
     mutationFn: addToWishList,
     onSuccess: () => {
-      setChangeheart(true);
+      setItemHeart(true);
     },
     onError: (error: any) => {
       console.error("Error adding to wishlist:", error.message);
@@ -75,7 +105,7 @@ const ProductsInfo = () => {
   const removeMutation = useMutation({
     mutationFn: removeWishList,
     onSuccess: () => {
-      setChangeheart(false);
+      setItemHeart(false);
       console.log("Removed from wishlist");
     },
     onError: (error: any) => {
@@ -111,22 +141,41 @@ const ProductsInfo = () => {
       dispatch(setSelectedItem(matchingVariation));
     }
   };
+
   const handleIncrement = () => {
-    setSelectQuantity((prev) => prev + 1);
+    if (selectedQuantity < 5) {
+      setSelectQuantity((prev) => prev + 1);
+    }
   };
 
   const handleDecrement = () => {
-    setSelectQuantity((prev) => (prev > 1 ? prev - 1 : prev));
+    if (selectedQuantity > 1) {
+      setSelectQuantity((prev) => prev - 1);
+    }
   };
 
   const toggleHeart = (id: number) => {
+    if (!authenticated) {
+      navigate("/login");
+    }
     const wishListData = {
       product_variation_id: id,
     };
-    if (changeheart) {
-      removeMutation.mutate(wishListData);
+    if (isLoved) {
+      removeMutation.mutate(wishListData, {
+        onSuccess: () => {
+          dispatch(setItemHeart(false)); // Ensure correct dispatch
+          dispatch(decrementLoveList());
+        },
+      });
     } else {
-      addMutation.mutate(wishListData);
+      addMutation.mutate(wishListData, {
+        onSuccess: () => {
+          dispatch(setItemHeart(true)); // Ensure correct dispatch
+
+          dispatch(incrementLoveList());
+        },
+      });
     }
   };
   const addToCart = (id: number) => {
@@ -140,7 +189,12 @@ const ProductsInfo = () => {
       console.log("Not authenticated");
       navigate("/login");
     }
-    basketMutation.mutate(addToCartProduct);
+    basketMutation.mutate(addToCartProduct, {
+      onSuccess: () => {
+        dispatch(incrementAddToCart());
+        navigate("/checkout"); // Dispatch the action after successful API call
+      },
+    });
   };
 
   const handleThumbnailClick = (index: number) => {
@@ -184,10 +238,10 @@ const ProductsInfo = () => {
     // Thumbnails Comp
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
       <div className="flex flex-start h-full">
+        {/* Thumbnails */}
         <div className="flex flex-col gap-2 h-60 overflow-y-scroll no-scrollbar">
-          {selectedProductVariation.images &&
-          selectedProductVariation.images.length > 0 ? (
-            selectedProductVariation.images.map((imgUrl, index) => (
+          {media.length > 0 ? (
+            media.map((item, index) => (
               <div
                 key={index}
                 onClick={() => handleThumbnailClick(index)}
@@ -195,11 +249,17 @@ const ProductsInfo = () => {
                   selectedIndex === index ? "border-black border-2" : ""
                 }`}
               >
-                <img
-                  src={BASE_URL + imgUrl || "/assets/products/product3.png"}
-                  alt={`Product ${index}`}
-                  className="rounded-full w-full h-full object-cover"
-                />
+                {item.type === "image" ? (
+                  <img
+                    src={BASE_URL + item.url || "/assets/products/product3.png"}
+                    alt={`Media ${index}`}
+                    className="rounded-full w-full h-full object-cover"
+                  />
+                ) : (
+                  <video className="rounded-full w-full h-full object-cover">
+                    <source src={BASE_URL + item.url} type="video/mp4" />
+                  </video>
+                )}
               </div>
             ))
           ) : (
@@ -213,16 +273,25 @@ const ProductsInfo = () => {
           )}
         </div>
 
+        {/* Carousel */}
         <div className="basis-[60%] mx-auto">
           <Carousel setApi={setApi}>
             <CarouselContent>
-              {selectedProductVariation.images?.map((imgUrl, index) => (
+              {media.map((item, index) => (
                 <CarouselItem key={index} className="h-60">
-                  <img
-                    src={BASE_URL + imgUrl || "/assets/products/product3.png"}
-                    alt={`Product ${index}`}
-                    className={`w-full h-full object-contain`}
-                  />
+                  {item.type === "image" ? (
+                    <img
+                      src={
+                        BASE_URL + item.url || "/assets/products/product3.png"
+                      }
+                      alt={`Media ${index}`}
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <video controls className="w-full h-full object-contain">
+                      <source src={BASE_URL + item.url} type="video/mp4" />
+                    </video>
+                  )}
                 </CarouselItem>
               ))}
             </CarouselContent>
@@ -233,7 +302,7 @@ const ProductsInfo = () => {
       </div>
       {/* product info left side */}
       <div className="space-y-4">
-        <div className="">
+        <div className="space-y-1">
           <h4 className="font-bold ">{productsDetailsData.name}</h4>
           <p>{productsDetailsData.short_description}</p>
         </div>
@@ -242,13 +311,35 @@ const ProductsInfo = () => {
 
         <div className="space-y-2">
           {/* Sizes */}
+
+          <h4>Colors</h4>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 w-3/4 px-1 ">
+            {availableColors.map((imageUrl, index) => (
+              <div
+                key={index}
+                onClick={() => handleColorClick(imageUrl, selectedSize)}
+                className={`w-9 h-9 cursor-pointer border-2 flex items-center rounded justify-center transition-all duration-200 transform hover:scale-105 hover:shadow-lg ${
+                  selectedProductVariation.images[0] === imageUrl
+                    ? "border-gray-700"
+                    : "border-gray-300 hover:border-gray-500"
+                }`}
+              >
+                <img
+                  src={BASE_URL + imageUrl}
+                  alt={`Color ${index}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
           <h4>Size</h4>
-          <div className="grid grid-cols-3 gap-3">
+
+          <div className="w-3/4 2xl:w-3/5 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {uniqueSizes.map((size, index) => (
               <div
                 key={index}
                 onClick={() => handleSizeClick(size)}
-                className={`border text-center px-2 py-2 cursor-pointer rounded-sm ${
+                className={`border text-center py-1 cursor-pointer rounded-sm hover:bg-slate-200 ${
                   selectedSize === size ? "border-gray-700" : "border-gray-300"
                 }`}
               >
@@ -257,29 +348,8 @@ const ProductsInfo = () => {
             ))}
           </div>
 
-          <h4>Colors</h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-            {availableColors.map((imageUrl, index) => (
-              <div
-                key={index}
-                onClick={() => handleColorClick(imageUrl, selectedSize)}
-                className={`w-10 h-10 cursor-pointer rounded-full border-2 flex items-center justify-center ${
-                  selectedProductVariation.images[0] === imageUrl
-                    ? "border-gray-700"
-                    : "border-gray-300"
-                }`}
-              >
-                <img
-                  src={BASE_URL + imageUrl}
-                  alt={`Color ${index}`}
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </div>
-            ))}
-          </div>
-
           <div className="flex items-center gap-4 my-4">
-            <div className="text-white h-11 bg-red-600 rounded-full pl-4  pr-10 flex justify-start items-center gap-4">
+            <div className="text-white h-11 bg-red-600 rounded-full pl-4  pr-10 flex justify-start items-center gap-4 mt-2">
               <div className="flex items-center gap-4 h-full border-r border-r-white pr-2  basis-[30%]">
                 <Minus className="cursor-pointer" onClick={handleDecrement} />
                 {selectedQuantity}
@@ -297,8 +367,9 @@ const ProductsInfo = () => {
                 {basketMutation.isPending ? "Adding..." : "Add to Basket"}
               </span>
             </div>
-            {changeheart ? (
+            {isLoved ? (
               <FaHeart
+                key="loved" // Forces re-render when state changes
                 onClick={
                   removeMutation.isPending
                     ? undefined
@@ -313,6 +384,7 @@ const ProductsInfo = () => {
               />
             ) : (
               <FaRegHeart
+                key="not-loved" // Forces re-render when state changes
                 onClick={
                   addMutation.isPending
                     ? undefined

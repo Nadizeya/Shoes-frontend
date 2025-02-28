@@ -1,14 +1,15 @@
-import { CategoryT } from "@/types/common";
+import { BrandT, CategoryT } from "@/types/common";
 
 interface Props {
-  data: CategoryT[];
+  data: CategoryT[] | BrandT[];
   mainCategoryName: string; // Pass down from parent
 }
 
 const CategoriesDropDown = ({ data, mainCategoryName }: Props) => {
   const chunkedData = [];
-  for (let i = 0; i < data.length; i += 2) {
-    chunkedData.push(data.slice(i, i + 5));
+  const filteredData = data.slice(0, 30);
+  for (let i = 0; i < filteredData.length; i += 5) {
+    chunkedData.push(filteredData.slice(i, i + 5));
   }
 
   return (
@@ -20,8 +21,10 @@ const CategoriesDropDown = ({ data, mainCategoryName }: Props) => {
               <a
                 href={
                   mainCategoryName === "Brand"
-                    ? `/brands/${category.id}` // Route for Brand
-                    : `/categories/${category.id}` // Route for other categories
+                    ? `/brands/${category.id}`
+                    : mainCategoryName === "New"
+                    ? `/new-categories/`
+                    : `/categories/${category.id}`
                 }
                 className="inline-block font-bold hover:underline"
               >

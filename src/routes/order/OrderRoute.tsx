@@ -8,7 +8,7 @@ export const orderRoutes: Routes = [
     element: <LazyOrderList />,
   },
   {
-    key: "order",
+    key: "orderDetail",
     path: `/order-list/:orderId`,
     element: <LazyOrderDetail />,
   },

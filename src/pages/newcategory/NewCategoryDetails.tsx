@@ -1,18 +1,12 @@
 import { useLocation, useParams } from "react-router-dom";
 import ProductList from "../products/components/ProductsList";
-import { useCategoryDetail } from "@/utils/api hooks/useDetail";
+import { useNewCategoryDetail } from "@/utils/api hooks/useDetail";
 
 const CategoryDetails = () => {
   const { categoryId } = useParams();
-  const {
-    products,
-    isLoading,
-    isError,
-    loadMore,
-    currentPage,
-    lastPage,
-    name,
-  } = useCategoryDetail(Number(categoryId));
+  const { products, isLoading, isError, loadMore, currentPage, lastPage } =
+    useNewCategoryDetail();
+  console.log(products, "New products");
 
   const showMore = lastPage! > currentPage!;
 
@@ -31,7 +25,7 @@ const CategoryDetails = () => {
   return (
     <div>
       <ProductList
-        name={name || ""}
+        name="New Products  "
         products={products || []}
         loadMore={loadMore}
         isLoading={isLoading}

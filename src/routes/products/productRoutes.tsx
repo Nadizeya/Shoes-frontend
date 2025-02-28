@@ -8,6 +8,11 @@ export const productRoutes: Routes = [
     element: <LazyProducts />,
   },
   {
+    key: "recommended",
+    path: "/nadi-recommendation",
+    element: <LazyProducts />,
+  },
+  {
     key: "productsDetails",
     path: "/products/:productId",
     element: <LazyProductDetails />,

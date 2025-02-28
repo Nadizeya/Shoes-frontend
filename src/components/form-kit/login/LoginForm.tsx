@@ -31,15 +31,13 @@ const FormSchema = z.object({
         message: "Please enter a valid phone number or email!",
       }
     ),
-  password: z
-    .string()
-    .min(6)
-    .refine(
-      (value) =>
-        /[a-z]/.test(value) && // at least one lowercase letter
-        /[0-9]/.test(value) && // at least one digit
-        /[!@#$%^&*(),.?":{}|<>]/.test(value) // at least one special character
-    ),
+  password: z.string().refine(
+    (value) =>
+      /[a-z]/.test(value) && // at least one lowercase letter
+      /[0-9]/.test(value) && // at least one digit
+      /[!@#$%^&*(),.?":{}|<>]/.test(value),
+    { message: "" } // at least one special character
+  ),
 });
 
 type LoginPropsT = {

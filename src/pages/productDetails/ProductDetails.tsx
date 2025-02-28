@@ -6,20 +6,27 @@ import {
 import { useProductDetails } from "@/utils/api hooks/useProductDetail";
 import { ChevronLeft } from "lucide-react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import HeroSection from "../home/components/HeroSection";
 import ProductAccordion from "./components/ProductAccordion";
 import ProductsInfo from "./components/ProductsInfo";
 import ProductsHomeComp from "../home/components/ProductsHomeComp";
+import { useAuth } from "@/utils/useAuth";
+import MainLoading from "@/components/shared/MainLoading";
 
 const ProductDetails = () => {
   const dispatch = useAppDispatch();
+  const { authenticated } = useAuth();
+  const location = useLocation();
   const { productId } = useParams<{ productId: string }>();
   const numericProductId = Number(productId);
-  const { productDetail, isSuccess, productsAfterDetail } =
+  const { productDetail, isSuccess, productsAfterDetail, refetch, isLoading } =
     useProductDetails(numericProductId);
 
   console.log(productDetail);
+  useEffect(() => {
+    refetch();
+  }, [location.key]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -34,6 +41,10 @@ const ProductDetails = () => {
       }
     }
   }, [productDetail, isSuccess]);
+
+  if (isLoading) {
+    return <MainLoading />;
+  }
   return (
     <div>
       {isSuccess && (

@@ -19,7 +19,9 @@ const AuthRoutes = () => (
   <Routes>
     {/* Initial authentication pages */}
     {typedAuthRoutes.map((route) => {
-      if (["login", "register"].includes(route.key)) {
+      if (
+        ["login", "register", "register-otp-validation"].includes(route.key)
+      ) {
         return (
           <Route
             key={route.key}

@@ -14,17 +14,22 @@ export interface CategoryData {
   products: Categories; // Dynamic categories
 }
 
-export interface DetailType {
+export interface BaseProductType {
+  products: ProductT[];
+  pagination: PaginationT;
+}
+
+export interface NewProductsType extends BaseProductType {}
+
+export interface DetailType extends BaseProductType {
   id: number;
   name: string;
   main_category_name: string;
   main_category_id: number;
   image: string;
-  products: ProductT[];
-  pagination: PaginationT;
 }
 
-type PaginationT = {
+export type PaginationT = {
   current_page: number;
   last_page: number;
   per_page: number;

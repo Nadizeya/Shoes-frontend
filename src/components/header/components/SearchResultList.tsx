@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import classNames from "classnames";
 import { SearchResutListT } from "@/types/search";
 import { BASE_URL } from "@/api/BaseService";
+import { useNavigate } from "react-router-dom";
 
 const tags = [
   { id: 1, tag: "All" },
@@ -18,11 +19,27 @@ type SearchItemProps = {
     original_price?: number;
     image: string | null;
   };
+  itemType: "product" | "brand" | "category";
 };
 
-const SearchItem: React.FC<SearchItemProps> = ({ item }) => {
+const SearchItem: React.FC<SearchItemProps> = ({ item, itemType }) => {
+  const navigate = useNavigate();
+
+  // Determine the correct route based on itemType
+  const handleClick = () => {
+    if (itemType === "product") {
+      navigate(`/products/${item.id}`);
+    } else if (itemType === "brand") {
+      navigate(`/brands/${item.id}`);
+    } else if (itemType === "category") {
+      navigate(`/categories/${item.id}`);
+    }
+  };
   return (
-    <div className="py-2 border-b flex gap-5 last:border-none">
+    <div
+      className="py-2 border-b flex gap-5 last:border-none cursor-pointer"
+      onClick={handleClick} // Add onClick to navigate
+    >
       {item.image && (
         <img
           src={` ${BASE_URL}${item.image}`}
@@ -30,9 +47,7 @@ const SearchItem: React.FC<SearchItemProps> = ({ item }) => {
           className="w-9 h-9  object-cover"
         />
       )}
-      <h4>
-        {item.name} - {item.description}
-      </h4>
+      <h4>{item.name}</h4>
     </div>
   );
 };
@@ -44,9 +59,9 @@ const SearchResultList = ({
 }: SearchResutListT) => {
   const resultexist =
     resultList &&
-    (resultList.products.length > 0 ||
-      resultList.brands.length > 0 ||
-      resultList.categories.length > 0);
+    (resultList.products.length >= 0 ||
+      resultList.brands.length >= 0 ||
+      resultList.categories.length >= 0);
 
   const filteredResults = () => {
     if (query.tag === "Products") {
@@ -97,7 +112,11 @@ const SearchResultList = ({
 
                 {resultList.products.length > 0 &&
                   resultList.products.map((product) => (
-                    <SearchItem item={product} key={product.id} />
+                    <SearchItem
+                      item={product}
+                      itemType="product"
+                      key={product.id}
+                    />
                   ))}
               </div>
             )}
@@ -107,7 +126,7 @@ const SearchResultList = ({
 
                 {resultList.brands.length > 0 &&
                   resultList.brands.map((brand) => (
-                    <SearchItem item={brand} key={brand.id} />
+                    <SearchItem item={brand} itemType="brand" key={brand.id} />
                   ))}
               </div>
             )}
@@ -117,7 +136,11 @@ const SearchResultList = ({
                   <h3 className="font-bold py-1">Category Suggestions</h3>
                   {resultList.categories.length > 0 &&
                     resultList.categories.map((category) => (
-                      <SearchItem item={category} key={category.id} />
+                      <SearchItem
+                        item={category}
+                        itemType="category"
+                        key={category.id}
+                      />
                     ))}
                 </div>
               )}

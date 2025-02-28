@@ -3,16 +3,16 @@ import Delete from "/assets/add-to-cart/delete.svg";
 import { useAppSelector } from "@/store/hook";
 import { useDispatch } from "react-redux";
 import {
-  deleteItem,
   incrementQuantity,
   decrementQuantity,
   updateTotalCost,
 } from "@/store/slices/Checkout/checkOutSlice";
 import useResponsive from "@/utils/useResponsive";
 import { BASE_URL } from "@/api/BaseService";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteOrder } from "@/api/endpoints/checkoutApi";
-import { CartProductsList } from "@/types/checkOutTypes";
+import { CartItemT } from "@/types/checkOutTypes";
+import { decrementAddToCart } from "@/store/slices/user/userSlice";
 
 const ItemQuantity = ({
   quantity,
@@ -43,7 +43,6 @@ const CartItem = ({
   desc,
   price,
   size,
-  color,
   onDelete,
 }: {
   id: number;
@@ -52,14 +51,14 @@ const CartItem = ({
   desc: string;
   price: number;
   size: string;
-  color: string;
   quantity: number;
   onDelete: (id: number) => void;
 }) => {
   const dispatch = useDispatch();
   const itemQuantity = useAppSelector(
     (state) =>
-      state.checkout.cartItems.find((item) => item.id === id)?.quantity || 1
+      state.checkout.cartItems.find((item) => item.cart_item_id === id)
+        ?.quantity || 1
   );
 
   console.log(itemQuantity, "quantity");
@@ -93,7 +92,7 @@ const CartItem = ({
           </div>
           <p>{desc}</p>
           <small className="text-muted-foreground">Size: {size}</small>
-          <span className="text-xs">{color}</span>
+          {/* <span className="text-xs">{color}</span> */}
           <div className="flex justify-between items-center gap-4 mt-4">
             <ItemQuantity
               quantity={itemQuantity}
@@ -116,7 +115,6 @@ const MobileCartItem = ({
   desc,
   price,
   size,
-  color,
   onDelete,
 }: {
   id: number;
@@ -125,14 +123,14 @@ const MobileCartItem = ({
   desc: string;
   price: number;
   size: string;
-  color: string;
   quantity: number;
   onDelete: (id: number) => void;
 }) => {
   const dispatch = useDispatch();
   const itemQuantity = useAppSelector(
     (state) =>
-      state.checkout.cartItems.find((item) => item.id === id)?.quantity || 1
+      state.checkout.cartItems.find((item) => item.cart_item_id === id)
+        ?.quantity || 1
   );
 
   const totalPrice = price * itemQuantity;
@@ -157,7 +155,7 @@ const MobileCartItem = ({
           </div>
           <p>{desc}</p>
           <small className="text-muted-foreground">Size: {size}</small>
-          <span className="text-xs">{color}</span>
+          {/* <span className="text-xs">{color}</span> */}
         </div>
       </div>
       <div className="flex justify-between items-center mt-4 p-4 px-10 md:px-16 ">
@@ -181,21 +179,25 @@ const MobileCartItem = ({
   );
 };
 type CartCompProps = {
-  cartItems: CartProductsList;
-  isOrderDetail: boolean;
+  cartItems: CartItemT[];
 };
 
-const CartComp = ({ cartItems, isOrderDetail }: CartCompProps) => {
+const CartComp = ({ cartItems }: CartCompProps) => {
   const { desktopResponsive, mobileResponsive, tabletResponsive } =
     useResponsive();
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: deleteOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cartProducts"] });
+      queryClient.invalidateQueries({ queryKey: ["payment"] });
+    },
   });
 
   const handleDelete = (id: number) => {
-    dispatch(deleteItem(id));
     dispatch(updateTotalCost());
+    dispatch(decrementAddToCart());
     mutation.mutate(id);
   };
 
@@ -205,13 +207,12 @@ const CartComp = ({ cartItems, isOrderDetail }: CartCompProps) => {
         cartItems?.map((item, index) => (
           <CartItem
             key={index}
-            id={item.id}
-            title={item.product.name}
-            image={BASE_URL + item.product.image}
-            color={item.product.item.color}
-            desc={item.product.short_description}
-            price={item.product.original_price}
-            size={item.product.item.size}
+            id={item.cart_item_id}
+            title={item.name}
+            image={BASE_URL + item.image}
+            desc={item.short_description}
+            price={item.price}
+            size={item.variant.size}
             quantity={item.quantity}
             onDelete={handleDelete}
           />
@@ -220,13 +221,12 @@ const CartComp = ({ cartItems, isOrderDetail }: CartCompProps) => {
         cartItems?.map((item, index) => (
           <MobileCartItem
             key={index}
-            id={item.id}
-            title={item.product.name}
-            image={BASE_URL + item.product.image}
-            color={item.product.item.color}
-            desc={item.product.short_description}
-            price={item.product.original_price}
-            size={item.product.item.size}
+            id={item.cart_item_id}
+            title={item.name}
+            image={BASE_URL + item.image}
+            desc={item.short_description}
+            price={item.price}
+            size={item.variant.size}
             quantity={item.quantity}
             onDelete={handleDelete}
           />

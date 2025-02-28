@@ -1,4 +1,4 @@
-export interface WishListProduct {
+interface WishListProduct {
   variation_id: number;
   product_id: number;
   price: number;

@@ -19,11 +19,12 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useAppSelector } from "@/store/hook";
-import { postOtpValidation } from "@/api/endpoints/authApi";
+import { postOtpValidation, postRegisterOtp } from "@/api/endpoints/authApi";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { useAuth } from "@/utils/useAuth";
 
 const FormSchema = z.object({
   otp_code: z.string().min(6, {
@@ -31,7 +32,12 @@ const FormSchema = z.object({
   }),
 });
 
-export function InputOTPForm() {
+type InputOTPFormProps = {
+  mode: "register" | "forgotPassword";
+};
+
+export function InputOTPForm({ mode }: InputOTPFormProps) {
+  const { register } = useAuth();
   const navigate = useNavigate();
   const { completeStep } = useAuthGuard();
   const email = useAppSelector((state) => state.user.email);
@@ -44,8 +50,10 @@ export function InputOTPForm() {
     },
   });
 
+  const mutationFn = mode === "register" ? postRegisterOtp : postOtpValidation;
+
   const { mutate, isError } = useMutation({
-    mutationFn: postOtpValidation,
+    mutationFn: mutationFn,
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -61,19 +69,22 @@ export function InputOTPForm() {
 
     mutate(payload, {
       onSuccess: (response) => {
-        console.log(response.data);
         toast({
-          title: "You submitted the following values:",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">
-                {JSON.stringify(payload, null, 2)}
-              </code>
-            </pre>
-          ),
+          title: "Your OTP is correct.",
+          // description: (
+          //   <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          //     <code className="text-white">
+          //       {JSON.stringify(payload, null, 2)}
+          //     </code>
+          //   </pre>
+          // ),
         });
+        if (mode === "register") {
+          register(response.data);
+        }
         completeStep("otpValidated");
-        navigate("/reset-password");
+
+        navigate(mode === "register" ? "/" : "/reset-password");
       },
       onError: (err) => {
         console.error(err);

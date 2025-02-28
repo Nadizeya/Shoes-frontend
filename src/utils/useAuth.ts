@@ -4,7 +4,7 @@ import {
   signInSuccess,
   signOutSuccess,
 } from "@/store/slices/auth/authSlice";
-import { setRegister, setUser } from "@/store/slices/user/userSlice";
+import { setEmail, setRegister, setUser } from "@/store/slices/user/userSlice";
 import { useAppSelector, useAppDispatch } from "@/store/hook";
 
 export function useAuth() {
@@ -23,9 +23,15 @@ export function useAuth() {
     dispatch(setRegister(data));
   };
 
+  const registerOtp = (data: any) => {
+    dispatch(setEmail(data));
+  };
+
   const handleLogOut = () => {
     dispatch(
       setUser({
+        add_to_cart: 0,
+        address: "",
         name: "",
         id: 0,
         role: "",
@@ -48,5 +54,6 @@ export function useAuth() {
     login,
     register,
     logout,
+    registerOtp,
   };
 }

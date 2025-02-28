@@ -8,11 +8,17 @@ import {
   LazyOtpValidate,
   LazyCreateProfile,
   LazySuccess,
+  LazyRegisterOtp,
 } from "../lazy";
 
 const authRoutes: AuthRoutes = [
   { key: "login", path: "/login", element: <LazyLogin /> },
   { key: "register", path: "/register", element: <LazyRegister /> },
+  {
+    key: "register-otp-validation",
+    path: "/register/otp-validation",
+    element: <LazyRegisterOtp />,
+  },
   {
     key: "change-password",
     path: "/change-password",

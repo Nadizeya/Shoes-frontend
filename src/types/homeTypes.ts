@@ -18,13 +18,17 @@ export type ProductDetailProducts = {
   recently_view: ProductT[];
 };
 
-export type MainCategory = {
+export interface MainCategory {
   id: number;
   name: string;
-  created_at: string | null;
-  updated_at: string | null;
   brands: BrandT[];
   categories: CategoryT[];
+  new_categories?: NewCategory[];
+}
+
+export type NewCategory = {
+  id: number;
+  name: string;
 };
 
 export type Maincategroies = MainCategory[];

@@ -8,10 +8,9 @@ import { toast } from "@/components/ui/use-toast";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const OtpValidation = () => {
+const RegisterOtp = () => {
   const navigate = useNavigate();
   const email = useAppSelector((state) => state.user.email);
-
   const { mutate, isPending } = useMutation({
     mutationFn: postForgotPassword,
   });
@@ -58,7 +57,7 @@ const OtpValidation = () => {
           </p>
         </div>
         <div className="w-full sm:w-[85%] ">
-          <InputOTPForm mode="forgotPassword" />
+          <InputOTPForm mode="register" />
         </div>
         <span>
           If you didn’t receive the OTspan,{" "}
@@ -85,4 +84,4 @@ const OtpValidation = () => {
   );
 };
 
-export default OtpValidation;
+export default RegisterOtp;

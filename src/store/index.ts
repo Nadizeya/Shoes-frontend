@@ -3,6 +3,7 @@ import userReducer from "@/store/slices/user/userSlice";
 import authReducer from "@/store/slices/auth/authSlice";
 import homeReducer from "@/store/slices/Home/homeSlice";
 import checkoutReducer from "@/store/slices/Checkout/checkOutSlice";
+import orderdetailReducer from "@/store/slices/OrderDetail/orderDetailslice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import productDetailReducer from "./slices/Products/productSlice";
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   home: homeReducer,
   checkout: checkoutReducer,
   productDetail: productDetailReducer,
+  orderdetail: orderdetailReducer,
 });
 
 const persistConfig = {

@@ -11,6 +11,7 @@ import {
   setCartItems,
   setPayment,
   setTotalCost,
+  updateTotalCost,
 } from "@/store/slices/Checkout/checkOutSlice";
 import { useCheckoutItems } from "@/utils/api hooks/useCheckout";
 import { addOrder } from "@/api/endpoints/checkoutApi";
@@ -20,22 +21,16 @@ import ProductsHomeComp from "../home/components/ProductsHomeComp";
 import { useHomeData } from "@/utils/api hooks/useHomeData";
 
 // Zod schema for form validation
-const formSchema = z.object({
+export const formSchema = z.object({
   user_name: z.string().min(1, "Name is required"),
   phone_number: z
     .string()
     .regex(/^\d+$/, "Phone number should contain digits only")
     .min(10, "Phone number should be at least 10 digits"),
   address: z.string().min(5, "Address must be at least 5 characters"),
-  // order_cost: z.object({
-  //   total: z.number().min(0, "Total must be a positive number"),
-  //   delivery_cost: z.number().min(0, "Delivery cost must be a positive number"),
-  //   subtotal: z.number().min(0, "Subtotal must be a positive number"),
-  // }),
-  // payment_id: z.number().min(1, "Payment ID is required"),
-  // payment_file: z
-  //   .any()
-  //   .refine((file) => file instanceof File, "Payment file is required"),
+  payment_screenshot: z
+    .instanceof(File, { message: "Payment file is required" }) // Ensures file is an instance of File
+    .optional(),
 });
 
 const Checkout = () => {
@@ -43,19 +38,22 @@ const Checkout = () => {
   const dispatch = useAppDispatch();
   const { cartProducts, paymentData, isSuccess, total } = useCheckoutItems();
   const { productsData } = useHomeData();
+  const userId = useAppSelector((state) => state.user.id);
 
-  // console.log(paymentData, "Payment data");
+  console.log(paymentData, "Payment data");
   useEffect(() => {
     if (isSuccess) {
       dispatch(setCartItems(cartProducts));
       dispatch(setPayment(paymentData));
       dispatch(setTotalCost(total));
+      dispatch(updateTotalCost());
     }
   }, [cartProducts, paymentData, dispatch]);
 
   // const cartItems = useAppSelector((state) => state.checkout.cartItems);
   const totalCost = useAppSelector((state) => state.checkout.orderCost.total);
   const paymentId = useAppSelector((state) => state.checkout.paymentId);
+  console.log(paymentId, "payment id");
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -63,6 +61,7 @@ const Checkout = () => {
       name: "",
       phoneNumber: "",
       address: "",
+      payment_screenshot: null,
       // order_cost: {
       //   total: 0,
       //   delivery_cost: 0,
@@ -73,9 +72,6 @@ const Checkout = () => {
     },
   });
 
-  const { formState } = form;
-  console.log("Errors:", formState.errors);
-
   const mutation = useMutation({
     mutationFn: addOrder,
   });
@@ -83,29 +79,41 @@ const Checkout = () => {
   // console.log(form);
 
   const onSubmit = (data: any) => {
-    toast({
-      title: "Success !!",
-      description:
-        "Your order is submitted successful. Please wait for the admin to confirm the order.",
-    });
-    console.log(data, "checkout data");
-
     const products = cartProducts
-      .filter((item) => item.quantity && item.id)
+      .filter((item) => item.quantity && item.variant.id)
       .map((item: any) => ({
-        variation_id: item.product.item.id,
+        variation_id: item.variant.id,
         quantity: item.quantity,
       }));
-    data = {
-      user_id: cartProducts[0].user_id,
+
+    const latestData = {
+      user_id: userId,
       total_price: totalCost,
       products: products,
       account_id: paymentId,
       ...data,
     };
-    mutation.mutate(data);
-    navigate("/");
+
+    mutation.mutate(latestData, {
+      onSuccess: () => {
+        toast({
+          title: "Success !!",
+          description:
+            "Your order is submitted successfully. Please wait for the admin to confirm the order.",
+        });
+        navigate("/"); // ✅ Navigate only after a successful API response
+      },
+      onError: (error: any) => {
+        toast({
+          title: "Order Submission Failed",
+          description:
+            error.message || "Something went wrong. Please try again.",
+          variant: "destructive",
+        });
+      },
+    });
   };
+
   return (
     <div>
       {isSuccess && (
@@ -115,8 +123,8 @@ const Checkout = () => {
             <FormProvider {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="w-full flex flex-col md:flex-row gap-4 items-center md:items-start ">
-                  <CartComp cartItems={cartProducts} isOrderDetail={false} />
-                  <CheckoutComp />
+                  <CartComp cartItems={cartProducts} />
+                  <CheckoutComp isOrderDetail={false} />
                 </div>
               </form>
             </FormProvider>

@@ -20,6 +20,7 @@ export interface ProductData {
   category_name: string;
   brand_id: number;
   brand_name: string;
+  isLoved?: boolean;
   product_variations: ProductVariation[]; // Matches API response structure
 }
 

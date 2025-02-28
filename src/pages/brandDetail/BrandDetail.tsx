@@ -1,16 +1,25 @@
 import { useParams } from "react-router-dom";
 import ProductList from "../products/components/ProductsList";
-import { useBrandDetail, useCategoryDetail } from "@/utils/api hooks/useDetail";
+import { useBrandDetail } from "@/utils/api hooks/useDetail";
+import MainLoading from "@/components/shared/MainLoading";
 
 const BrandDetail = () => {
   const { brandId } = useParams();
-  const { products, isLoading, isError, loadMore, currentPage, lastPage } =
-    useBrandDetail(Number(brandId));
+  const {
+    name,
+    products,
+    isLoading,
+    isError,
+    loadMore,
+    currentPage,
+    lastPage,
+    isSuccess,
+  } = useBrandDetail(Number(brandId));
 
   const showMore = lastPage! > currentPage!;
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <MainLoading />;
   }
 
   if (isError) {
@@ -19,13 +28,19 @@ const BrandDetail = () => {
 
   return (
     <div>
-      <ProductList
-        products={products || []}
-        loadMore={loadMore}
-        isLoading={isLoading}
-        showMore={showMore}
-      />
+      {isSuccess && (
+        <div>
+          <ProductList
+            name={name || ""}
+            products={products || []}
+            loadMore={loadMore}
+            isLoading={isLoading}
+            showMore={showMore}
+          />
+        </div>
+      )}
     </div>
+
     // <div className="py-5">
     //   <h1></h1>
     //   {isSuccess && products ? (

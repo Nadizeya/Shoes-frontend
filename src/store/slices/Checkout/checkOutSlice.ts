@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  CartItem,
-  CartProduct,
+  CartItemT,
   CheckOutT,
   DeliveryInfo,
   OrderCost,
@@ -29,7 +28,7 @@ export const checkoutSlice = createSlice({
   name: "checkout",
   initialState: initialState,
   reducers: {
-    setCartItems(state, action: PayloadAction<CartProduct[]>) {
+    setCartItems(state, action: PayloadAction<CartItemT[]>) {
       state.cartItems = action.payload;
     },
     setPayment(state, action: PayloadAction<PaymentDataList>) {
@@ -46,19 +45,19 @@ export const checkoutSlice = createSlice({
       console.log(action.payload, "in slice");
       state.paymentFile = action.payload;
     },
-    deleteItem(state, action: PayloadAction<number>) {
-      state.cartItems = state.cartItems.filter(
-        (item) => item.id !== action.payload
-      );
-    },
+
     incrementQuantity(state, action: PayloadAction<number>) {
-      const item = state.cartItems.find((item) => item.id === action.payload);
+      const item = state.cartItems.find(
+        (item) => item.cart_item_id === action.payload
+      );
       if (item) {
         item.quantity += 1;
       }
     },
     decrementQuantity(state, action: PayloadAction<number>) {
-      const item = state.cartItems.find((item) => item.id === action.payload);
+      const item = state.cartItems.find(
+        (item) => item.cart_item_id === action.payload
+      );
       if (item && item.quantity > 1) {
         item.quantity -= 1;
       }
@@ -66,7 +65,7 @@ export const checkoutSlice = createSlice({
 
     updateTotalCost(state) {
       const totalValue = state.cartItems.reduce((acc, item) => {
-        return acc + item.product.original_price * item.quantity;
+        return acc + item.price * item.quantity;
       }, 0);
 
       state.orderCost.total = totalValue;
@@ -85,13 +84,12 @@ export const checkoutSlice = createSlice({
   },
 });
 
-export const getCartItems = (state: { cartItems: CartItem[] }) =>
+export const getCartItems = (state: { cartItems: CartItemT[] }) =>
   state.cartItems;
 
 export const {
   setCartItems,
   setTotalCost,
-  deleteItem,
   changePaymentId,
   changePaymentFile,
   updateDeliveryInfo,

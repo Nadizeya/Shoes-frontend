@@ -1,10 +1,11 @@
 import {
   Heart,
   Basket,
-  ClockClockwise,
   Package,
   Notepad,
   UserRectangle,
+  Sun,
+  MoonStars,
 } from "@phosphor-icons/react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -34,54 +35,64 @@ type dropDownOptionT = {
   path: string;
 };
 
-const dropDownOptions: dropDownOptionT[] = [
+export const dropDownOptions: dropDownOptionT[] = [
   {
     id: 1,
-    icon: <ClockClockwise size={23} />,
-    title: "Buy It Again",
-    desc: "Reorder from in-store and online purchases",
-    path: "/login",
-  },
-  {
-    id: 2,
     icon: <Package size={23} />,
     title: "Orders",
     desc: "View and track online or pickup orders",
     path: "/order-list",
   },
   {
-    id: 3,
+    id: 2,
     icon: <Heart size={23} />,
     title: "Loves",
     desc: "View saved products",
     path: "/love-list",
   },
   {
-    id: 4,
+    id: 3,
     icon: <UserRectangle size={23} />,
     title: "Account Settings",
     desc: "Payment, contact info , addresses, password",
     path: "/profile",
   },
   {
-    id: 5,
+    id: 4,
     icon: <Notepad size={23} />,
     title: "Nadi's Recommendations",
     desc: "Recommendations from your store visits",
-    path: "/login",
+    path: "/nadi-recommendation",
   },
 ];
 
-const getGreeting = () => {
+export const getTime = () => {
   const hours = new Date().getHours();
   if (hours < 12) {
-    return "Good Morning";
+    return "Good Morning,";
   } else if (hours < 18) {
-    return "Good Afternoon";
+    return "Good Afternoon,";
   } else {
-    return "Good Evening";
+    return "Good Evening,";
   }
 };
+
+export const getDay = (): string => {
+  const day: number = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+  const greetings: Record<number, string> = {
+    0: "Happy Sunday,",
+    1: "Happy Monday,",
+    2: "Happy Tuesday,",
+    3: "Happy Wednesday,",
+    4: "Happy Thursday,",
+    5: "Happy Friday,",
+    6: "Happy Weekend,", // Change to "Happy Saturday" if preferred
+  };
+
+  return greetings[day] ?? "Happy Day"; // Ensures a string is always returned
+};
+
 const DesktopNav = ({
   authenticated,
   logout,
@@ -94,7 +105,7 @@ const DesktopNav = ({
 
   const loginUserName = useAppSelector((state) => state.user.name);
   const whilistCount = useAppSelector((state) => state.user.whilist_count);
-  const order_count = useAppSelector((state) => state.user.order_count);
+  const add_to_cart = useAppSelector((state) => state.user.add_to_cart);
 
   return (
     <nav className="hidden md:flex items-center justify-between gap-2 ">
@@ -123,7 +134,7 @@ const DesktopNav = ({
               {authenticated && (
                 <div className="flex flex-col items-start">
                   <h6 className="font-bold">Hi, {loginUserName}</h6>
-                  <p className="text-xs"> {getGreeting()}</p>
+                  <p className="text-xs"> {getTime()}</p>
                 </div>
               )}
             </DropdownMenuTrigger>
@@ -138,10 +149,18 @@ const DesktopNav = ({
                       alt="black and white logo"
                     />
                     <div className="flex flex-col items-start">
-                      <h6 className="font-bold">
-                        {getGreeting() + " "}
-                        {authenticated ? loginUserName : "Beautiful"}
-                      </h6>
+                      <div className="flex gap-11 items-center">
+                        <h6 className="font-bold">
+                          {getTime() + " "}
+                          {authenticated ? loginUserName : "Beautiful"}
+                        </h6>
+                        {getTime() === "Good Evening," ? (
+                          <MoonStars size={20} />
+                        ) : (
+                          <Sun size={20} weight="light" />
+                        )}
+                      </div>
+
                       {!authenticated && (
                         <p className="text-xs">
                           Sign in for <b className="font-bold">Free Delivery</b>{" "}
@@ -204,7 +223,7 @@ const DesktopNav = ({
           <li className="flex items-center gap-4">
             <NotificationBadge
               icon={<Basket size={23} />}
-              count={order_count}
+              count={add_to_cart}
             />
           </li>
         </Link>
@@ -218,7 +237,7 @@ const MobileNav = ({}: {
   logout: () => void;
 }) => {
   const whilistCount = useAppSelector((state) => state.user.whilist_count);
-  const order_count = useAppSelector((state) => state.user.order_count);
+  const add_to_cart = useAppSelector((state) => state.user.add_to_cart);
 
   return (
     <nav className="flex items-center justify-between">
@@ -243,7 +262,7 @@ const MobileNav = ({}: {
           <li className="flex items-center gap-4">
             <NotificationBadge
               icon={<Basket size={23} />}
-              count={order_count}
+              count={add_to_cart}
             />
           </li>
         </Link>

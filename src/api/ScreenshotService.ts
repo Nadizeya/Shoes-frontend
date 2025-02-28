@@ -2,18 +2,18 @@ import axios from "axios";
 import { store } from "@/store";
 import { signOutSuccess } from "@/store/slices/auth/authSlice";
 
-const BASE_URL = "https://admin.nadiyoonhtike.com/api/";
+const BASE_URL = "http://192.168.1.35:8000/api/";
 
-const ProtectedService = axios.create({
+const ScreenshotService = axios.create({
   baseURL: BASE_URL,
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data",
   },
 });
 
 const unauthorizedCode = [401];
 
-ProtectedService.interceptors.request.use(
+ScreenshotService.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
 
@@ -30,7 +30,7 @@ ProtectedService.interceptors.request.use(
   }
 );
 
-ProtectedService.interceptors.response.use(
+ScreenshotService.interceptors.response.use(
   (response) => response,
   (error) => {
     const { response } = error;
@@ -42,4 +42,4 @@ ProtectedService.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-export default ProtectedService;
+export default ScreenshotService;

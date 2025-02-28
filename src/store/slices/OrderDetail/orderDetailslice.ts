@@ -1,106 +1,46 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  CartItem,
-  CartProduct,
-  CheckOutT,
-  DeliveryInfo,
-  OrderCost,
-  PaymentDataList,
-} from "../../../types/checkOutTypes";
+import { CartItemT, PaymentDataList } from "../../../types/checkOutTypes";
+import { DetailedOrder, OrderDetailItem } from "@/types/orderTypes";
 
-const initialState: CheckOutT = {
-  cartItems: [],
-  deliveryInfo: {
+const initialState: DetailedOrder = {
+  id: 0,
+  user_id: 0,
+  total_price: "0.00",
+  status: "pending",
+  created_date: "",
+  updated_date: "",
+  order_items: [],
+  delivery: {
     name: "",
-    phoneNumber: "",
+    phone_number: "",
     address: "",
   },
-  orderCost: {
+  order_summary: {
     total: 0,
-    deliveryCost: 0,
-    subtotal: 0,
+    delivery: 0,
+    receipt_photo: "",
   },
-  paymentData: [],
-  paymentId: 0,
-  paymentFile: null,
 };
-
-export const checkoutSlice = createSlice({
-  name: "checkout",
-  initialState: initialState,
+export const orderdetailSlice = createSlice({
+  name: "orderdetail",
+  initialState,
   reducers: {
-    setCartItems(state, action: PayloadAction<CartProduct[]>) {
-      state.cartItems = action.payload;
-    },
-    setPayment(state, action: PayloadAction<PaymentDataList>) {
-      state.paymentData = action.payload;
-      // state.paymentFile = action.payload.file;
+    setOrderPayment(state, action: PayloadAction<DetailedOrder>) {
+      state.id = action.payload.id;
+      state.total_price = action.payload.total_price;
+      state.status = action.payload.status;
+      state.created_date = action.payload.created_date;
+      state.updated_date = action.payload.updated_date;
+      state.order_items = action.payload.order_items;
+      state.delivery = action.payload.delivery;
+      state.order_summary = action.payload.order_summary;
     },
     setTotalCost(state, action: PayloadAction<number>) {
-      state.orderCost.total = action.payload;
-    },
-    changePaymentId(state, action: PayloadAction<number>) {
-      state.paymentId = action.payload;
-    },
-    changePaymentFile(state, action: PayloadAction<File | null>) {
-      console.log(action.payload, "in slice");
-      state.paymentFile = action.payload;
-    },
-    deleteItem(state, action: PayloadAction<number>) {
-      state.cartItems = state.cartItems.filter(
-        (item) => item.id !== action.payload
-      );
-    },
-    incrementQuantity(state, action: PayloadAction<number>) {
-      const item = state.cartItems.find((item) => item.id === action.payload);
-      if (item) {
-        item.quantity += 1;
-      }
-    },
-    decrementQuantity(state, action: PayloadAction<number>) {
-      const item = state.cartItems.find((item) => item.id === action.payload);
-      if (item && item.quantity > 1) {
-        item.quantity -= 1;
-      }
-    },
-
-    updateTotalCost(state) {
-      const totalValue = state.cartItems.reduce((acc, item) => {
-        return acc + item.product.original_price * item.quantity;
-      }, 0);
-
-      state.orderCost.total = totalValue;
-      state.orderCost.subtotal = totalValue + state.orderCost.deliveryCost;
-    },
-    updateDeliveryInfo(state, action: PayloadAction<Partial<DeliveryInfo>>) {
-      state.deliveryInfo = { ...state.deliveryInfo, ...action.payload };
-    },
-    updateOrderCost(state, action: PayloadAction<Partial<OrderCost>>) {
-      state.orderCost = { ...state.orderCost, ...action.payload };
-    },
-
-    clearCart(state) {
-      state.cartItems = [];
+      state.order_summary.total = action.payload;
     },
   },
 });
 
-export const getCartItems = (state: { cartItems: CartItem[] }) =>
-  state.cartItems;
+export const { setTotalCost, setOrderPayment } = orderdetailSlice.actions;
 
-export const {
-  setCartItems,
-  setTotalCost,
-  deleteItem,
-  changePaymentId,
-  changePaymentFile,
-  updateDeliveryInfo,
-  updateOrderCost,
-  setPayment,
-  clearCart,
-  decrementQuantity,
-  incrementQuantity,
-  updateTotalCost, // Export the new action
-} = checkoutSlice.actions;
-
-export default checkoutSlice.reducer;
+export default orderdetailSlice.reducer;

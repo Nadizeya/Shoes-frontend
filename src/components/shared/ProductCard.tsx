@@ -5,27 +5,26 @@ import { Link } from "react-router-dom";
 type ProductCardProps = {
   id: number;
   name: string;
+  category_id: number;
+  brand_id: number;
   category_name: string;
-  brand_name?: string; // Optional field
+  brand_name: string; // Optional field
   short_description: string;
-  original_price: number | string; // To support both numbers and strings
-  image?: string | null; // Optional and nullable field
-  videos?: string[] | string | null; // Optional, nullable, and can handle a single or multiple strings
-  tags?: string[]; // Optional for cases with tags
+  price: number | string; // To support both numbers and strings
+  image: string | null; // Optional and nullable field
 };
 
 const ProductCard = ({
   id,
   name,
-
   short_description,
-  original_price,
+  price,
   image,
 }: ProductCardProps) => {
   return (
     <Card
       key={id}
-      className="xl:p-2 lg:p-1 2xl:min-w-[230px] 2xl:w-[230px] xl:min-w-[200px] xl:w-[200px] lg:min-w-[180px] lg:w-[180px] min-w-[170px] w-[170px]"
+      className="xl:p-2 lg:p-1 2xl:min-w-[200px] 2xl:w-[200px] xl:min-w-[200px] xl:w-[200px] lg:min-w-[180px] lg:w-[180px] md:min-w-[180px] md:w-[180px] min-w-[190px] w-[190px]"
     >
       <Link to={`/products/${id}`}>
         <CardContent className="cursor-pointer p-3 ">
@@ -41,11 +40,11 @@ const ProductCard = ({
           <div className="space-y-2">
             <p className="text-sm font-bold">{name}</p>
             <p className="text-sm">
-              {short_description.length > 50
-                ? `${short_description.substring(0, 50)}...`
+              {short_description.length > 20
+                ? `${short_description.substring(0, 20)}...`
                 : short_description}
             </p>
-            <p className="font-bold">{original_price} Ks</p>
+            <p className="font-bold">{price} Ks</p>
           </div>
         </CardContent>
       </Link>

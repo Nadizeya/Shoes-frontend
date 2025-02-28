@@ -6,9 +6,11 @@ type ProductListProps = {
   loadMore: () => void;
   isLoading: boolean;
   showMore: boolean;
+  name: string;
 };
 
 const ProductList = ({
+  name,
   products,
   loadMore,
   isLoading,
@@ -19,17 +21,20 @@ const ProductList = ({
   const results = 15000;
   return (
     <div className="space-y-5 mb-10 my-2">
-      <small className="text-muted-foreground">{results} results</small>
+      {/* <small className="text-muted-foreground">{results} results</small> */}
+      <h1 className="py-2 tracking-wider font-bold text-2xl">{name}</h1>
 
-      <div className="grid grid-col sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-x-2 gap-y-6">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-x-2 gap-y-6 justify-center place-items-center">
         {products.map((product: ProductT) => (
           <ProductCard
+            category_id={product.category_id}
+            brand_id={product.brand_id}
             id={product.id}
             name={product.name}
             category_name={product.category_name}
             brand_name={product.brand_name} // Optional
             short_description={product.short_description}
-            original_price={product.price}
+            price={product.price}
             image={product.image}
           />
         ))}

@@ -9,7 +9,7 @@ import { useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { CartCardShared } from "../CartCardShared";
 
-const DeliveryContent = () => {
+const DeliveryContent = ({ isReadOnly }: { isReadOnly: boolean }) => {
   const { control } = useFormContext();
 
   return (
@@ -23,7 +23,11 @@ const DeliveryContent = () => {
             <FormItem>
               <FormLabel>Phone Name</FormLabel>
               <FormControl>
-                <Input placeholder="Your Name" {...field} />
+                <Input
+                  placeholder="Your Name"
+                  {...field}
+                  readOnly={isReadOnly}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -36,7 +40,7 @@ const DeliveryContent = () => {
             <FormItem>
               <FormLabel>Your Address</FormLabel>
               <FormControl>
-                <Input placeholder="Address" {...field} />
+                <Input placeholder="Address" {...field} readOnly={isReadOnly} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -49,7 +53,11 @@ const DeliveryContent = () => {
             <FormItem>
               <FormLabel>Phone No.</FormLabel>
               <FormControl>
-                <Input placeholder="Phone Number" {...field} />
+                <Input
+                  placeholder="Phone Number"
+                  {...field}
+                  readOnly={isReadOnly}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -60,10 +68,13 @@ const DeliveryContent = () => {
   );
 };
 
-const Delivery = () => {
+const Delivery = ({ isReadOnly }: { isReadOnly: boolean }) => {
   return (
     <div className="w-full">
-      <CartCardShared cardContent={<DeliveryContent />} cardClassName="py-3" />
+      <CartCardShared
+        cardContent={<DeliveryContent isReadOnly={isReadOnly} />}
+        cardClassName="py-3"
+      />
     </div>
   );
 };

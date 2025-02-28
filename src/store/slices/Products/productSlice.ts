@@ -5,6 +5,7 @@ import {
   ProductDetailType,
   ProductVariation,
 } from "@/types/productDetailType";
+import { FaLess } from "react-icons/fa6";
 
 const initialProductDetail: ProductDetailType = {
   productDetail: {
@@ -19,6 +20,7 @@ const initialProductDetail: ProductDetailType = {
     category_name: "",
     brand_id: 0,
     brand_name: "",
+    isLoved: false,
     product_variations: [],
   },
   selectedItem: {
@@ -45,10 +47,16 @@ export const productDetailSlice = createSlice({
     setSelectedSize(state, action: PayloadAction<string>) {
       state.selectedItem.size = action.payload;
     },
-    // setSelectedColor(state, action: PayloadAction<string>) {
-    //   state.selectedItem.color = action.payload;
-    // },
+    setItemHeart: (state, action) => {
+      return {
+        ...state,
+        productDetail: { ...state.productDetail, isLoved: action.payload },
+      };
+    },
   },
+  // setSelectedColor(state, action: PayloadAction<string>) {
+  //   state.selectedItem.color = action.payload;
+  // },
 });
 
 // export const getMainCategories = (state: { maincategories: MainCategory }) =>
@@ -59,6 +67,7 @@ export const {
   setProductDetail,
   setSelectedItem,
   setSelectedSize,
+  setItemHeart,
   // setSelectedColor,
 } = productDetailSlice.actions;
 

@@ -1,17 +1,24 @@
 import {
   fetchProductbyId,
+  fetchProductbyIdWithAuth,
   fetchProductsAfterDetail,
 } from "@/api/endpoints/productsApi";
 import { ProductData } from "@/types/productDetailType";
 import { useQueries } from "@tanstack/react-query";
 import { ProductDetailProducts } from "@/types/homeTypes";
+import { useAuth } from "../useAuth";
 
 export const useProductDetails = (productId: number) => {
+  const { authenticated } = useAuth();
+
   const queries = useQueries({
     queries: [
       {
-        queryKey: ["productDetail", productId],
-        queryFn: () => fetchProductbyId(productId),
+        queryKey: ["productDetail", productId, authenticated], // Include `authenticated` to refetch when it changes
+        queryFn: () =>
+          authenticated
+            ? fetchProductbyIdWithAuth(productId) // Fetch normally when authenticated
+            : fetchProductbyId(productId), // Fetch with authentication when not authenticated
         enabled: !!productId,
         staleTime: 1000 * 60 * 5,
       },
@@ -38,6 +45,7 @@ export const useProductDetails = (productId: number) => {
     isLoading,
     isError,
     isSuccess,
+    refetch: productDetailQuery.refetch,
   };
 };
 

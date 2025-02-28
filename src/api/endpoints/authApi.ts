@@ -35,6 +35,17 @@ export const postOtpValidation = async (
   return response.data;
 };
 
+export const postRegisterOtp = async (
+  otpValidatioVal: { email: string; otp_code: number } // email is string, otp is number
+) => {
+  const response = await PublicService.post(
+    "/register-otp-validation",
+    otpValidatioVal
+  );
+
+  return response.data;
+};
+
 export const postResetPassword = async (
   resetPasswordVal: { email: string; password: string } // email is string, otp is number
 ) => {

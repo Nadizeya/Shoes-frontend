@@ -60,14 +60,14 @@ const stepThreeSchema = z.object({
 const RegisterForm = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const { register } = useAuth();
+  const { registerOtp } = useAuth();
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    name: "",
-    address: "",
+    email: "silvernadi99@gmail.com",
+    password: "Nadizeya@123",
+    name: "sdfsfd",
+    address: "sdfsf",
   });
   const schemas = [stepOneSchema, stepTwoSchema, stepThreeSchema];
   const { mutate, isPending } = useMutation({
@@ -97,13 +97,21 @@ const RegisterForm = () => {
   const handleSubmitForm = (data: any) => {
     mutate(data, {
       onSuccess: (response) => {
-        toast({ title: "Your account is created successfully!" });
-        register(response.data);
-        localStorage.setItem("authToken", response.data.token);
-        navigate("/");
+        toast({ title: response.message });
+        console.log(response, "response");
+        registerOtp(response.email);
+        // localStorage.setItem("authToken", response.data.token);
+        navigate("/register/otp-validation");
       },
       onError: (err: any) => {
-        const message = err?.response?.data?.msg || "Email is invalid";
+        console.error("Mutation Error:", err); // Debugging
+
+        // Extract message from response
+        const message =
+          err?.response?.data?.errors?.email || // Specific email error
+          err?.response?.data?.message || // General validation message
+          "Something went wrong. Please try again."; // Fallback message
+
         toast({
           title: message,
           variant: "destructive",
