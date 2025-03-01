@@ -1,12 +1,12 @@
 import { Separator } from "@/components/ui/separator";
 import { CaretLeft } from "@phosphor-icons/react";
 import { useNavigate } from "react-router-dom";
-import { LoveListSort } from "../loves/components/LoveListSort";
 import { useOrder } from "@/utils/api hooks/useOrder";
 import { useAppSelector } from "@/store/hook";
 import { OrderDetailItem, status } from "@/types/orderTypes";
 import { format } from "date-fns";
 import MainLoading from "@/components/shared/MainLoading";
+import { BASE_URL } from "@/api/BaseService";
 
 const OrderProduct = ({
   id,
@@ -17,7 +17,6 @@ const OrderProduct = ({
 }: {
   id: number;
   created_at: string;
-  // image: string;
   items: OrderDetailItem[];
   total_price: string;
   status: status;
@@ -42,7 +41,6 @@ const OrderProduct = ({
   };
 
   const createdDate = formatCreatedDate(created_at);
-  console.log(createdDate);
   return (
     <div className="text-sm">
       <div
@@ -51,7 +49,7 @@ const OrderProduct = ({
       >
         <div className="flex gap-10 md:gap-4 items-center  md:items-start">
           <img
-            src={"public/assets/products/product3.png"}
+            src={BASE_URL + items[0].variation.image}
             width={150}
             height={150}
             className="place-self-center"
@@ -123,6 +121,13 @@ const OrderList = () => {
   const navigate = useNavigate();
   const userId = useAppSelector((state) => state.user.id);
   const { orderHistory, isLoading } = useOrder(userId);
+  const sortedOrders = orderHistory
+    ? [...orderHistory].sort(
+        (a, b) =>
+          new Date(b.created_date).getTime() -
+          new Date(a.created_date).getTime()
+      )
+    : [];
   if (isLoading) {
     return <MainLoading />;
   }
@@ -144,7 +149,7 @@ const OrderList = () => {
         {/* <LoveListSort onSortChange={handleSortChange} type="order-list" /> */}
 
         <div className="grid grid-cols-1 gap-4 w-full mt-4">
-          {orderHistory?.map((product) => {
+          {sortedOrders?.map((product) => {
             return (
               <OrderProduct
                 key={product.id}

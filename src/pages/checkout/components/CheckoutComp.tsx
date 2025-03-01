@@ -22,15 +22,20 @@ const CheckoutComp = ({
       {isOrderDetail && (
         <div className="space-y-5">
           <h1>Payment Screenshot</h1>
-          <div className="border-rounded">
-            <img
-              src={BASE_URL + orderSummary.receipt_photo}
-              className="w-full h-[250px] object-cover  "
-              alt=""
-            />
+          <div className="border rounded-md overflow-hidden w-full min-w-xs flex items-center justify-center h-[250px]">
+            {orderSummary.receipt_photo ? (
+              <img
+                src={BASE_URL + orderSummary.receipt_photo}
+                className="max-w-full max-h-full object-contain"
+                alt="Payment Screenshot"
+              />
+            ) : (
+              <p className="text-gray-500 text-center">No image available</p>
+            )}
           </div>
         </div>
       )}
+
       {!isOrderDetail && <PaymentMethod isPending={isPending} />}
     </div>
   );

@@ -18,9 +18,11 @@ export const addOrder = async (data: any) => {
   const response = await ScreenshotService.post(`/orders/create-order`, data, {
     timeout: 5000,
   });
-  if (response.status != 200) {
-    throw new Error("Problem with fetching");
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(`Problem with fetching: Status ${response.status}`);
   }
+
   return response.data;
 };
 

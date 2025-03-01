@@ -14,7 +14,7 @@ import { BASE_URL } from "@/api/BaseService";
 import { useAuth } from "@/utils/useAuth";
 import { useNavigate } from "react-router-dom";
 import { postAddToCartT } from "@/utils/api hooks/useProductDetail";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postAddToCart } from "@/api/endpoints/productsApi";
 import {
   setItemHeart,
@@ -74,8 +74,8 @@ const ProductsInfo = () => {
   const { authenticated } = useAuth();
   const [selectedQuantity, setSelectQuantity] = React.useState(1);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  // const [changeheart, setChangeheart] = React.useState(false);
   const [api, setApi] = React.useState(null);
+  const queryClient = useQueryClient();
 
   //Logic for sizes and colors
   const uniqueSizes = [...new Set(items.map((v) => v.size))];
@@ -92,24 +92,40 @@ const ProductsInfo = () => {
   );
 
   // Mutations called
+
   const addMutation = useMutation({
     mutationFn: addToWishList,
-    onSuccess: () => {
-      setItemHeart(true);
+    onMutate: async (wishListData) => {
+      // Optimistically update UI
+      dispatch(setItemHeart(true));
+
+      return { previousState: isLoved };
     },
-    onError: (error: any) => {
-      console.error("Error adding to wishlist:", error.message);
+    onSuccess: () => {
+      console.log("Added to wishlist");
+    },
+    onError: (_error, _variables, context) => {
+      // Rollback if API fails
+      if (context?.previousState) {
+        dispatch(setItemHeart(context.previousState));
+      }
     },
   });
 
   const removeMutation = useMutation({
     mutationFn: removeWishList,
+    onMutate: async (wishListData) => {
+      dispatch(setItemHeart(false));
+
+      return { previousState: isLoved };
+    },
     onSuccess: () => {
-      setItemHeart(false);
       console.log("Removed from wishlist");
     },
-    onError: (error: any) => {
-      console.error("Error removing from wishlist:", error.message);
+    onError: (_error, _variables, context) => {
+      if (context?.previousState) {
+        dispatch(setItemHeart(context.previousState));
+      }
     },
   });
 
@@ -164,7 +180,8 @@ const ProductsInfo = () => {
     if (isLoved) {
       removeMutation.mutate(wishListData, {
         onSuccess: () => {
-          dispatch(setItemHeart(false)); // Ensure correct dispatch
+          dispatch(setItemHeart(false));
+          queryClient.invalidateQueries({ queryKey: ["wishlist"] });
           dispatch(decrementLoveList());
         },
       });
@@ -172,7 +189,7 @@ const ProductsInfo = () => {
       addMutation.mutate(wishListData, {
         onSuccess: () => {
           dispatch(setItemHeart(true)); // Ensure correct dispatch
-
+          queryClient.invalidateQueries({ queryKey: ["wishlist"] });
           dispatch(incrementLoveList());
         },
       });

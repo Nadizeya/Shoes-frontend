@@ -26,6 +26,7 @@ const PaymentMethodContent = ({ isPending }: { isPending: boolean }) => {
   const bankData = paymentMethods?.filter(
     (item) => item.bank_type === "bank_account"
   );
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   // Handling events
   const handlePaymentSelection = (id: number) => {
@@ -39,12 +40,16 @@ const PaymentMethodContent = ({ isPending }: { isPending: boolean }) => {
       console.log(selectedFile, "selected file");
       setValue("payment_screenshot", selectedFile);
       clearErrors("payment_screenshot"); // ✅ Clear validation
+
+      const previewUrl = URL.createObjectURL(selectedFile);
+      setImagePreview(previewUrl);
     }
   };
   const handleAttachPhotoClick = () => {
     fileInputRef.current?.click();
   };
   const selectedPaymentId = useAppSelector((state) => state.checkout.paymentId); // Get current selected payment from Redux
+  console.log(paymentScreenshot);
 
   useEffect(() => {
     if (bankData.length > 0 && !selectedPaymentId) {
@@ -197,11 +202,7 @@ const PaymentMethodContent = ({ isPending }: { isPending: boolean }) => {
         >
           Attach Receipt Photo
         </Button>
-        {paymentScreenshot && (
-          <p className="text-green-500">
-            File selected: {paymentScreenshot.name}
-          </p>
-        )}
+
         {errors.payment_screenshot && (
           <p className="text-red-500">{errors.payment_screenshot.message}</p>
         )}
@@ -220,6 +221,20 @@ const PaymentMethodContent = ({ isPending }: { isPending: boolean }) => {
           {isPending ? "Processing..." : "Checkout"}
         </Button>
         <small className="flex justify-center">get it soon now</small>
+        <div className="space-y-5">
+          <h1>Payment Screenshot</h1>
+          <div className="border rounded-md overflow-hidden w-full min-w-xs flex items-center justify-center h-[200px]">
+            {imagePreview ? (
+              <img
+                src={imagePreview}
+                alt="Payment Screenshot"
+                className="max-w-full max-h-full object-contain"
+              />
+            ) : (
+              <p className="text-gray-500 text-center">No image uploaded</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

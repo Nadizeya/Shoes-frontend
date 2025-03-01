@@ -8,6 +8,7 @@ import axios from "axios";
 import useDebounce from "@/hooks/useDebounce";
 import { BASE_URL } from "@/api/BaseService";
 import useResponsive from "@/utils/useResponsive";
+import { useLocation } from "react-router-dom";
 
 const SearchBar = () => {
   const [query, setQuery] = useState<QueryT>({
@@ -22,12 +23,15 @@ const SearchBar = () => {
   };
   const [resultList, setResultList] = useState(initialResultState);
   const { desktopResponsive } = useResponsive();
+  const location = useLocation();
+  const [isFetching, setIsFetching] = useState(false); // Track fetching state
 
   const fetchSearchResults = async (searchValue: string) => {
     if (!searchValue.trim()) {
       setResultList(initialResultState);
       return;
     }
+    setIsFetching(true); // Start fetching
     try {
       const response = await axios.post(
         `${BASE_URL}api/global_search?query=${searchValue}`
@@ -37,14 +41,15 @@ const SearchBar = () => {
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
+    setIsFetching(false); // Fetching completed
   };
 
-  // Fetch results whenever the debounced query changes
   useEffect(() => {
     if (debouncedQuery) {
       fetchSearchResults(debouncedQuery);
     }
   }, [debouncedQuery]);
+
   const [showResults, setShowResults] = useState(false); // Control visibility of SearchResultList
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -107,6 +112,8 @@ const SearchBar = () => {
           query={query}
           setQuery={setQuery}
           resultList={resultList}
+          setShowResults={setShowResults}
+          isFetching={isFetching}
         />
       )}
       {showResults && !desktopResponsive && (
@@ -145,6 +152,8 @@ const SearchBar = () => {
                 query={query}
                 setQuery={setQuery}
                 resultList={resultList}
+                setShowResults={setShowResults}
+                isFetching={isFetching}
               />
             </div>
           </div>

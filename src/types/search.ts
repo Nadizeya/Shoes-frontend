@@ -34,4 +34,6 @@ export type SearchResutListT = {
   query: QueryT;
   setQuery: React.Dispatch<React.SetStateAction<QueryT>>;
   resultList: SearchResult | null;
+  setShowResults?: any;
+  isFetching?: any;
 };

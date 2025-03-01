@@ -18,7 +18,6 @@ const ProductList = ({
 }: ProductListProps) => {
   console.log(products);
 
-  const results = 15000;
   return (
     <div className="space-y-5 mb-10 my-2">
       {/* <small className="text-muted-foreground">{results} results</small> */}

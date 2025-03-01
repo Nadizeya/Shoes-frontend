@@ -196,9 +196,9 @@ const CartComp = ({ cartItems }: CartCompProps) => {
   });
 
   const handleDelete = (id: number) => {
+    mutation.mutate(id);
     dispatch(updateTotalCost());
     dispatch(decrementAddToCart());
-    mutation.mutate(id);
   };
 
   return (

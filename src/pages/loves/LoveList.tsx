@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CaretLeft } from "@phosphor-icons/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import Delete from "/assets/add-to-cart/delete.svg";
 import { useWishList } from "@/utils/api hooks/useWishList";
@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppDispatch } from "@/store/hook";
 import { decrementLoveList } from "@/store/slices/user/userSlice";
 import MainLoading from "@/components/shared/MainLoading";
+import LoveListSkeleton from "./components/LoveListSkeleton";
 
 type LoveProductProps = {
   variation_id: number;
@@ -96,8 +97,7 @@ const LoveList = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
-  const { isSuccess, isLoading, wishListsData } = useWishList();
-  const [sortedData, setSortedData] = useState(wishListsData || []);
+  const { wishListsData, isSuccess, isLoading, isFetching } = useWishList();
 
   const mutation = useMutation({
     mutationFn: removeWishList,
@@ -114,63 +114,49 @@ const LoveList = () => {
     mutation.mutate(wishListData);
   };
 
-  useEffect(() => {
-    if (wishListsData && isSuccess) {
-      setSortedData(wishListsData);
-    }
-  }, [isSuccess, wishListsData]);
-
-  if (isLoading) {
-    return <MainLoading />;
-  }
-
   return (
-    <div>
-      {isSuccess && (
-        <div className="py-6 space-y-4">
-          <span
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => navigate(-1)}
-          >
-            <CaretLeft size={20} />
-            Back
-          </span>
+    <div className="py-6 space-y-4">
+      <span
+        className="flex items-center gap-2 cursor-pointer"
+        onClick={() => navigate(-1)}
+      >
+        <CaretLeft size={20} />
+        Back
+      </span>
 
-          {sortedData?.length === 0 ? (
-            <div className="md:h-screen grid place-content-center text-center">
-              <div>
-                <img src="/assets/error.png" className="w-4/5 h-4/5" alt="" />
-                <h5 className="font-bold">
-                  You haven't added any products to your Love Lists.
-                </h5>
-                <p className="font-light">
-                  Collect all your favorite and must-try products by clicking on
-                  the heart while you shop.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <h1 className="text-xl md:text-2xl font-bold">Loves</h1>
-
-              <div className="grid grid-cols-1 gap-4 w-full mt-4">
-                {sortedData?.map((product) => {
-                  return (
-                    <LoveProduct
-                      key={product.variation_id}
-                      image={product.image}
-                      name={product.name}
-                      price={product.price}
-                      product_id={product.product_id}
-                      short_description={product.short_description}
-                      variation_id={product.variation_id}
-                      onDelete={handleDelete}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          )}
+      {/* ✅ Show skeleton while fetching or loading */}
+      {isLoading || isFetching ? (
+        <LoveListSkeleton />
+      ) : isSuccess && wishListsData?.length === 0 ? (
+        <div className="md:h-screen grid place-content-center text-center">
+          <div>
+            <img src="/assets/error.png" className="w-2/3 h-4/5" alt="" />
+            <h5 className="font-bold">
+              You haven't added any products to your Love Lists.
+            </h5>
+            <p className="font-light">
+              Collect all your favorite and must-try products by clicking on the
+              heart while you shop.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <h1 className="text-xl md:text-2xl font-bold">Loves</h1>
+          <div className="grid grid-cols-1 gap-4 w-full mt-4">
+            {wishListsData?.map((product) => (
+              <LoveProduct
+                key={product.variation_id}
+                image={product.image}
+                name={product.name}
+                price={product.price}
+                product_id={product.product_id}
+                short_description={product.short_description}
+                variation_id={product.variation_id}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>

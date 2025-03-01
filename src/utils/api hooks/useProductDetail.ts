@@ -4,33 +4,33 @@ import {
   fetchProductsAfterDetail,
 } from "@/api/endpoints/productsApi";
 import { ProductData } from "@/types/productDetailType";
-import { useQueries } from "@tanstack/react-query";
+import { useQuery, useIsFetching } from "@tanstack/react-query";
 import { ProductDetailProducts } from "@/types/homeTypes";
 import { useAuth } from "../useAuth";
 
 export const useProductDetails = (productId: number) => {
   const { authenticated } = useAuth();
 
-  const queries = useQueries({
-    queries: [
-      {
-        queryKey: ["productDetail", productId, authenticated], // Include `authenticated` to refetch when it changes
-        queryFn: () =>
-          authenticated
-            ? fetchProductbyIdWithAuth(productId) // Fetch normally when authenticated
-            : fetchProductbyId(productId), // Fetch with authentication when not authenticated
-        enabled: !!productId,
-        staleTime: 1000 * 60 * 5,
-      },
-      {
-        queryKey: ["productsAfterDetail"],
-        queryFn: fetchProductsAfterDetail,
-      },
-    ],
+  // ✅ Fetch `productDetail` first
+  const productDetailQuery = useQuery({
+    queryKey: ["productDetail", productId, authenticated],
+    queryFn: () =>
+      authenticated
+        ? fetchProductbyIdWithAuth(productId)
+        : fetchProductbyId(productId),
+    enabled: !!productId,
+    staleTime: 1000 * 60 * 5,
   });
 
-  const [productDetailQuery, productsAfterDetailQuery] = queries;
+  const productsAfterDetailQuery = useQuery({
+    queryKey: ["productsAfterDetail"],
+    queryFn: fetchProductsAfterDetail,
+    enabled: productDetailQuery.isSuccess,
+    staleTime: 1000 * 60 * 5,
+  });
 
+  // ✅ Compute fetching/loading states
+  const isFetching = useIsFetching();
   const isLoading =
     productDetailQuery.isLoading || productsAfterDetailQuery.isLoading;
   const isError =
@@ -45,16 +45,7 @@ export const useProductDetails = (productId: number) => {
     isLoading,
     isError,
     isSuccess,
+    isFetching,
     refetch: productDetailQuery.refetch,
   };
 };
-
-export type postAddToCartT = {
-  product_id: number;
-  quantity: number;
-  product_variations_id: number | null;
-};
-
-// export const useAddToCartMutation = () => {
-//   return useMutation(postAddToCart);
-// };

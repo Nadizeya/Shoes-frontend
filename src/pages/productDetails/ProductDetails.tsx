@@ -6,7 +6,7 @@ import {
 import { useProductDetails } from "@/utils/api hooks/useProductDetail";
 import { ChevronLeft } from "lucide-react";
 import { useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import HeroSection from "../home/components/HeroSection";
 import ProductAccordion from "./components/ProductAccordion";
 import ProductsInfo from "./components/ProductsInfo";
@@ -20,10 +20,15 @@ const ProductDetails = () => {
   const location = useLocation();
   const { productId } = useParams<{ productId: string }>();
   const numericProductId = Number(productId);
-  const { productDetail, isSuccess, productsAfterDetail, refetch, isLoading } =
-    useProductDetails(numericProductId);
+  const {
+    productDetail,
+    isSuccess,
+    productsAfterDetail,
+    refetch,
+    isLoading,
+    isFetching,
+  } = useProductDetails(numericProductId);
 
-  console.log(productDetail);
   useEffect(() => {
     refetch();
   }, [location.key]);
@@ -42,21 +47,33 @@ const ProductDetails = () => {
     }
   }, [productDetail, isSuccess]);
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <MainLoading />;
   }
+
   return (
     <div>
       {isSuccess && (
         <div className="px-4 py-8">
-          <h4 className="flex items-center gapa-4">
-            {productDetail.maincategory_name}
+          <h4 className="flex items-center gap-4">
+            <Link to={`/`} className=" hover:underline">
+              {productDetail.maincategory_name}
+            </Link>
             <ChevronLeft width={20} height={20} className="text-gray-600" />
-            {productDetail.category_name}
+            <Link
+              to={`/categories/${productDetail.category_id}`}
+              className=" hover:underline"
+            >
+              {productDetail.category_name}
+            </Link>
             <ChevronLeft width={20} height={20} className="text-gray-600" />
-            {productDetail.brand_name}
+            <Link
+              to={`/brands/${productDetail.brand_id}`}
+              className=" hover:underline"
+            >
+              {productDetail.brand_name}
+            </Link>
           </h4>
-
           <ProductsInfo />
           <div className="space-y-8 pb-10">
             <ProductAccordion description={productDetail.description} />

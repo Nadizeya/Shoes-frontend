@@ -22,7 +22,12 @@ type SearchItemProps = {
   itemType: "product" | "brand" | "category";
 };
 
-const SearchItem: React.FC<SearchItemProps> = ({ item, itemType }) => {
+const SearchItem: React.FC<
+  SearchItemProps & {
+    setQuery: (query: any) => void;
+    setShowResults: (val: boolean) => void;
+  }
+> = ({ item, itemType, setQuery, setShowResults }) => {
   const navigate = useNavigate();
 
   // Determine the correct route based on itemType
@@ -34,6 +39,9 @@ const SearchItem: React.FC<SearchItemProps> = ({ item, itemType }) => {
     } else if (itemType === "category") {
       navigate(`/categories/${item.id}`);
     }
+
+    setQuery((prev: any) => ({ ...prev, searchTerm: "", tag: "All" }));
+    setShowResults(false);
   };
   return (
     <div
@@ -56,97 +64,129 @@ const SearchResultList = ({
   resultList,
   setQuery,
   query,
+  setShowResults,
+  isFetching,
 }: SearchResutListT) => {
-  const resultexist =
-    resultList &&
-    (resultList.products.length >= 0 ||
-      resultList.brands.length >= 0 ||
-      resultList.categories.length >= 0);
-
-  const filteredResults = () => {
-    if (query.tag === "Products") {
-      return { products: resultList?.products, brands: [], categories: [] };
-    } else if (query.tag === "Brands") {
-      return { products: [], brands: resultList?.brands, categories: [] };
-    } else if (query.tag === "Categories") {
-      return { products: [], brands: [], categories: resultList?.categories };
+  // Ensure displayResults always returns an object with empty arrays if necessary
+  const filteredResults = (): SearchResutListT["resultList"] => {
+    if (!resultList) {
+      return { products: [], brands: [], categories: [] };
     }
-    return resultList; // Show all results for "All"
+
+    if (query.tag === "Products") {
+      return {
+        products: resultList.products || [],
+        brands: [],
+        categories: [],
+      };
+    } else if (query.tag === "Brands") {
+      return { products: [], brands: resultList.brands || [], categories: [] };
+    } else if (query.tag === "Categories") {
+      return {
+        products: [],
+        brands: [],
+        categories: resultList.categories || [],
+      };
+    }
+
+    return {
+      products: resultList.products || [],
+      brands: resultList.brands || [],
+      categories: resultList.categories || [],
+    };
   };
 
   const displayResults = filteredResults();
 
+  const resultexist =
+    displayResults &&
+    (displayResults.products.length > 0 ||
+      displayResults.brands.length > 0 ||
+      displayResults.categories.length > 0);
+
   return (
     <>
-      {resultexist && (
-        <div className="absolute w-full p-3 z-50 bg-white rounded-md mt-2 shadow-sm">
-          {/* Render Tags */}
-          <div className="flex gap-2 mb-3">
-            {tags.map((val) => (
-              <Badge
-                key={val.id}
-                onClick={() =>
-                  setQuery((prev) => ({
-                    ...prev,
-                    tag: val.tag,
-                  }))
+      <div className="absolute w-full p-3 z-50 bg-white rounded-md mt-2 shadow-sm">
+        {/* Render Tags */}
+        <div className="flex gap-2 mb-3">
+          {tags.map((val) => (
+            <Badge
+              key={val.id}
+              onClick={() =>
+                setQuery((prev) => ({
+                  ...prev,
+                  tag: val.tag,
+                }))
+              }
+              className={classNames(
+                "cursor-pointer border border-[#323232] text-black hover:bg-transparent",
+                {
+                  "bg-black text-white hover:bg-black": query.tag === val.tag,
+                  "bg-transparent": query.tag !== val.tag,
                 }
-                className={classNames(
-                  "cursor-pointer border border-[#323232] text-black hover:bg-transparent",
-                  {
-                    "bg-black text-white hover:bg-black": query.tag === val.tag,
-                    "bg-transparent": query.tag !== val.tag,
-                  }
-                )}
-              >
-                {val.tag}
-              </Badge>
-            ))}
-          </div>
+              )}
+            >
+              {val.tag}
+            </Badge>
+          ))}
+        </div>
 
-          {/* Render Results */}
-          <div className="mb-3">
-            {displayResults?.products && displayResults.products.length > 0 && (
-              <div className="border-b py-1">
-                <h3 className="font-bold">Product Suggestions</h3>
-
-                {resultList.products.length > 0 &&
-                  resultList.products.map((product) => (
+        {/* Render Results or Fetching State */}
+        <div className="mb-3">
+          {isFetching ? (
+            <div className="text-center text-gray-500 py-2">Searching...</div>
+          ) : resultexist && displayResults ? (
+            <>
+              {displayResults.products.length > 0 && (
+                <div className="border-b py-1">
+                  <h3 className="font-bold">Product Suggestions</h3>
+                  {displayResults.products.map((product) => (
                     <SearchItem
                       item={product}
                       itemType="product"
                       key={product.id}
+                      setQuery={setQuery}
+                      setShowResults={setShowResults}
                     />
                   ))}
-              </div>
-            )}
-            {displayResults?.brands && displayResults.brands.length > 0 && (
-              <div className="border-b py-1">
-                <h3 className="font-bold">Brand Suggestions</h3>
-
-                {resultList.brands.length > 0 &&
-                  resultList.brands.map((brand) => (
-                    <SearchItem item={brand} itemType="brand" key={brand.id} />
-                  ))}
-              </div>
-            )}
-            {displayResults?.categories &&
-              displayResults.categories.length > 0 && (
-                <div>
-                  <h3 className="font-bold py-1">Category Suggestions</h3>
-                  {resultList.categories.length > 0 &&
-                    resultList.categories.map((category) => (
-                      <SearchItem
-                        item={category}
-                        itemType="category"
-                        key={category.id}
-                      />
-                    ))}
                 </div>
               )}
-          </div>
+              {displayResults.brands.length > 0 && (
+                <div className="border-b py-1">
+                  <h3 className="font-bold">Brand Suggestions</h3>
+                  {displayResults.brands.map((brand) => (
+                    <SearchItem
+                      item={brand}
+                      itemType="brand"
+                      key={brand.id}
+                      setQuery={setQuery}
+                      setShowResults={setShowResults}
+                    />
+                  ))}
+                </div>
+              )}
+              {displayResults?.categories.length > 0 && (
+                <div>
+                  <h3 className="font-bold py-1">Category Suggestions</h3>
+                  {displayResults.categories.map((category) => (
+                    <SearchItem
+                      item={category}
+                      itemType="category"
+                      key={category.id}
+                      setQuery={setQuery}
+                      setShowResults={setShowResults}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center text-gray-500 py-2">
+              No results found.
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </>
   );
 };
