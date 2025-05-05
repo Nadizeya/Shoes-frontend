@@ -23,7 +23,7 @@ const Products = () => {
   return (
     <div>
       <ProductList
-        name={isRecommendationPage ? "Nadi's Recommendation" : "All Products"}
+        name={isRecommendationPage ? "Recommendation" : "All Products"}
         products={products || []}
         loadMore={loadMore}
         isLoading={isLoading}

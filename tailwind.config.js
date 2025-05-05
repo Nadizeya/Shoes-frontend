@@ -54,7 +54,7 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
         buttonbg: "#323232",
-        pinkbg: "#F8C6D5",
+        pinkbg: "black",
         textColor: "#323232",
       },
       borderRadius: {

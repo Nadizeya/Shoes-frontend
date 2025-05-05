@@ -323,7 +323,7 @@ const ProductsInfo = () => {
           <h4 className="font-bold ">{productsDetailsData.name}</h4>
           <p>{productsDetailsData.short_description}</p>
         </div>
-        <h4 className="font-bold">{selectedProductVariation.price} Ks</h4>
+        <h4 className="font-bold">{selectedProductVariation.price}$</h4>
         <p>Size : {selectedProductVariation.size}</p>
 
         <div className="space-y-2">

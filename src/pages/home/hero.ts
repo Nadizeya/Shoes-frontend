@@ -1,65 +1,44 @@
 export const heroCardsData = [
   {
     image: "/assets/home/hero1.png",
-    title: "Discover Top Brands",
-    description: "Explore the best beauty brands in one place",
-    background: "#edc1cf",
+    title: "Top Sneaker Brands",
+    description: "Explore Nike, Adidas, Puma & more in one place",
+    background: "#e3eaf2", // cool blue-grey tone
     path: "/brands",
   },
   {
-    image: "/assets/home/hero2.png",
-    title: "Latest Arrivals",
-    description: "Stay ahead with the newest beauty products",
-    background: "#d1c1b0",
-    path: "/new-categories",
-  },
-  {
-    image: "/assets/home/hero3.png",
-    title: "Must-Have Picks",
-    description: "Shop our top-rated beauty essentials",
-    background: "#edc1cf",
+    image: "/assets/home/hero2.jpg",
+    title: "Latest Drops",
+    description: "Be the first to shop the newest sneaker releases",
+    background: "#f5f1ea", // soft neutral beige
     path: "/products",
   },
   {
-    image: "/assets/home/hero4.png",
-    title: "Nadi's Favorites",
-    description: "Handpicked beauty products just for you",
-    background: "#b2cbb7",
+    image: "/assets/home/hero3.jpg",
+    title: "Editor's Picks",
+    description: "Handpicked kicks that define your style",
+    background: "#e1efe3", // fresh mint
+    path: "/new-categories  ",
+  },
+  {
+    image: "/assets/home/hero4.jpeg",
+    title: "Recommended",
+    description: "Sneakers personally selected for you",
+    background: "#f2e0e0", // light blush
     path: "/nadi-recommendation",
   },
   {
-    image: "/assets/home/hero5.png",
+    image: "/assets/home/hero5.jpg",
     title: "Trending Now",
-    description: "See what's hot in beauty right now",
-    background: "#f6e7df",
-    path: "/products",
+    description: "Discover what's hot in the sneaker world",
+    background: "#fff3d6", // warm yellow tint
+    path: "/categories/1",
   },
   {
-    image: "/assets/home/hero6.png",
-    title: "Best of Beauty",
-    description: "Indulge in luxury beauty must-haves",
-    background: "#d7b3a3",
-    path: "/products",
-  },
-  {
-    image: "/assets/home/hero7.png",
-    title: "Exclusive Brands",
-    description: "Shop premium beauty brands with us",
-    background: "#ede1c1",
-    path: "/brands",
-  },
-  {
-    image: "/assets/home/hero8.png",
-    title: "New & Noteworthy",
-    description: "Fresh arrivals you need to check out",
-    background: "#f5ebdc",
-    path: "/new-categories",
-  },
-  {
-    image: "/assets/home/hero9.png",
-    title: "Editor’s Choice",
-    description: "Our experts’ top beauty recommendations",
-    background: "#e5e7e6",
+    image: "/assets/home/hero6.jpg",
+    title: "Luxury Sneakers",
+    description: "Step up in style with premium kicks",
+    background: "#dcd6f7", // soft purple/lavender
     path: "/nadi-recommendation",
   },
 ];

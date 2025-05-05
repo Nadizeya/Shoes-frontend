@@ -30,7 +30,7 @@ const Home = () => {
           <HeroSection />
           <ProductsHomeComp
             id={1}
-            name="Beauty Offers (10)"
+            name="Best Offers (10)"
             data={productsData.beauty_offer}
           />
           <ProductsHomeComp

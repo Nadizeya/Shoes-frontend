@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import TinyLogo from "/assets/logo/blackwhitelogo.jpg";
+import TinyLogo from "/assets/logo/blackwhitelogo.png";
 import { useAuth } from "@/utils/useAuth";
 import SearchBar from "./components/Search";
 import { useAppSelector } from "@/store/hook";
@@ -60,7 +60,7 @@ export const dropDownOptions: dropDownOptionT[] = [
   {
     id: 4,
     icon: <Notepad size={23} />,
-    title: "Nadi's Recommendations",
+    title: "Recommendations",
     desc: "Recommendations from your store visits",
     path: "/nadi-recommendation",
   },
@@ -110,7 +110,7 @@ const DesktopNav = ({
   return (
     <nav className="hidden md:flex items-center justify-between gap-2 ">
       <Link to={"/"}>
-        <h1 className="text-2xl font-black cursor-pointer">Nadi Yoon Htike</h1>
+        <h1 className="text-2xl font-black cursor-pointer">Sneakers Buy</h1>
       </Link>
 
       <SearchBar />
@@ -123,6 +123,7 @@ const DesktopNav = ({
                 src={TinyLogo}
                 width={35}
                 height={35}
+                className="rounded-full"
                 alt="black and white logo"
               />
               {!authenticated && (
@@ -146,6 +147,7 @@ const DesktopNav = ({
                       src={TinyLogo}
                       width={35}
                       height={35}
+                      className="rounded-full"
                       alt="black and white logo"
                     />
                     <div className="flex flex-col items-start">
@@ -243,7 +245,7 @@ const MobileNav = ({}: {
     <nav className="flex items-center justify-between">
       <Link to={"/"}>
         <h1 className="text-lg sm:text-xl md:text-2xl font-black">
-          Nadi Yoon Htike
+          SneakerBuy
         </h1>
       </Link>
 

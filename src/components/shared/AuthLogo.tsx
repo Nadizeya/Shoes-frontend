@@ -1,4 +1,4 @@
-import Logo from "/assets/footer/Badge.png";
+import Logo from "/assets/logo/blackwhitelogo.png";
 
 export const AuthLogo = ({
   width,
@@ -13,18 +13,13 @@ export const AuthLogo = ({
     <div className="flex flex-col gap-2 justify-center">
       <div className="flex items-center justify-center">
         <img
-          className="mx-auto"
+          className="mx-auto rounded-full"
           src={Logo}
           alt=""
           width={width || 180}
           height={height || 180}
         />
       </div>
-      {!mobile && (
-        <h4 className="mt-2 text-center font-bold text-2xl lg:text-2xl">
-          Nadi Yoon Htike
-        </h4>
-      )}
     </div>
   );
 };

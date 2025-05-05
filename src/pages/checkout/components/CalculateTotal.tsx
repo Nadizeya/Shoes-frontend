@@ -12,16 +12,16 @@ const CalculateTotalContent = ({ isReadOnly }: { isReadOnly: boolean }) => {
       <h1 className="mb-3">Order Summary</h1>
       <div className="flex justify-between">
         <span>Total</span>
-        <span>{orderCost?.total ?? 0} Ks</span>
+        <span>{orderCost?.total ?? 0} $</span>
       </div>
       <div className="flex justify-between">
         <span>Delivery Cost</span>
-        <span>{orderCost?.delivery ?? 0} Ks</span>
+        <span>{orderCost?.delivery ?? 0} $</span>
       </div>
       <Separator />
       <div className="flex justify-between">
         <span>Subtotal</span>
-        <span>{(orderCost?.total ?? 0) + (orderCost?.delivery ?? 0)} Ks</span>
+        <span>{(orderCost?.total ?? 0) + (orderCost?.delivery ?? 0)} $</span>
       </div>
     </div>
   );

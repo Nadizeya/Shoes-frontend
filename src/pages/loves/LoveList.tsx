@@ -75,7 +75,7 @@ const LoveProduct = ({
         </div>
       </div>
       <div className="hidden md:flex items-center gap-3">
-        <p>{price} MMK</p>
+        <p>{price}$</p>
         <Button
           className="text-white bg-red-600 rounded-full px-10"
           onClick={() => navigate(`/products/${variation_id}`)}
@@ -88,7 +88,7 @@ const LoveProduct = ({
           className="cursor-pointer"
         />{" "}
       </div>
-      <p className="md:hidden font-bold">{price} MMK</p>
+      <p className="md:hidden font-bold">{price}$</p>
     </div>
   );
 };

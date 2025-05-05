@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/utils/useAuth";
 import { useAppSelector } from "@/store/hook";
-import TinyLogo from "/assets/logo/blackwhitelogo.jpg";
+import TinyLogo from "/assets/logo/blackwhitelogo.png";
 
 const Layout = () => {
   const { authenticated, logout } = useAuth();
@@ -38,7 +38,13 @@ const Layout = () => {
         {/* Me Section with Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger className="flex flex-col items-center gap-1">
-            <img src={TinyLogo} width={23} height={23} alt="Me Icon" />
+            <img
+              src={TinyLogo}
+              width={23}
+              height={23}
+              className="rounded-full"
+              alt="Me Icon"
+            />
             <p>Me</p>
           </DropdownMenuTrigger>
 
@@ -52,6 +58,7 @@ const Layout = () => {
                     width={30}
                     height={30}
                     alt="black and white logo"
+                    className="rounded-full"
                   />{" "}
                   <div className="flex flex-col items-start">
                     <div className="flex gap-11 items-center">

@@ -134,7 +134,7 @@ const Checkout = () => {
           <div className="space-y-4">
             <ProductsHomeComp
               id={1}
-              name="Your beauty picks"
+              name="Your picks"
               data={productsData.beauty_offer}
             />
             <ProductsHomeComp

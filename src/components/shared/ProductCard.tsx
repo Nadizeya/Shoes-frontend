@@ -30,9 +30,7 @@ const ProductCard = ({
         <CardContent className="cursor-pointer p-3 ">
           <div className="mb-4">
             <img
-              src={
-                image ? `${BASE_URL}${image}` : "/assets/products/product3.png"
-              }
+              src={image ? `${BASE_URL}${image}` : "/assets/default.png"}
               alt={name}
             />
           </div>
@@ -44,7 +42,7 @@ const ProductCard = ({
                 ? `${short_description.substring(0, 20)}...`
                 : short_description}
             </p>
-            <p className="font-bold">{price} Ks</p>
+            <p className="font-bold">{price}$</p>
           </div>
         </CardContent>
       </Link>

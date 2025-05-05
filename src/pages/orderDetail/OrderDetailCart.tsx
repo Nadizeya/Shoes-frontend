@@ -34,7 +34,7 @@ const CartItem = ({
             <span className="border rounded-2xl border-black px-4 ">
               {quantity}
             </span>
-            <span className="font-bold">{price} Ks</span>
+            <span className="font-bold">{price}$</span>
           </div>
         </div>
       </div>
@@ -79,7 +79,7 @@ const MobileCartItem = ({
             {quantity}
           </span>
         </span>{" "}
-        <span>{price} Ks</span>
+        <span>{price}$</span>
       </div>
       <Separator />
     </div>

@@ -1,4 +1,4 @@
-import Logo from "/assets/footer/Badge.png";
+import Logo from "/assets/logo/blackwhitelogo.png";
 import Messenger from "/assets/footer/messenger.svg";
 import Instagram from "/assets/footer/instagram.svg";
 import Gmail from "/assets/footer/gmail.svg";
@@ -12,8 +12,14 @@ const MobileAndTabletFooter = () => {
   return (
     <div className="w-full bg-black text-white  py-16 flex flex-col gap-6">
       <div className="flex flex-col items-center gap-4">
-        <img src={Logo} width={80} height={80} alt="nadi yoon htike's logo" />
-        <h3 className="tracking-wider font-bold text-lg">Nadi Yoon Htike</h3>
+        <img
+          src={Logo}
+          width={80}
+          height={80}
+          className="rounded-full"
+          alt="nadi yoon htike's logo"
+        />
+        <h3 className="tracking-wider font-bold text-lg">Sneakers Buy</h3>
       </div>
 
       {/* Mapped Footer Sections */}
@@ -47,7 +53,7 @@ const MobileAndTabletFooter = () => {
       <Separator className="w-full bg-[#bbbbbb]" />
       <div className="flex flex-col">
         <small className="text-center">
-          ©2025, Nadi Yoon Htike, All right reserved.
+          ©2025, SneakersBuy, All right reserved.
         </small>{" "}
         <small className="text-center">1-347-242-8322</small>
       </div>
@@ -72,20 +78,20 @@ const MobileAndTabletFooter = () => {
 
 const socialLinks = [
   {
-    href: "https://www.facebook.com/nadiyoon22",
+    href: "https://www.facebook.com/",
     icon: <FacebookLogo size={25} weight="fill" />,
     alt: "facebook",
   },
   {
-    href: "https://www.facebook.com/messages/t/100011958466272",
+    href: "https://www.facebook.com/",
     icon: <Icon width={20} height={20} src={Messenger} alt="messenger" />,
   },
   {
-    href: "https://www.instagram.com/nadiyoonhtike/",
+    href: "https://www.instagram.com/",
     icon: <Icon width={20} height={20} src={Instagram} alt="instagram" />,
   },
   {
-    href: "https://www.instagram.com/nadiyoonhtike/",
+    href: "https://www.instagram.com/",
     icon: <Icon width={20} height={20} src={Telegram} alt="telegram" />,
   },
   {
@@ -100,15 +106,8 @@ const DesktopFooter = () => {
       <div className="flex justify-between items-center px-16 py-10">
         {/* Logo Section */}
         <div className="flex flex-col gap-4">
-          <img
-            src={Logo}
-            width={100}
-            height={100}
-            alt="nadi yoon htike's logo"
-          />
-          <h3 className="tracking-wider font-bold text-[14px]">
-            Nadi Yoon Htike
-          </h3>
+          <img src={Logo} width={100} height={100} className="rounded-full" />
+          <h3 className="tracking-wider font-bold text-[14px]">Sneakers Buy</h3>
         </div>
 
         {/* Mapped Footer Sections */}
@@ -142,7 +141,7 @@ const DesktopFooter = () => {
       <Separator className="w-full bg-[#bbbbbb]" />
       <div className="flex flex-col py-5">
         <small className="text-center">
-          ©2025, Nadi Yoon Htike, All right reserved.
+          ©2025, SneakersBuy, All right reserved.
         </small>{" "}
         <small className="text-center">1-347-242-8322</small>
       </div>

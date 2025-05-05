@@ -99,7 +99,7 @@ const CartItem = ({
               onIncrement={handleIncrement}
               onDecrement={handleDecrement}
             />
-            <span>{totalPrice} Ks</span>
+            <span>{totalPrice}$</span>
           </div>
         </div>
       </div>
@@ -172,7 +172,7 @@ const MobileCartItem = ({
           />
         </div>
 
-        <span>{totalPrice} Ks</span>
+        <span>{totalPrice}$</span>
       </div>
       <Separator />
     </div>
